@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンテナ（Docker） — 開発の常識・作法</title>
+    <meta name="description" content="コンテナ（Docker） — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="コンテナ（Docker） — 開発の常識・作法">
+    <meta property="og:description" content="コンテナ（Docker） — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/06-docker.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="05-auth.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔑</span>
+            認証・認可
+        </a>
+        
+        <a href="06-docker.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📦</span>
+            コンテナ（Docker）
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="05-auth.html" class="nav-prev">← 認証・認可</a>
+            
+            
+            <a href="14-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: コンテナ（Docker）
+icon: 📦
+card_desc: アプリを環境ごと箱詰めしてどこでも同じように動かす技術 — イメージ・コンテナ・Dockerfile・開発と本番の差異をなくす作法
+slug: 06-docker</h2>
+<h1>06 コンテナ（Docker） — アプリを「環境ごと箱詰め」してどこでも同じように動かす</h1>
+<div class="callout callout-info"><p>「私のPCでは動いていたのに、本番サーバーに置いたら動かない」——開発現場で一番よく聞くこの事故を、<strong>根本から防ぐ</strong>技術がコンテナです。この章では、アプリを「環境ごと箱詰め」して運ぶ作法を、根本から理解します。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p><strong>コンテナ</strong>は、アプリと、そのアプリが動くために必要なもの（ライブラリ・設定等）を**「丸ごと1つの箱」に詰め込む技術<strong>です。<strong>Docker</strong>（ドッカー）は、その箱を作って動かすための代表的なツールです。箱詰めしておけば、開発用のPCでも・テスト環境でも・本番サーバーでも</strong>「同じ箱」を動かす**ことになるので、「環境の違い」で動かない事故が構造的に起きなくなります。</p>
+<hr />
+<h2>1. なぜコンテナが必要なのか</h2>
+<p>第1章で「CI環境と本番環境は別物」と書き、その対策として**「可能な限り同じ環境（コンテナ等）を使う」**と触れました。この章は、その伏線を回収します。</p>
+<p>チーム開発や本番運用を想像してください：</p>
+<ul>
+<li>「私のPC（Python 3.12）では動いたのに、本番サーバー（Python 3.9）では動かない」（バージョン違い）</li>
+<li>「私のPCに入っているライブラリが、ほかの人のPCには入っていない」（依存の差）</li>
+<li>「Macで開発したが、本番はLinux。OSが違うことで起きる問題にハマる」（OSの差）</li>
+<li>「新しい人が入ったが、環境構築で丸1日つぶれる」（再現の手間）</li>
+</ul>
+<p>これらはすべて**「動かす環境が、人・タイミング・場所でバラバラ」**なことが原因です。</p>
+<div class="callout callout-tip"><p>💡 この問題を「手順書をちゃんと書く」で防ごうとすると、環境が変わるたびに壊れ、メンテ不能になります。コンテナの発想は逆です。**「環境そのものを、コードと一緒に運べるものにする」**ことで、バラつきを構造的に消し去ります。</p></div>
+<hr />
+<h2>2. コンテナとは何か —— 「環境ごと箱詰め」</h2>
+<p>コンテナとは、**「アプリが正しく動くために必要なものを、すべて詰め込んだ1つの箱」**です。箱の中には、アプリのコードだけでなく、必要なライブラリ・ツール・設定ファイルが入っています。</p>
+<p>大事なのは、**この箱は「中身を一切いじらずに、別の場所へそのまま運べる」**という点です。だから「私のPCで動いた箱」を、本番サーバーで「そのまま」動かせます。</p>
+<h3>仮想マシン（VM）との違い</h3>
+<p>「環境を隔離する」という目的は、従来の<strong>仮想マシン</strong>（<code>Virtual Machine</code>／通称 <code>VM</code>）にもありました。しかし方式が違います：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>仮想マシン（VM）</th>
+<th>コンテナ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>何を隔離するか</td>
+<td><strong>OSごと</strong>丸ごと別のPCを模倣する</td>
+<td>OSの機能を共有しつつ、<strong>アプリ周辺だけ</strong>を隔離する</td>
+</tr>
+<tr>
+<td>重さ</td>
+<td>重い（OS1つ分のリソースが要る）</td>
+<td><strong>軽い</strong>（OSは共有）</td>
+</tr>
+<tr>
+<td>起動</td>
+<td>遅い（数十秒〜分）</td>
+<td><strong>早い</strong>（秒以下）</td>
+</tr>
+<tr>
+<td>数を増やす</td>
+<td>コストが高い</td>
+<td>同一マシンで<strong>たくさん動かせる</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>例えていうと: 家と部屋</h3>
+<ul>
+<li><strong>仮想マシン</strong>は「<strong>部屋ごと、別の家を丸ごと建てる</strong>」ようなもの。完全に独立していますが、家1つ分のコスト・手間がかかります。</li>
+<li><strong>コンテナ</strong>は「<strong>1つの家の中で、部屋を区切って使う</strong>」ようなもの。水道や土台（OS）は共有しつつ、部屋の中（アプリの実行空間）は独立しています。</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>Docker</strong>（ドッカー）は、このコンテナを作る・動かす・運ぶための<strong>最も普及したツール兼フォーマット</strong>です。「コンテナ」という技術概念と「Docker」という実装がセットで普及したため、現場ではほぼ同義で語られます。</p></div>
+<hr />
+<h2>3. 🔑 イメージとコンテナ —— 設計図と実体</h2>
+<p>ここが本章の核心です。<strong>「イメージ」と「コンテナ」を混同するのが、初学者が一番よく陥る罠</strong>です。この2つは<strong>別のもの</strong>です。</p>
+<h3>イメージ（image）= 設計図</h3>
+<p><strong>イメージ</strong>は、アプリと環境を詰め込んだ**「設計図（読み取り専用のテンプレート）」<strong>です。箱の中身の</strong>定義**であって、動いている実体ではありません。イメージは変更不可（読み取り専用）で、何度でも同じものを複製できます。</p>
+<h3>コンテナ = 実体</h3>
+<p><strong>コンテナ</strong>は、そのイメージから**「実際に起動して動いているもの」**です。「イメージという設計図を、実体として走らせた状態」がコンテナです。</p>
+<h3>例えていうと: レシピとケーキ</h3>
+<ul>
+<li><strong>イメージ</strong>は「<strong>レシピ（と、必要な材料が揃ったキット）</strong>」。レシピそのものは食べられません（動いていません）。</li>
+<li><strong>コンテナ</strong>は「<strong>そのレシピで実際に焼いたケーキ</strong>」。これが「動いている実体」です。</li>
+</ul>
+<p>1つのレシピから、ケーキを<strong>何個でも焼ける</strong>のと同じように、1つのイメージからコンテナを<strong>複数、同時に起動</strong>できます。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>イメージ（image）</th>
+<th>コンテナ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>例え</td>
+<td>レシピ・型</td>
+<td>焼けたケーキ</td>
+</tr>
+<tr>
+<td>性質</td>
+<td><strong>読み取り専用</strong>のテンプレート</td>
+<td><strong>動いている実体</strong></td>
+</tr>
+<tr>
+<td>数</td>
+<td>1つ作れば完了</td>
+<td>1イメージから<strong>複数起動</strong>可能</td>
+</tr>
+<tr>
+<td>操作</td>
+<td>「ビルド（build）」して作る</td>
+<td>「起動（run）」して動かす・「停止」して止める</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-danger"><p>重要 <strong>「イメージを作る」ことと「コンテナを動かす」ことは別工程</strong>です。まず設計図（イメージ）を作り、それから実体（コンテナ）を起動する、という2段階で理解するのが正しい入り方です。</p></div>
+<hr />
+<h2>4. Dockerfile —— 設計図を書く手順書</h2>
+<p>では、イメージ（設計図）はどうやって作るのでしょうか。その**「作り方を書いた手順書」**が <strong>Dockerfile</strong>（ドッカーファイル）です。</p>
+<h3>Dockerfile の例</h3>
+<pre><code class="language-dockerfile"># Dockerfile（イメージの作り方を書く手順書）
+FROM python:3.12            # ベース: Python 3.12 が入った素材を使う
+WORKDIR /app                # アプリを置く場所を /app に決める
+COPY requirements.txt .     # 必要なライブラリ一覧をコピー
+RUN pip install -r requirements.txt   # ライブラリをインストール
+COPY . .                    # アプリのコードをすべてコピー
+CMD [&quot;python&quot;, &quot;app.py&quot;]    # 箱を起動した時に動かすコマンド
+</code></pre>
+<p>この手順書を <strong>ビルド（build）</strong> すると、完成した<strong>イメージ</strong>ができます。そして、そのイメージを<strong>起動（run）</strong> すると、<strong>コンテナ</strong>として動き出します。</p>
+<div class="callout callout-tip"><p>💡 <strong>Dockerfile は「環境構築の手順書」のコード化</strong>です。かつて「このフォルダで <code>pip install</code> して、あの設定ファイルを置いて……」と<strong>人間が手順書を読んで手作業でやっていた</strong>環境構築を、<strong>機械が再現できる形</strong>に書き直したもの、と捉えると本質が見えます。手順書がコードになれば、バージョン管理（→ 第2章）でき、CIで検査（→ 第1章）もできます。</p></div>
+<hr />
+<h2>5. 🔑 開発と本番で「同じ箱」を動かす —— 差異をなくす作法</h2>
+<p>ここが、コンテナが単なる「便利な道具」でなく<strong>開発の作法</strong>たる理由です。</p>
+<h3>同じイメージを、別々の場所で動かす</h3>
+<p>コンテナの最大の価値は、<strong>「1つのイメージを、開発PC・CI・本番サーバーの全部で、そのまま動かせる」<strong>ことです。箱の中身が同じなら、「私のPCでは動いたのに本番で動かない」という事故が</strong>構造的に起きません</strong>。</p>
+<h3>ただし「完全に同じ」には分けるべきものがある</h3>
+<p>ここが重要な落とし穴です。「同じ箱を動かす」といっても、<strong>環境ごとに必ず変わるもの</strong>があります。それを箱の中に固定してはいけません：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>箱の中（共通・固定）</th>
+<th>箱の外から与える（環境ごとに変わる）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アプリのコード</td>
+<td><strong>環境変数</strong>（DBの接続先・APIキー等）</td>
+</tr>
+<tr>
+<td>ライブラリ・ツール</td>
+<td><strong>データ</strong>（開発用のテストデータ vs 本番の実データ）</td>
+</tr>
+<tr>
+<td>実行環境の設定</td>
+<td><strong>リソース</strong>（本番のスペック・台数）</td>
+</tr>
+</tbody>
+</table></div>
+<p>つまり作法は、**「アプリ部分＝箱の中で共通」「環境依存部分＝箱の外から注入」**と、はっきり分けることです。</p>
+<div class="callout callout-warn"><p>⚠ <strong>本番の秘密情報を、イメージに焼き込んではいけない</strong>: データベースのパスワードやAPIキーを Dockerfile やイメージの中に直接書くと、イメージが漏れた時に<strong>秘密も一緒に漏洩</strong>します。秘密は<strong>環境変数として、箱の外から実行時に与える</strong>のが正解です（→ 第4章 環境変数・シークレット管理）。</p></div>
+<div class="callout callout-tip"><p>💡 つまりコンテナは、第4章の「環境変数で機密を外だしする」作法と<strong>セットで使って初めて完成</strong>します。「アプリは箱・設定は外」の分離こそが、環境を運ぶ作法の核心です。</p></div>
+<hr />
+<h2>6. なぜ「コンテナ」が開発の作法なのか</h2>
+<p>ここまでを読むと、コンテナが単なる「動かす道具」でなく、<strong>開発から本番まで環境を一致させる基盤</strong>であることが見えてきます。</p>
+<h3>作法として位置づけられる理由</h3>
+<ol>
+<li><strong>環境の再現性</strong> —— 誰のPCでも・いつでも・同じ環境が再現できる（「私のPCでしか動かない」の排除）</li>
+<li><strong>開発と本番の一致</strong> —— 同じ箱を動かすので、環境差による事故が減る</li>
+<li><strong>オーケストレーションへの入り口</strong> —— コンテナ1個は手軽ですが、本番で数十〜数百を運用するには<strong>管理の仕組み</strong>が要ります。その基盤が <strong>Kubernetes</strong>（クーバネティス／通称 <strong>K8s</strong>）です。</li>
+</ol>
+<div class="callout callout-tip"><p>💡 <strong>Kubernetes</strong> は、複数のコンテナを本番で<strong>大量に運用・自動管理</strong>する技術です。「コンテナが死んだら自動で再起動」「アクセスが増えたら台数を増やす」等を自動で行います。1個のコンテナならDocker単体で足りますが、本番の大規模運用ではK8sのような管理基盤が前提になります。第6章では「コンテナの基礎」、K8sはその先の「運用の規模拡大」の技術、と位置づけてください。</p></div>
+<h3>面接・実務での意味</h3>
+<div class="callout callout-info"><p>「Docker、使ったことありますか？」</p></div>
+<p>この質問は、単に「コマンドを打てるか」を聞いているのではありません。**「環境の再現性を意識して、開発から本番まで環境を一致させられるか」**を聞いています。「コンテナで環境を固定し、秘密は環境変数で外だしする」と即答できる人は、現場で信頼されます。</p>
+<hr />
+<h2>7. よくある落とし穴と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>落とし穴</th>
+<th>何が起きるか</th>
+<th>正しい対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>秘密情報をイメージに焼き込む</strong></td>
+<td>イメージ漏洩でパスワード・APIキーも漏れる</td>
+<td>秘密は<strong>環境変数で外から注入</strong>（→ 第4章）</td>
+</tr>
+<tr>
+<td><strong>データをコンテナの中に置く</strong></td>
+<td>コンテナを消すと<strong>データも消える</strong></td>
+<td><strong>ボリューム</strong>（volume）等で、データは箱の外に置く</td>
+</tr>
+<tr>
+<td><strong>タグを <code>latest</code> で固定する</strong></td>
+<td>「いつのバージョンか」分からず再現性が消える</td>
+<td>バージョンを<strong>明記</strong>（<code>python:3.12</code> 等）して固定</td>
+</tr>
+<tr>
+<td><strong>開発と本番で別々のイメージを作る</strong></td>
+<td>「環境差」が復活し、コンテナの意義がなくなる</td>
+<td><strong>同一イメージ</strong>＋設定を外から注入して分ける</td>
+</tr>
+<tr>
+<td><strong>イメージを無駄に大きくする</strong></td>
+<td>ビルド・配布が遅く、攻撃対象も増える</td>
+<td>必要最小限にする（不要なファイル・ツールを詰め込まない）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>ボリューム</strong>（volume）: コンテナの「外」にデータを保存し、コンテナからそれを「参照」させる仕組み。データベースのデータ等、<strong>消してはいけないもの</strong>はコンテナ（使い捨ての実体）の中ではなく、ボリュームに置くのが作法です。</p></div>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li><strong>コンテナ</strong>は、アプリと実行環境を**「丸ごと1つの箱」**に詰め込む技術。<strong>Docker</strong> はその代表実装</li>
+<li><strong>仮想マシン</strong>（VM）はOSごと隔離して重い・<strong>コンテナ</strong>はアプリ周辺だけ隔離して<strong>軽く早い</strong></li>
+<li><strong>イメージ</strong>（設計図・読み取り専用）と<strong>コンテナ</strong>（実体・動いているもの）は<strong>別物</strong>。イメージからコンテナを複数起動できる</li>
+<li><strong>Dockerfile</strong> はイメージの作り方を書いた手順書。ビルドしてイメージを作り、起動してコンテナを動かす</li>
+<li>作法の核心は**「アプリ部分＝箱の中で共通・環境依存部分＝箱の外から注入」<strong>の分離。秘密は</strong>環境変数**で外だし（→ 第4章）</li>
+<li>同じイメージを開発〜本番で動かすことで「私のPCでは動いた」事故を<strong>構造的に防ぐ</strong>。大規模運用は <strong>Kubernetes（K8s）</strong> へ</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: アプリを動かす「箱」と環境の話が出ました。次は、アプリが蓄える<strong>データの置き場所</strong>——データベースです。第7章では、SQLite・PostgreSQL 等、目的に応じたデータベースの「適材適所」の判断軸を扱います。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="05-auth.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔑 認証・認可</span>
+            </a>
+            
+            
+            <a href="14-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
