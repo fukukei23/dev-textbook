@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バージョニング・パッケージ管理 — 開発の常識・作法</title>
+    <meta name="description" content="バージョニング・パッケージ管理 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="バージョニング・パッケージ管理 — 開発の常識・作法">
+    <meta property="og:description" content="バージョニング・パッケージ管理 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/10-versioning-package.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="05-auth.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔑</span>
+            認証・認可
+        </a>
+        
+        <a href="06-docker.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📦</span>
+            コンテナ（Docker）
+        </a>
+        
+        <a href="07-database.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗄️</span>
+            データベース適材適所
+        </a>
+        
+        <a href="08-logging.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📊</span>
+            ログ・モニタリング
+        </a>
+        
+        <a href="09-cache-async.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            キャッシュ・非同期処理
+        </a>
+        
+        <a href="10-versioning-package.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📦</span>
+            バージョニング・パッケージ管理
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="09-cache-async.html" class="nav-prev">← キャッシュ・非同期処理</a>
+            
+            
+            <a href="14-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: バージョニング・パッケージ管理
+icon: 📦
+card_desc: 「1.2.3」の意味と、依存ライブラリの管理 — セマンティックバージョニング/メジャー・マイナー・パッチ・依存関係・ロックファイル
+slug: 10-versioning-package</h2>
+<h1>10 バージョニング・パッケージ管理 — 「1.2.3」の意味と、依存ライブラリを壊さずに更新する作法</h1>
+<div class="callout callout-info"><p>自分の書いたコードだけでは動かない。他人が作ったライブラリ（道具の詰め合わせ）を組み合わせて動かす。その「組み合わせ」を番号で管理し、壊さずに更新する作法。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p>モダンな開発は、<strong>自分のコード + 無数の外部ライブラリ（部品）</strong> の組み合わせで成り立ちます。それぞれの部品には「<strong>バージョン（版）</strong>」という番号が付いていて、この番号の意味を読み解き、組み合わせを記録しておくのが「バージョニング・パッケージ管理」の作法です。</p>
+<hr />
+<h2>1. なぜバージョニング・パッケージ管理が必要なのか</h2>
+<h3>「私の環境では動いた」の罠</h3>
+<p>開発していると、こういうことが起きます。</p>
+<ul>
+<li>あなたのパソコンでは動いたコードが、<strong>他人のパソコンでは動かない</strong></li>
+<li>昨日は動いたのに、<strong>今日は壊れた</strong>（自分は何も変えていないのに）</li>
+</ul>
+<p>原因の多くは「<strong>使っている部品（ライブラリ）のバージョンが違う</strong>」ことです。ある部品が新しくなって仕様が変わり、それに依存していたあなたのコードが動かなくなった、という現象です。これを<strong>依存地獄</strong>（依存関係の地獄／<code>dependency hell</code>）と呼びます。</p>
+<h3>2つの問いに答える</h3>
+<p>バージョニング・パッケージ管理は、次の2つの問いに答える作法です。</p>
+<ol>
+<li><strong>「この部品が新しくなったとき、私のコードは壊れるか？」</strong> — バージョン番号の読み方（<strong>セマンティックバージョニング</strong>）で分かる</li>
+<li><strong>「半年後にこのコードを別の人が動かしたとき、同じく動くか？」</strong> — 組み合わせの記録（<strong>ロックファイル</strong>）で保証する</li>
+</ol>
+<p>この2つが揃って初めて、「どこでも・いつでも同じように動く」（<strong>再現性</strong>）が手に入ります。</p>
+<hr />
+<h2>2. セマンティックバージョニング（SemVer）とは —— 「1.2.3」の読み方</h2>
+<h3>3つの数字</h3>
+<p>ライブラリのバージョンは、たいてい <strong><code>1.2.3</code></strong> のようにピリオドで区切られた3つの数字で表されます。これを<strong>セマンティックバージョニング</strong>（<code>Semantic Versioning</code>／通称 <strong>SemVer</strong>／セムヴァー）と呼びます。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>位置</th>
+<th>名前</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td><strong>メジャー</strong>（major）</td>
+<td><strong>後方互換性が壊れる</strong>変更</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td><strong>マイナー</strong>（minor）</td>
+<td><strong>後方互換性を保つ</strong>機能追加</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td><strong>パッチ</strong>（patch）</td>
+<td>バグ修正（機能は変わらない）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>「<strong>後方互換性</strong>」（こうほうごかんせい／<code>backward compatibility</code>）とは、<strong>古い使い方が新しい版でもそのまま動く</strong>という性質のことです。「前の版のコードが、新しい版でも壊れずに動く」という約束を表します。</p></div>
+<h3>どう上がるか</h3>
+<p>あるライブラリが <code>1.2.3</code> から次のように変わったとき、意味が違います。</p>
+<ul>
+<li><code>1.2.4</code> — バグを直しただけ（パッチ）。<strong>ほぼ確実に壊れない</strong></li>
+<li><code>1.3.0</code> — 新機能を足した（マイナー）。<strong>原則壊れない</strong></li>
+<li><code>2.0.0</code> — 大きく作り変えた（メジャー）。<strong>壊れる可能性がある</strong></li>
+</ul>
+<p>この「<strong>どの桁が上がったかで、壊れるかどうかが分かる</strong>」という約束こそが、SemVer の核心です。</p>
+<hr />
+<h2>3. 🔑 番号は「互換性の約束」 —— SemVerの核心</h2>
+<h3>なぜ番号の読み方が重要か</h3>
+<p>SemVer が単なる「数え方のルール」でなく<strong>作法</strong>たるゆえんは、番号が<strong>作り手と使い手の間の約束</strong>だからです。</p>
+<ul>
+<li><strong>作り手</strong>は「メジャーを上げるときは、古い使い方が壊れることを覚悟して上げる」と約束する</li>
+<li><strong>使い手</strong>は「メジャーが上がっていない更新なら、安心して取り込める」と信頼できる</li>
+</ul>
+<p>この約束があるからこそ、無数のライブラリを組み合わせても**「どれを更新していいか・慎重にすべきか」が番号だけで判断**できます。約束が守られていないと、パッチ番号の変更で壊れるようなライブラリは「<strong>SemVer を守らない</strong>」として不信の目で見られます。</p>
+<h3>例えていうと: 電化製品のコンセント</h3>
+<ul>
+<li><strong>パッチ</strong> ＝ 同じ製品の色が変わった程度。コンセント（使い方）はそのまま。<strong>安心</strong></li>
+<li><strong>マイナー</strong> ＝ 新しい機能が付いた。でも従来のコンセントも使える。<strong>たいてい安心</strong></li>
+<li><strong>メジャー</strong> ＝ コンセントの形そのものが変わった。<strong>古いプラグは刺さらない（壊れる）</strong></li>
+</ul>
+<p>「コンセントの形が変わった」のがメジャーアップデートだと分かれば、安易に挿し直さず、<strong>変換アダプタ（修正）を用意するか止めるか</strong>を判断できます。これと同じことを、番号の桁で行います。</p>
+<hr />
+<h2>4. パッケージ管理とは —— 依存関係を宣言で管理する</h2>
+<h3>パッケージとパッケージマネージャ</h3>
+<p>外部ライブラリを<strong>パッケージ</strong>（<code>package</code>／荷物）と呼びます。そして、パッケージを<strong>探して・ダウンロードして・組み込んで・更新する</strong>仕組みを<strong>パッケージマネージャ</strong>（<code>package manager</code>／荷物の管理係）と呼びます。言語ごとに定番があります。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>言語</th>
+<th>パッケージマネージャ</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JavaScript</td>
+<td><code>npm</code>（エヌピーエム）・<code>yarn</code></td>
+<td><code>npm install react</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>pip</code>（ピップ）・<code>uv</code></td>
+<td><code>pip install fastapi</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>cargo</code>（カルゴ）</td>
+<td><code>cargo add serde</code></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code>bundler</code>（バンドラー）</td>
+<td><code>bundle install</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>「宣言」で管理する</h3>
+<p>モダンなパッケージ管理の作法は「<strong>何を使うかを宣言ファイルに書く</strong>」ことです。JavaScript なら <code>package.json</code>、Python なら <code>requirements.txt</code> 等に「このライブラリのこの版を使う」と宣言します。</p>
+<pre><code>fastapi == 0.115.0
+uvicorn &gt;= 0.30.0
+</code></pre>
+<p>こう書いておけば、パッケージマネージャが宣言を読んで<strong>必要な部品を自動で集めてくれます</strong>。人数が増えても、別のパソコンでも、宣言ファイル1つあれば「同じ部品構成」が再現できます。</p>
+<hr />
+<h2>5. 🔑 ロックファイルと範囲指定 —— 再現性の鍵</h2>
+<h3>範囲指定の誘惑と罠</h3>
+<p>宣言ファイルには「この版<strong>ぴったり</strong>」でなく「<strong>この版以上</strong>」のように<strong>範囲</strong>で書くことができます。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>書き方</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1.2.3</code></td>
+<td>この版<strong>ぴったり</strong>（固定）</td>
+</tr>
+<tr>
+<td><code>^1.2.3</code></td>
+<td><code>1.2.3</code> 以上 <code>2.0.0</code> <strong>未満</strong>（マイナー・パッチは自動で新しくなる）</td>
+</tr>
+<tr>
+<td><code>~1.2.3</code></td>
+<td><code>1.2.3</code> 以上 <code>1.3.0</code> <strong>未満</strong>（パッチだけ新しくなる）</td>
+</tr>
+</tbody>
+</table></div>
+<p>範囲指定は「<strong>バグ修正や新機能を自動で取り込める</strong>」という利点があります。しかしこれには裏があります。範囲を許すと、<strong>インストールのたびに実際に入る版が少しずつ違う</strong>可能性があるのです。「昨日は動いた、今日は壊れた」の再現です。</p>
+<div class="callout callout-tip"><p>💡 <strong><code>0.x</code> 系（<code>1.0.0</code> 未満）は例外</strong>: 開発初期のライブラリ（<code>0.2.5</code> 等）は SemVer のルールがまだ緩く、<strong>マイナー更新でも壊れる変更</strong>が入りうると定められています。<code>0.x</code> 系への範囲指定（<code>^0.2.3</code> 等）はとくに慎重に扱いましょう。</p></div>
+<h3>ロックファイル —— 実際の組み合わせを固定する</h3>
+<p>この問題を解決するのが<strong>ロックファイル</strong>（<code>lock file</code>／鍵ファイル）です。パッケージマネージャは、宣言を元に部品を集めたあと、**「実際に入れた版を、部品ごとにすべて書き留めた別のファイル」**を生成します。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>言語</th>
+<th>ロックファイル</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JavaScript（npm）</td>
+<td><code>package-lock.json</code></td>
+</tr>
+<tr>
+<td>JavaScript（yarn）</td>
+<td><code>yarn.lock</code></td>
+</tr>
+<tr>
+<td>Python（uv）</td>
+<td><code>uv.lock</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>Cargo.lock</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>ロックファイルのおかげで「半年後に別の人が <code>install</code> しても、<strong>私が動かした時と全く同じ版組み合わせ</strong>が入る」ことが保証されます。範囲指定（宣言）で柔軟性を保ちつつ、ロックファイル（記録）で再現性を固める、という2枚構えがモダンな作法です。</p>
+<div class="callout callout-warn"><p>⚠ ロックファイルは<strong>原則コミット（Git に保存）<strong>します。特に</strong>アプリ開発</strong>では、再現性のためにメンバー・CI 全員で共有する必須ファイルです。「<code>.gitignore</code> で無視する」は誤解です。※一方で<strong>ライブラリ開発</strong>（他人が組み込む部品を作る側）では、使う側の依存関係を縛りすぎないよう、あえてコミットしない運用も一般的です。</p></div>
+<hr />
+<h2>6. なぜ「バージョンを正しく管理する」が開発の作法なのか</h2>
+<h3>作法として位置づけられる理由</h3>
+<ul>
+<li><strong>チーム開発の前提</strong>: メンバー全員が同じ部品構成で動かせなければ、開発すら始まりません。宣言ファイルとロックファイルがその<strong>共通基盤</strong>です。</li>
+<li><strong>CI でも再現性が要る</strong>: 第1章で扱った CI（自動検査）は、CI サーバー上で改めて部品をインストールして検査します。ロックファイルがなければ**「あなたのPCでは緑・CIサーバーでは赤」**になり、CI の意味が崩れます。</li>
+<li><strong>セキュリティにも直結</strong>: ライブラリに脆弱性（セキュリティの穴）が見つかると、<strong>修正版への更新</strong>が必要です。番号の読み方が分かっていれば「この更新は安全に取り込めるか」を素早く判断できます。</li>
+</ul>
+<h3>面接・実務での意味</h3>
+<ul>
+<li>「<strong>依存関係はどう管理していますか？</strong>」という質問に、宣言ファイルとロックファイルの<strong>2枚構え</strong>で答えられるかが、現場経験の有無を分けます。</li>
+<li>「<strong>SemVer を守っていますか？</strong>」は、ライブラリを<strong>公開する側</strong>になるとさらに重要になります。自分のライブラリの番号の上げ方1つで、使ってくれる人のコードを壊しかねないからです。</li>
+<li>「<strong>私の環境では動きました</strong>」は、再現性の管理ができていないことの<strong>赤信号</strong>として扱われます。現場では「環境が同じであること」を証明できることが前提です。</li>
+</ul>
+<hr />
+<h2>7. よくある落とし穴と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>落とし穴</th>
+<th>何が起きるか</th>
+<th>正しい対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ロックファイルをコミットしない</strong></td>
+<td>メンバー・CI で版がズレて「私の環境では動く」が再発</td>
+<td><strong>アプリ開発ではGitに保存</strong>（※ライブラリ開発では逆にコミットしないのが一般）</td>
+</tr>
+<tr>
+<td><strong>メジャーアップデートを雑に取り込む</strong></td>
+<td>後方互換性が壊れ、あちこちでエラー</td>
+<td>メジャー上がりは<strong>必ず動作確認</strong>・範囲指定で上限を <code>2.0.0</code> 未満に抑える</td>
+</tr>
+<tr>
+<td><strong>範囲指定の範囲を広くしすぎる</strong></td>
+<td>知らぬ間に新しすぎる版が入って壊れる</td>
+<td><code>^</code> や <code>~</code> の意味を理解し、<strong>本当に許したい範囲だけ</strong>指定する</td>
+</tr>
+<tr>
+<td><strong>SemVer を守らずに番号を上げる</strong></td>
+<td>使う人が「パッチのはずが壊れた」と不信に陥る</td>
+<td>公開側は<strong>メジャー＝壊れる変更</strong>の約束を厳格に守る</td>
+</tr>
+<tr>
+<td><strong>使わなくなった部品を放置</strong></td>
+<td>セキュリティリスク・無駄な依存が増える</td>
+<td>定期的に<strong>依存関係を棚卸し</strong>し、未使用のものは外す</td>
+</tr>
+<tr>
+<td><strong>宣言ファイルと実際が乖離</strong></td>
+<td>「書いてある版」と「入っている版」が違う事故</td>
+<td><strong>install は必ずパッケージマネージャ経由</strong>で、宣言ファイルを正とする</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>依存地獄</strong>（<code>dependency hell</code>）: 依存する部品が多くなりすぎて、「部品Aのために部品Bは新しくしたいが、部品Cが古いBしか受け付けない」のように<strong>版の矛盾</strong>で身動きが取れなくなる状態。SemVer・ロックファイル・定期的な棚卸しは、すべてこの地獄に落ちないための作法です。</p></div>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li>モダンな開発は<strong>自分のコード＋無数の外部ライブラリ</strong>の組み合わせ。これを番号で管理するのが<strong>バージョニング・パッケージ管理</strong></li>
+<li><strong>セマンティックバージョニング（SemVer）</strong> は <code>メジャー.マイナー.パッチ</code> の3桁。<strong>メジャーが上がった＝後方互換性が壊れる</strong>可能性、が核心の約束</li>
+<li><strong>パッケージ管理</strong>は「何を使うかを宣言ファイルに書く」作法。言語ごとのパッケージマネージャ（<code>npm</code>・<code>pip</code> 等）が部品を自動で集める</li>
+<li><strong>範囲指定</strong>（<code>^</code>・<code>~</code>）は柔軟だが再現性を緩める。<strong>ロックファイル</strong>で「実際に入った版」を固定して補う（原則コミット）</li>
+<li>「どこでも・いつでも同じように動く＝<strong>再現性</strong>」を支えるのがこの作法の目的。「私の環境では動く」は管理不足の赤信号</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: 部品の組み合わせを管理できるようになりました。しかし、どんなに管理しても<strong>バグ</strong>は起きます。第11章「<strong>デバッグの作法</strong>」では、起きたバグの原因を、当てずっぽうでなく<strong>論理的に切り分けていく手順</strong>を扱います。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="09-cache-async.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">⚡ キャッシュ・非同期処理</span>
+            </a>
+            
+            
+            <a href="14-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">v1.19 · 2026.07.10</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
