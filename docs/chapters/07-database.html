@@ -140,7 +140,7 @@ slug: 07-database</h2>
 <li>データの<strong>整合性を保つ仕組み</strong>（トランザクション・後述）が強力</li>
 </ul>
 <h3>NoSQL（非リレーショナル）</h3>
-<p><strong>NoSQL</strong>（ノーエスキューエル／「SQLでない」の意）は、表以外の形でデータを扱う方式の総称です。「<strong>事前に形を決めなくてよい・柔軟</strong>」反面、<strong>厳密な整合性</strong>は RDB ほど強くないことが多いです。</p>
+<p><strong>NoSQL</strong>（ノーエスキューエル／「SQLでない」の意）は、表以外の形でデータを扱う方式の総称です。「<strong>事前に形を決めなくてよい・柔軟</strong>」（形がころころ変わる<strong>非構造化データ・半構造化データ</strong>向き）反面、<strong>厳密な整合性</strong>は RDB ほど強くないことが多いです。</p>
 <p>代表的な種類:</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -230,7 +230,7 @@ slug: 07-database</h2>
 <h3>ドキュメント型 MongoDB —— 形が変わるデータに</h3>
 <p><strong>MongoDB</strong> は、<code>JSON</code>（→ 第3章）のような<strong>形がころころ変わるデータ</strong>を保存するのに向きます。事前に列（スキーマ）を決めなくてよいので、「今後データの項目が増えそう・形が固まっていない」場面で柔軟です。</p>
 <h3>キー・バリュー型 Redis —— 超高速な読み書き</h3>
-<p><strong>Redis</strong> は、「<strong>鍵に対する値</strong>」を<strong>超高速</strong>で読み書きするのに特化しています。ただし<strong>電源を切ると消える可能性がある</strong>（メモリに置くのが基本）ため、<strong>消えて困るメインデータ</strong>ではなく、<strong>一時的なデータ</strong>（キャッシュ・一時セッション等）向けです（→ 第9章 キャッシュ）。</p>
+<p><strong>Redis</strong> は、「<strong>鍵に対する値</strong>」を<strong>超高速</strong>で読み書きするのに特化しています。ただし<strong>電源を切ると消える可能性がある</strong>（<strong>インメモリ</strong>——データをメモリ上に置く方式が基本のため）ため、<strong>消えて困るメインデータ</strong>ではなく、<strong>一時的なデータ</strong>（キャッシュ・一時セッション等）向けです（→ 第9章 キャッシュ）。</p>
 <div class="callout callout-warn"><p>⚠ <strong>NoSQL = RDB より優れている、ではない</strong>: NoSQL は<strong>特定の用途で高速・柔軟</strong>ですが、<strong>厳密な整合性</strong>や**複雑な関連（リレーション）**では RDB に分があります。「新しいから NoSQL」で選ぶのは禁物です。<strong>用途に合うか</strong>で選ぶのが適材適所です。</p></div>
 <hr />
 <h2>5. 🔑 「何で選ぶか」の判断軸</h2>
@@ -315,7 +315,7 @@ slug: 07-database</h2>
 <td>同時書き込みが多い本番は<strong>サーバー型</strong>（PostgreSQL 等）へ</td>
 </tr>
 <tr>
-<td><strong>RDB に無理やり非構造データを詰める</strong></td>
+<td><strong>RDB に無理やり非構造化データを詰める</strong></td>
 <td>表が複雑化し、運用が破綻する</td>
 <td>形が柔軟なデータは<strong>ドキュメント型</strong>も検討</td>
 </tr>
