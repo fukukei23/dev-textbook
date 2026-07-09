@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>認証・認可 — 開発の常識・作法</title>
+    <meta name="description" content="認証・認可 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="認証・認可 — 開発の常識・作法">
+    <meta property="og:description" content="認証・認可 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/05-auth.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="05-auth.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔑</span>
+            認証・認可
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="04-env-secrets.html" class="nav-prev">← 環境変数・シークレット管理</a>
+            
+            
+            <a href="14-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: 認証・認可
+icon: 🔑
+card_desc: 誰がアクセスしてよいかを決める仕組み — 認証と認可の違い・セッション/JWT・OAuth・MFA
+slug: 05-auth</h2>
+<h1>05 認証・認可 — 「誰か」と「何をしてよいか」を区別する作法</h1>
+<div class="callout callout-info"><p>「ログイン機能を作って」——この一言に、「本人確認（認証）」と「権限確認（認可）」という2つの全く別の問題が隠れています。この章では、現場で一番混同されやすいこの2つを、根本から区別できるようにします。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p><strong>認証</strong>（Authentication）は「<strong>あなたは誰か</strong>」を確認すること。<strong>認可</strong>（Authorization）は「<strong>あなたは何をしてよいか</strong>」を判断すること。この2つはセットで語られますが、<strong>別の問題</strong>です。ログイン画面でパスワードを入力するのは認証、ログイン後に「他人の注文履歴は見えない」になっているのは認可。認可を抜きにすると、誰もが管理者になれてしまいます。</p>
+<hr />
+<h2>1. なぜ認証・認可が必要なのか</h2>
+<p>まず、これが<strong>ない</strong>世界を想像してください。</p>
+<pre><code>GET /api/users/123/orders    ← 誰が頼んだリクエストか分からない
+</code></pre>
+<p>このAPIに<strong>認証・認可がない</strong>と、何が起きるか：</p>
+<ul>
+<li>URLの <code>123</code> を <code>124</code> に書き換えるだけで、<strong>他人の注文履歴が見える</strong>（認可の欠如）</li>
+<li>「管理者用」のAPIを、<strong>誰でも叩けてしまう</strong>（権限チェックなし）</li>
+<li>リクエストの送り主が誰か<strong>一切分からない</strong>（認証の欠落）</li>
+</ul>
+<p>これらは<strong>悪意がなくても起きる事故</strong>です。「自分のデータを見ようとしたら、URLの打ち間違いで他人のデータが見えた」という設計ミスは、現実によくあります。</p>
+<div class="callout callout-warn"><p>⚠ <strong>通称: IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）。URLのIDを書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。</p></div>
+<p><strong>認証・認可は、「使い勝手」のためでなく「安全」のための仕組み</strong>です。後回しにされがちですが、<strong>最初から設計に組み込む</strong>のが作法です（→ 後述）。</p>
+<hr />
+<h2>2. 🔑 「認証」と「認可」の区別</h2>
+<p>ここが本章の核心です。<strong>この2つを混同するのが、初学者が一番よく陥る罠</strong>です。</p>
+<h3>認証（Authentication）= 誰か</h3>
+<p>「あなたは<strong>誰</strong>ですか？」を確認すること。代表的な手段：</p>
+<ul>
+<li><strong>パスワード</strong>（知っていること）</li>
+<li><strong>ワンタイムパスコード</strong>（持っていること）</li>
+<li><strong>指紋・顔</strong>（生体情報）</li>
+</ul>
+<p>認証が成功すると、システムは「この利用者はユーザーID=123の山田さんだ」と<strong>身元を特定</strong>します。</p>
+<h3>認可（Authorization）= 何をしてよいか</h3>
+<p>「山田さんは、<strong>何を</strong>してよいか」を判断すること。身元が分かった上で、さらに：</p>
+<ul>
+<li>この注文を見てよいか（自分の注文か、他人の注文か）</li>
+<li>ユーザーを削除してよいか（管理者権限があるか）</li>
+<li>記事を編集してよいか（編集権限があるか）</li>
+</ul>
+<div class="callout callout-tip"><p>💡 権限の管理には「<strong>役割</strong>（管理者・一般等）で分ける」方式（<code>RBAC</code>: 役割ベースアクセス制御）等がよく使われます。いずれにせよ「<strong>誰が・何をしてよいか</strong>」をルール化しておくのが認可です。</p></div>
+<h3>例えていうと: ホテルのカードキー</h3>
+<p><strong>フロントで身分証を提示してチェックインする</strong>のが<strong>認証</strong>。「あなたは201号室の山田様ですね」と身元を確認します。</p>
+<p><strong>部屋のカードキーで201号室のドアを開ける</strong>のが<strong>認可</strong>。201号室には入れるが、<strong>他人の部屋（202号室）のカードキーは使えない</strong>。これが「自分のリソースにはアクセスできる・他人のにはできない」という認可の構造です。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>認証（Authentication）</th>
+<th>認可（Authorization）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>質問</td>
+<td><strong>誰</strong>ですか？</td>
+<td><strong>何を</strong>してよいか？</td>
+</tr>
+<tr>
+<td>タイミング</td>
+<td>ログイン時</td>
+<td>ログイン後の毎操作</td>
+</tr>
+<tr>
+<td>例</td>
+<td>パスワード確認</td>
+<td>「自分の注文か」「管理者か」</td>
+</tr>
+<tr>
+<td>失敗例</td>
+<td>「パスワードが違います」</td>
+<td>「このページは閲覧権限がありません」</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 頭文字の <strong>A</strong> が同じなので混同しやすいのが難点です。<strong>Auth</strong>entication（認証）と <strong>Auth</strong>orization（認可）。英語圏でも略すと両方「Auth」になるため、文脈で読み分けます。</p></div>
+<hr />
+<h2>3. セッション・Cookie方式 —— ブラウザ型の古典</h2>
+<p>「毎回パスワードを入力する」のは現実的ではありません。ログイン状態を<strong>維持</strong>する仕組みが必要です。その1つが<strong>セッション</strong>方式です。</p>
+<h3>仕組み</h3>
+<pre><code>1. ログイン（ID + パスワード送信）
+       ↓
+2. サーバーが「この人はログイン中」と記憶（セッション生成）
+       ↓
+3. サーバーが「セッションID」をCookieでブラウザに渡す
+       ↓
+4. 以降のリクエストにはCookieが自動送信される
+       ↓
+5. サーバーはセッションIDを見て「誰か」を特定
+</code></pre>
+<ul>
+<li><strong>Cookie</strong>（クッキー）: ブラウザに保存される小さなデータ。リクエストのたび<strong>自動で</strong>サーバーに送信される</li>
+<li><strong>セッション</strong>: サーバー側が「このセッションID=誰」を<strong>記憶</strong>している状態</li>
+</ul>
+<h3>メリットとデメリット</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>メリット</th>
+<th>デメリット</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ブラウザがCookieを自動送信で楽</td>
+<td><strong>状態をサーバーが記憶</strong>（複数台構成でセッション共有の工夫が要る）</td>
+</tr>
+<tr>
+<td><strong>サーバー側でセッションを即座に無効化</strong>できる（ログアウト確実）</td>
+<td>モバイルアプリ・他サービス連携に不向き</td>
+</tr>
+<tr>
+<td>歴史が長く実績豊富</td>
+<td><strong>CSRF</strong>の対策が別途必要（後述）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>「ステートフル」</strong>（状態あり）な方式。サーバーが「誰がログイン中か」を覚えているのが特徴。そのため<strong>ログアウトはサーバー側でセッションを消せば確実</strong>（Cookieを消すだけでは不十分）。API（ステートレス指向）とは相性が良くない面があります（→ 第3章 REST の「ステートレス」参照）。</p></div>
+<hr />
+<h2>4. トークン方式 JWT —— API・モバイル向き</h2>
+<p>セッション方式の「サーバーが状態を記憶する」という負担を減らすため、<strong>トークン</strong>方式が登場しました。代表が <strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）です。</p>
+<h3>トークンとは</h3>
+<p>ログイン成功時、サーバーは<strong>トークン</strong>（入場券のような文字列）を発行します。以降、クライアントはリクエストのたび<strong>このトークンを添えて</strong>送ります。サーバーはトークンを見て「誰か」「権限」を判断します。</p>
+<h3>JWT の特徴</h3>
+<p>JWT は、<strong>署名付き</strong>の JSON データです。中身は大きく3部構成:</p>
+<pre><code>ヘッダ.ペイロード.署名
+</code></pre>
+<ul>
+<li><strong>ペイロード</strong>: 「誰か」「権限」「有効期限」などの情報（JSON）</li>
+<li><strong>署名</strong>: サーバーだけが持つ鍵で作った<strong>改ざん検知用のハンコ</strong></li>
+</ul>
+<div class="callout callout-danger"><p>💡 ペイロードは<strong>誰でも読めます</strong>（Base64でエンコードされているだけ・暗号化ではない）。重要なのは「<strong>署名</strong>があることで<strong>改ざんを検知できる</strong>」点。鍵を持たない攻撃者は、署名付きの正しいトークンを作れません。</p></div>
+<h3>メリットとデメリット</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>メリット</th>
+<th>デメリット</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>サーバーが状態を記憶しなくてよい</strong>（ステートレス）</td>
+<td>発行後の<strong>無効化が難しい</strong>（有効期限が切れるまで有効）</td>
+</tr>
+<tr>
+<td>モバイル・他サービス連携に向く</td>
+<td>ペイロードは読めるので<strong>機密情報を入れてはいけない</strong></td>
+</tr>
+<tr>
+<td>複数台構成でスケールしやすい</td>
+<td>扱いを間違えると重大な脆弱性になる（→ 後述）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>無効化の工夫</strong>: JWTは「発行したら期限まで有効」が基本ですが、実運用では「<strong>短命のアクセストークン</strong>＋<strong>長命のリフレッシュトークン</strong>」の2段構えにし、リフレッシュトークンをサーバー側で無効化できるようにする等の工夫がよく使われます。</p></div>
+<div class="callout callout-warn"><p>⚠ <strong>JWTの落とし穴</strong>: 「署名検証をしない」「<code>alg: none</code>攻撃を許す」「機密情報をペイロードに入れる」等の実装ミスが、<strong>深刻な認証バイパス</strong>につながります。ライブラリを正しく使い、検証は必ず行います。</p></div>
+<hr />
+<h2>5. OAuth / OpenID Connect —— 「Googleでログイン」の正体</h2>
+<p>「<strong>Googleでログイン</strong>」「<strong>GitHubでログイン</strong>」を見たことがあるでしょう。これの正体が <strong>OAuth</strong>（オース／通称「オーオース」も／<code>OAuth 2.0</code>）と、その上に乗る <strong>OpenID Connect</strong>（オープンアイディー・コネクト／<code>OIDC</code>）です。</p>
+<h3>OAuth は「委譲」</h3>
+<p>OAuth の核心は<strong>委譲（いじょう）</strong>——「あなたの代わりに、限られたことだけ、外部のサービスに許可する」仕組みです。</p>
+<p>例: あなたが「写真印刷サービス」にGoogleフォトの写真への<strong>アクセスを許可</strong>する。</p>
+<ul>
+<li>写真印刷サービスに<strong>パスワードを渡すわけではない</strong>（これが重要）</li>
+<li>「<strong>写真を読む権限だけ</strong>」を、<strong>一時的・限定的に</strong>許可する</li>
+<li>いつでも<strong>取り消せる</strong></li>
+</ul>
+<pre><code>あなた  →  Google: 「写真印刷サービスに写真を読む権限を渡して」
+Google  →  写真印刷サービス: 「写真を読むためのアクセストークン」を発行
+写真印刷サービス  →  GoogleフォトAPI: トークンを使って写真を取得
+</code></pre>
+<h3>OpenID Connect は「認証」</h3>
+<p>OAuth（委譲＝認可）の上に、「<strong>この人はGoogleアカウントの誰か</strong>」という<strong>認証</strong>の仕組みを乗せたのが <strong>OIDC</strong>。「Googleでログイン」のボタンを押すと、Googleが「この人はこの人です」と**保証（IDトークン発行）**してくれます。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>OAuth 2.0</th>
+<th>OpenID Connect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td><strong>認可</strong>（委譲: 限られた権限を貸す）</td>
+<td><strong>認証</strong>（この人は誰か）</td>
+</tr>
+<tr>
+<td>よく使う場面</td>
+<td>「アプリに〇〇へのアクセスを許可」</td>
+<td>「Googleでログイン」</td>
+</tr>
+<tr>
+<td>関係</td>
+<td>基盤（下回り）</td>
+<td>OAuth の上に認証を乗せたもの</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p>⚠ <strong>「外部に任せて安心」ではない</strong>: OIDC を使う側は、受け取った<strong>IDトークンの署名と内容（発行者・有効期限・宛先等）を必ず検証</strong>します。検証をサボると、偽のIDトークンで成りすまされる事故に繋がります。「成熟した基盤に任せる」選択は有効ですが、<strong>検証の責任は使う側にある</strong>点に注意。</p></div>
+<hr />
+<h2>6. 多要素認証 MFA —— 「1つの鍵」に頼らない</h2>
+<p>パスワードだけだと、<strong>1つ漏れただけで侵入される</strong>リスクがあります。これを減らすのが<strong>多要素認証</strong>（<code>MFA</code>／エムエフエー）です。</p>
+<h3>認証の3要素</h3>
+<p>MFA は、以下の<strong>異なる性質</strong>の要素を組み合わせます:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>例</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>知識</strong>（知っていること）</td>
+<td>パスワード・暗証番号</td>
+<td>忘れたら困る・他人に教えうる</td>
+</tr>
+<tr>
+<td><strong>所有</strong>（持っていること）</td>
+<td>スマホ（SMS/アプリ）・セキュリティキー</td>
+<td>物理的に必要・なくすと困る</td>
+</tr>
+<tr>
+<td><strong>生体</strong>（本人であること）</td>
+<td>指紋・顔・虹彩</td>
+<td>忘れない・なくさないが変更不可</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 「所有」の代表格として<strong>パスキー</strong>（<code>FIDO2</code> / <code>WebAuthn</code> 等の技術）が近年広がっています。パスワードをなくし、<strong>フィッシング（偽サイト騙し）に強い</strong>のが特徴。注目される「パスワードレス」の方向です。</p></div>
+<p>「パスワード（知識）＋ スマホのワンタイムコード（所有）」のように、<strong>異なる性質</strong>を2つ以上組み合わせるのが MFA の基本。「同じ性質」を2つ（例: パスワード＋もう一つパスワード）は、<strong>同一要素の重複</strong>で MFA の意味が薄れます。</p>
+<div class="callout callout-tip"><p>💡 <strong>2FA</strong>（ツーエフエー／二要素認証）は MFA の「2つ組み合わせ」版。現場では <strong>2FA / MFA</strong> ほぼ同義で使われます。</p></div>
+<h3>なぜ効果的か</h3>
+<p>パスワードが漏洩しても、**スマホ（所有）**がなければログインできません。攻撃者は「パスワードを知っている」だけでなく「物理的にスマホも手に入れる」必要があり、難易度が跳ね上がります。</p>
+<hr />
+<h2>7. よくある落とし穴と、なぜ「作法」なのか</h2>
+<h3>❌ やってはいけないこと</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>落とし穴</th>
+<th>何が起きるか</th>
+<th>正しい対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>パスワードを平文で保存</strong></td>
+<td>DB漏洩ですべてバレる</td>
+<td><strong>ハッシュ化</strong>（<code>bcrypt</code>等の専用アルゴリズム）して保存（→ 第4章）</td>
+</tr>
+<tr>
+<td><strong>認可チェックを忘れる</strong>（IDOR）</td>
+<td>他人データが見える</td>
+<td>「<strong>自分のリソースか・権限があるか</strong>」を毎操作で確認</td>
+</tr>
+<tr>
+<td><strong>トークンをlocalStorage等に無防備に置く</strong></td>
+<td>XSS（スクリプト注入）で盗まれる</td>
+<td>保管場所を吟味（<code>HttpOnly</code> Cookie 等・用途で判断）</td>
+</tr>
+<tr>
+<td><strong>HTTPSを使わない</strong></td>
+<td>通信を盗聴されてトークン・パスワード漏洩</td>
+<td><strong>本番は必ずHTTPS</strong>（→ 第4章: 暗号化通信）</td>
+</tr>
+<tr>
+<td><strong>JWTの署名検証をしない</strong></td>
+<td>任意のトークンで成りすませる</td>
+<td>ライブラリを正しく使い<strong>必ず検証</strong></td>
+</tr>
+<tr>
+<td><strong>権限を「フロントだけ」で隠す</strong></td>
+<td>APIを直接叩かれると突破される</td>
+<td><strong>サーバー側で必ず認可チェック</strong>（フロントの隠蔽はUX用）</td>
+</tr>
+<tr>
+<td><strong>CSRF対策をしない</strong>（Cookie方式）</td>
+<td>悪意あるサイトから勝手にリクエスト送られる</td>
+<td><code>SameSite</code>属性・CSRFトークン等で対策</td>
+</tr>
+<tr>
+<td><strong>ログイン試行を無制限に許す</strong></td>
+<td>ブルートフォース（総当たり）で破られる</td>
+<td><strong>試行回数制限・ロック</strong>（→ 第3章: レート制限）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>✅ 認証・認可の設計の作法</h3>
+<ol>
+<li><strong>認証と認可を明確に分ける</strong> —— 「誰か」と「何をしてよいか」は別のレイヤー</li>
+<li><strong>認可チェックはサーバー側で毎回</strong> —— フロントのUI制御だけでは不十分</li>
+<li><strong>パスワードは絶対ハッシュ化</strong>（<code>bcrypt</code>等・生保存・可逆復元しない）</li>
+<li><strong>HTTPSを必須にする</strong>（本番での平文通信は論外）</li>
+<li><strong>MFAで「1つの鍵」に頼らない</strong>（知識＋所有等の組み合わせ）</li>
+<li><strong>成熟した基盤（OIDC等）の活用を検討</strong>（自作リスクの回避・ただし検証は必須）</li>
+<li><strong>ブルートフォース対策</strong>（試行回数制限・ロック）を忘れない</li>
+</ol>
+<div class="callout callout-warn"><p>💡 <strong>CSRF</strong>（シーエスアールエフ／<code>Cross-Site Request Forgery</code>／「偽造リクエスト」）: ユーザーがログイン中に、悪意ある別サイトが「勝手にリクエストを送る」攻撃。Cookieが自動送信される仕組みを悪用するため、<strong>Cookie方式では特に注意</strong>が必要です。</p></div>
+<h3>面接・実務での意味</h3>
+<div class="callout callout-info"><p>「認証と認可の違い、説明できますか？」</p></div>
+<p>この質問は、<strong>「安全な設計ができるか」<strong>を問う一番手軽な検査です。「同じだろ」と答える人は、IDOR等の認可不備を作りがちです。逆に「<strong>認証は誰か・認可は何をしてよいか</strong>」と即答でき、さらに「認可チェックは</strong>サーバー側で毎回必須</strong>」と言える人は、現場で信頼されます。</p>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li><strong>認証</strong>（Authentication）は「<strong>誰か</strong>」・<strong>認可</strong>（Authorization）は「<strong>何をしてよいか</strong>」。<strong>別の問題</strong>として分けて設計する</li>
+<li><strong>セッション・Cookie</strong> はブラウザ型の古典（ステートフル・ログアウト確実）・<strong>JWT</strong> はAPI向き（ステートレス・署名付き・無効化は工夫が要る）</li>
+<li><strong>OAuth</strong> は委譲（限られた権限を貸す）・<strong>OIDC</strong> はその上の認証（「Googleでログイン」の正体・検証は必須）</li>
+<li><strong>MFA</strong> は知識・所有・生体の<strong>異なる性質</strong>を組み合わせて「1つの鍵」に頼らない（パスキー等でパスワードレスも）</li>
+<li><strong>認可チェックはサーバー側で毎回必須</strong>・パスワードは<strong>ハッシュ化</strong>・<strong>HTTPS必須</strong>・CSRF/ブルートフォース対策も忘れずに</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: 誰がアクセスしてよいかの「認証・認可」が見えました。次は、開発現場で「環境を丸ごと運ぶ」もう一つの基盤技術——**コンテナ（Docker）**を扱います。第6章では、開発環境と本番環境の差異をなくす作法を学びます。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="04-env-secrets.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔐 環境変数・シークレット管理</span>
+            </a>
+            
+            
+            <a href="14-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
