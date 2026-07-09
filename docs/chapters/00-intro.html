@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>はじめに — 開発の常識・作法</title>
+    <meta name="description" content="はじめに — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="はじめに — 開発の常識・作法">
+    <meta property="og:description" content="はじめに — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/00-intro.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            
+            <a href="01-ci-cd.html" class="nav-next">CI/CD →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>00 はじめに — この教科書の対象読者と使い方</h1>
+<div class="callout callout-info"><p>独学で開発を進めてきた人が、現場で「そろそろ当たり前」とされる常識を体系的につなぎ直すための教科書</p></div>
+<hr />
+<h2>誰のための教科書か</h2>
+<p>この教科書は、<strong>AIツールを使いこなしながら開発をしてきた人が、点々としていた知識を一本の線でつなぎ直す</strong>ために書きました。</p>
+<p>たとえばこんな疑問を持ったことはありませんか：</p>
+<ul>
+<li>「CIが緑（成功）になっている。でも、それが何を証明しているのか正直よく分からない」</li>
+<li>「Pull Request・コンフリクト・レビューって、みんな当然のように話すけれど、正確な作法が見えない」</li>
+<li>「Docker・SQLite・キャッシュ……それぞれ何に使うかは分かる。でも『いつ・どれを選ぶか』の判断軸がない」</li>
+<li>「面接で『CI回してますか？』と聞かれて、自信を持って答えられなかった」</li>
+</ul>
+<p>こうした「なんとなく使っているけれど、人に正確に説明はできない」を、<strong>開発現場で前提とされるレベル</strong>まで引き上げるのが本書の目的です。</p>
+<hr />
+<h2>この教科書の特徴</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>特徴</th>
+<th>どう違うか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🧩 <strong>盲点を埋める</strong></td>
+<td>入門書が省きがちな「現場の暗黙の常識」に焦点を当てる</td>
+</tr>
+<tr>
+<td>🗣️ <strong>面接・実務で効く</strong></td>
+<td>ほかの開発者と話が通じる・面接官の質問に即答できる知識のセット</td>
+</tr>
+<tr>
+<td>💡 <strong>「なぜ」を書く</strong></td>
+<td>暗記でなく理解。「なぜそうするのか」を毎回添える</td>
+</tr>
+<tr>
+<td>📱 <strong>すき間時間向け</strong></td>
+<td>スマホから読める・ダークモード対応</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>どう読むか</h2>
+<ul>
+<li><strong>通読して身につける</strong>のが主な使い方です。第1章から順に読むと、知識がつながっていきます。</li>
+<li>各章は「<strong>概念 → なぜ重要か → 具体例</strong>」の順で構成しています。</li>
+<li>専門用語は初出時にかならず平易な言い換えを併記します。</li>
+<li>最終章「用語集」は、さっと引ける辞書として独立させてあります。</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>Tip</strong>: つまずいたら、その章の冒頭の要約だけ読んで次に進んでも構いません。あとから戻ってきて深掘りすれば十分です。</p></div>
+<hr />
+<h2>全体構成（全14章）</h2>
+<p>本書は3つの重要度に分かれています。まず 🔴 必須章から読むと、現場の会話の大部分がカバーできます。</p>
+<h3>🔴 必須（面接・実務で即聞かれる）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>テーマ</th>
+<th>一言でいうと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>CI/CD</td>
+<td>コードをpushするたび機械が自動で検査する仕組みと「緑」の意味</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Git &amp; GitHub</td>
+<td>コードの変更履歴を管理し、チームで協働する作法</td>
+</tr>
+<tr>
+<td>3</td>
+<td>API・エンドポイント</td>
+<td>プログラム同士が通信する窓口の約束事</td>
+</tr>
+<tr>
+<td>4</td>
+<td>環境変数・シークレット管理</td>
+<td>パスワードやAPIキーをコードに直接書かない仕組み</td>
+</tr>
+<tr>
+<td>5</td>
+<td>認証・認可</td>
+<td>「あなたは誰ですか」「何を許可しますか」を判定する仕組み</td>
+</tr>
+</tbody>
+</table></div>
+<h3>🟡 推奨（知っておくと理解が深まる）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>テーマ</th>
+<th>一言でいうと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td>コンテナ（Docker）</td>
+<td>アプリを「環境ごと箱詰め」してどこでも同じように動かす技術</td>
+</tr>
+<tr>
+<td>7</td>
+<td>データベース適材適所</td>
+<td>SQLite・PostgreSQL等を何で選ぶかの判断軸</td>
+</tr>
+<tr>
+<td>8</td>
+<td>ログ・モニタリング</td>
+<td>動いているシステムの状態を観察する作法</td>
+</tr>
+<tr>
+<td>9</td>
+<td>キャッシュ・非同期処理</td>
+<td>処理を速くする・後回しにする技術の使い分け</td>
+</tr>
+<tr>
+<td>10</td>
+<td>バージョニング・パッケージ管理</td>
+<td>「1.2.3」の意味と、依存ライブラリの管理</td>
+</tr>
+<tr>
+<td>11</td>
+<td>デバッグの作法</td>
+<td>バグの原因を論理的に切り分ける手順</td>
+</tr>
+<tr>
+<td>12</td>
+<td>開発プロセス・品質</td>
+<td>テスト・Lint・型チェックで品質を保つ仕組み</td>
+</tr>
+<tr>
+<td>13</td>
+<td>レビュー文化・設計</td>
+<td>コードレビューとアーキテクチャの基本</td>
+</tr>
+</tbody>
+</table></div>
+<h3>🟢 任意（必要な時に引く）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>章</th>
+<th>テーマ</th>
+<th>一言でいうと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14</td>
+<td>用語集</td>
+<td>開発でよく出る言葉をさっと引ける辞書</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p>⚠ 第2章以降は順次追加中です。まずは <strong>第1章「CI/CD」</strong> からお読みください。</p></div>
+<hr />
+<h2>補足：既存のチートシート群との関係</h2>
+<p>著者は個別テーマの「引く系」チートシート（Gitコマンド一覧・Docker早見表 等）も別途公開しています。本書はそれらを<strong>読んで理解する統合教科書</strong>として位置づけ、各章から関連チートシートへ「詳しくはこちら」とリンクします。</p>
+<ul>
+<li><strong>さっと引きたい</strong> → チートシート（<a href="https://fukukei23.github.io/guides/">技術ガイド集</a>）</li>
+<li><strong>順を追って理解したい</strong> → 本書</li>
+</ul>
+<p>それでは、第1章「CI/CD」から始めましょう。</p>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            
+            <a href="01-ci-cd.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">🔄 CI/CD</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
