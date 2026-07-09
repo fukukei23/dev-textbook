@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データベース適材適所 — 開発の常識・作法</title>
+    <meta name="description" content="データベース適材適所 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="データベース適材適所 — 開発の常識・作法">
+    <meta property="og:description" content="データベース適材適所 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/07-database.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="05-auth.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔑</span>
+            認証・認可
+        </a>
+        
+        <a href="06-docker.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📦</span>
+            コンテナ（Docker）
+        </a>
+        
+        <a href="07-database.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🗄️</span>
+            データベース適材適所
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="06-docker.html" class="nav-prev">← コンテナ（Docker）</a>
+            
+            
+            <a href="14-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: データベース適材適所
+icon: 🗄️
+card_desc: データを保存する道具の選び方 — RDB/NoSQL・SQLite vs PostgreSQL・何で選ぶかの判断軸
+slug: 07-database</h2>
+<h1>07 データベース適材適所 — SQLite・PostgreSQL 等、何で選ぶかの判断軸</h1>
+<div class="callout callout-info"><p>「データベース」と一口に言っても、<strong>目的によって最適な道具は違います</strong>。小さなツールには SQLite、大規模サービスには PostgreSQL。この章では、「何で選ぶか」の判断軸を根本から理解します。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p><strong>データベース</strong>は、アプリが扱うデータを<strong>保存・検索・更新・削除</strong>する仕組みです。しかし「1つの万能なデータベース」は存在しません。<strong>データの規模・同時書き込みの量・データの形・運用コスト</strong>によって、最適な道具が変わります。この章の核心は、<strong>「どの場面でどれを選ぶか」の判断軸</strong>を持つことです。</p>
+<hr />
+<h2>1. なぜ「データベースの選び方」があるのか</h2>
+<p>まず、そもそもなぜデータベースが必要か。アプリのデータをただのテキストファイルに保存してはいけないのでしょうか。</p>
+<p>テキストファイルでの保存は、小規模なら動きます。しかし：</p>
+<ul>
+<li>「ユーザーID=123 の注文だけ、新しい順で20件」のような<strong>検索</strong>が遅くなる</li>
+<li>2人が同時に書き込むと<strong>データが壊れる</strong>（同時書き込みの問題）</li>
+<li>「金額×個数=合計」のような<strong>整合性</strong>を保つ仕組みがない</li>
+</ul>
+<p>これらを解決するのがデータベースです。データの<strong>保存・検索・整合性</strong>を、安全かつ高速に担う専用の仕組みです。</p>
+<div class="callout callout-tip"><p>💡 <strong>SQL</strong>（エスキューエル／<code>Structured Query Language</code>）は、<strong>RDB</strong>（後述）を操作するための共通言語です。「このデータを取得して」「このデータを更新して」を、データベースの種類を問わずほぼ共通の文法で書けます。</p></div>
+<h3>なぜ「選ぶ」必要があるのか</h3>
+<p>ここが重要です。<strong>すべての場面で最適な「1つのデータベース」はありません</strong>。</p>
+<ul>
+<li><strong>小さなツール</strong>に、大規模向けの重いデータベースを導入すると、<strong>運用コスト</strong>で疲弊します</li>
+<li><strong>大規模サービス</strong>に、小規模向けのデータベースを使うと、<strong>同時書き込みで詰まります</strong></li>
+<li><strong>形が決まったデータ</strong>と<strong>形がころころ変わるデータ</strong>では、向く道具が違います</li>
+</ul>
+<p>つまり**「適材適所」**——目的に応じて最適な道具を選ぶ、という発想そのものが、この章のテーマです。</p>
+<hr />
+<h2>2. データベースの2大分類 —— RDB と NoSQL</h2>
+<p>データベースは大きく2つに分かれます。</p>
+<h3>RDB（リレーショナルデータベース）</h3>
+<p><strong>RDB</strong>（アールディービー／<code>Relational Database</code>／リレーショナルデータベース）は、データを**表（テーブル）**で管理する方式です。Excelのシートのように、**行（レコード）と列（カラム）**でデータを整理します。</p>
+<ul>
+<li>あらかじめ<strong>列の形（スキーマ）を決めて</strong>からデータを入れる</li>
+<li><strong>SQL</strong> で操作する</li>
+<li>表と表を**関連（リレーション）**づけられる（「注文」表と「ユーザー」表を紐づける等）</li>
+<li>データの<strong>整合性を保つ仕組み</strong>（トランザクション・後述）が強力</li>
+</ul>
+<h3>NoSQL（非リレーショナル）</h3>
+<p><strong>NoSQL</strong>（ノーエスキューエル／「SQLでない」の意）は、表以外の形でデータを扱う方式の総称です。「<strong>事前に形を決めなくてよい・柔軟</strong>」反面、<strong>厳密な整合性</strong>は RDB ほど強くないことが多いです。</p>
+<p>代表的な種類:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>何を保存するか</th>
+<th>代表例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ドキュメント型</strong></td>
+<td>JSON のような柔軟なデータ（形が変わる）</td>
+<td><code>MongoDB</code>（モンゴディービー）</td>
+</tr>
+<tr>
+<td><strong>キー・バリュー型</strong></td>
+<td>「鍵」に対する「値」の高速な取得</td>
+<td><code>Redis</code>（レディース）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 現実の多くのサービスは<strong>両方を組み合わせて</strong>使います。メインデータは RDB で整合性を保ちつつ、一時キャッシュやアクセスカウント等の「高速に読み書きしたい」部分は Redis のような NoSQL で補う、といった使い分けです（→ 第9章 キャッシュ）。</p></div>
+<hr />
+<h2>3. 🔑 RDB の中の適材適所 —— SQLite vs PostgreSQL</h2>
+<p>ここが本章の核心の1つ目です。<strong>RDB の中でも、規模によって選ぶ道具が変わります</strong>。代表的な2つを比較します。</p>
+<h3>SQLite —— 「ファイル1つ」の軽量版</h3>
+<p><strong>SQLite</strong>（エスキューライト）は、データベース全体が<strong>1つのファイル</strong>に収まる、極めて軽量な RDB です。</p>
+<ul>
+<li><strong>サーバーが不要</strong>（アプリに組み込んで使える）</li>
+<li>導入が<strong>圧倒的に簡単</strong>（ファイルを置くだけ）</li>
+<li>ただし<strong>同時書き込みに弱い</strong>（大勢がいっせいに書き込む用途には向かない）</li>
+</ul>
+<h3>PostgreSQL / MySQL —— サーバー型の本格版</h3>
+<p><strong>PostgreSQL</strong>（ポストグレス・キューエル／通称「ポストグレス」）や <strong>MySQL</strong>（マイエスキューエル）は、<strong>専用のサーバー</strong>として動かす本格的な RDB です。</p>
+<ul>
+<li><strong>同時書き込みに強い</strong>（大勢が同時に書き込める）</li>
+<li>大規模データの<strong>高速な検索</strong>や複雑な集計が得意</li>
+<li>ただし<strong>運用コストがかかる</strong>（サーバーを立て・監視・バックアップ等の管理が要る）</li>
+</ul>
+<h3>比較表</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>SQLite</th>
+<th>PostgreSQL / MySQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>形態</td>
+<td><strong>ファイル1つ</strong>（サーバー不要）</td>
+<td><strong>サーバー型</strong>（専用プロセス）</td>
+</tr>
+<tr>
+<td>導入</td>
+<td>圧倒的に簡単</td>
+<td>サーバー構築・管理が要る</td>
+</tr>
+<tr>
+<td>同時書き込み</td>
+<td><strong>弱い</strong>（ロックが発生しやすい）</td>
+<td><strong>強い</strong>（多数の同時書き込み可）</td>
+</tr>
+<tr>
+<td>向く場面</td>
+<td>個人ツール・プロトタイプ・組込・テスト</td>
+<td><strong>本番のWebサービス</strong>・大規模</td>
+</tr>
+<tr>
+<td>運用コスト</td>
+<td>ほぼゼロ</td>
+<td>監視・バックアップ等の手間あり</td>
+</tr>
+</tbody>
+</table></div>
+<h3>例えていうと: 手帳と金庫</h3>
+<ul>
+<li><strong>SQLite</strong>は「<strong>自分用の手帳</strong>」。すぐ開けて・すぐ書けて便利ですが、複数人が同時に同じページに書き込むとぶつかります。</li>
+<li><strong>PostgreSQL/MySQL</strong>は「<strong>職場の金庫（共有金庫）</strong>」。管理人（サーバー）がいて、複数人が順番に整理して出入れできますが、管理人を雇う（運用する）手間がかかります。</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>判断の目安</strong>: 「<strong>同時に大勢が書き込む本番サービス</strong>か？」が分かれ目です。個人開発・プロトタイプ・テストなら <strong>SQLite</strong> で十分。不特定多数が同時に書き込む本番Webサービスなら <strong>PostgreSQL/MySQL</strong> が基本です。</p></div>
+<hr />
+<h2>4. NoSQL の代表 —— 用途で選ぶ</h2>
+<p>RDB が「万能で堅実な本棚」なら、NoSQL は「<strong>特定の用途に特化した専用道具</strong>」です。</p>
+<h3>ドキュメント型 MongoDB —— 形が変わるデータに</h3>
+<p><strong>MongoDB</strong> は、<code>JSON</code>（→ 第3章）のような<strong>形がころころ変わるデータ</strong>を保存するのに向きます。事前に列（スキーマ）を決めなくてよいので、「今後データの項目が増えそう・形が固まっていない」場面で柔軟です。</p>
+<h3>キー・バリュー型 Redis —— 超高速な読み書き</h3>
+<p><strong>Redis</strong> は、「<strong>鍵に対する値</strong>」を<strong>超高速</strong>で読み書きするのに特化しています。ただし<strong>電源を切ると消える可能性がある</strong>（メモリに置くのが基本）ため、<strong>消えて困るメインデータ</strong>ではなく、<strong>一時的なデータ</strong>（キャッシュ・一時セッション等）向けです（→ 第9章 キャッシュ）。</p>
+<div class="callout callout-warn"><p>⚠ <strong>NoSQL = RDB より優れている、ではない</strong>: NoSQL は<strong>特定の用途で高速・柔軟</strong>ですが、<strong>厳密な整合性</strong>や**複雑な関連（リレーション）**では RDB に分があります。「新しいから NoSQL」で選ぶのは禁物です。<strong>用途に合うか</strong>で選ぶのが適材適所です。</p></div>
+<hr />
+<h2>5. 🔑 「何で選ぶか」の判断軸</h2>
+<p>ここが本章の核心の2つ目です。具体的な製品名を覚えるより、<strong>「どの軸で選ぶか」の判断フレーム</strong>を持つ方が応用が効きます。以下の5つの軸で、目的を整理します:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>判断軸</th>
+<th>問うべきこと</th>
+<th>選び方の目安</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>規模</strong></td>
+<td>データは数十万件？ 億件？</td>
+<td>大規模 → サーバー型 RDB / NoSQL</td>
+</tr>
+<tr>
+<td><strong>同時書き込み</strong></td>
+<td>同時に書き込む人は1人？ 何千人？</td>
+<td>大人数同時 → PostgreSQL/MySQL・Redis</td>
+</tr>
+<tr>
+<td><strong>データの形</strong></td>
+<td>形は固定？ ころころ変わる？</td>
+<td>固定 → RDB／柔軟 → ドキュメント型</td>
+</tr>
+<tr>
+<td><strong>運用コスト</strong></td>
+<td>サーバー管理できる？ 手軽さ優先？</td>
+<td>手軽さ → SQLite／管理可 → サーバー型</td>
+</tr>
+<tr>
+<td><strong>検索の複雑さ</strong></td>
+<td>複雑な関連・集計？ 単純な取得？</td>
+<td>複雑 → RDB／単純高速 → Redis</td>
+</tr>
+</tbody>
+</table></div>
+<h3>補足: トランザクションと ACID</h3>
+<p>RDB の強みの1つが<strong>トランザクション</strong>（<code>transaction</code>／「一連の処理を1つのまとまりにする」仕組み）です。「送金」なら「Aの口座から減らす」＋「Bの口座に増やす」を<strong>セットで成功か、両方なかったことか</strong>にできます。この<strong>整合性の性質</strong>を <strong>ACID</strong>（アシッド）と呼びます:</p>
+<ul>
+<li><strong>原子性</strong>（Atomicity）: 全体で成功か・さもなければ全てなかったことに</li>
+<li><strong>一貫性</strong>（Consistency）: 常にルールを満たす状態を保つ</li>
+<li><strong>隔離性</strong>（Isolation）: 同時実行が互いに干渉しない</li>
+<li><strong>耐久性</strong>（Durability）: 保存したら電源が切れても消えない</li>
+</ul>
+<div class="callout callout-tip"><p>💡 「<strong>お金など絶対に狂ってはいけないデータ</strong>」には、ACID を強く持つ RDB が基本です。「<strong>少し狂っても速度優先</strong>」なデータ（アクセスカウント等）には、緩い整合性で高速な NoSQL も選択肢に入ります。<strong>何を優先するか</strong>で選ぶ、という具体例です。</p></div>
+<hr />
+<h2>6. なぜ「適材適所」が開発の作法なのか</h2>
+<p>ここまでを読むと、データベース選びが「名前を知っているか」でなく**「目的に合わせて判断できるか」**の問題だと分かります。</p>
+<h3>作法として位置づけられる理由</h3>
+<ol>
+<li><strong>過剰選びを避ける</strong> —— 小さなツールに大規模向けDBを選ぶと、運用コストだけで疲弊する</li>
+<li><strong>不足選びを避ける</strong> —— 大規模サービスに軽量DBを使うと、成長した時に詰まる</li>
+<li><strong>両方を組み合わせる</strong> —— 現実のサービスは**RDB + キャッシュ層（Redis）**等の組み合わせが普通</li>
+</ol>
+<h3>面接・実務での意味</h3>
+<div class="callout callout-info"><p>「データベース、何を使っていますか？ なぜそれを選んだのですか？」</p></div>
+<p>この質問は、単に「名前を言えるか」でなく**「選んだ理由を説明できるか」<strong>を聞いています。「規模が小さいので SQLite で運用コストを抑えた」「同時書き込みが多い本番なので PostgreSQL にした」と</strong>理由付きで選べる**人が、現場で信頼されます。</p>
+<div class="callout callout-warn"><p>💡 <strong>ORM</strong>（オーアールエム／<code>Object-Relational Mapping</code>／オブジェクト関係マッピング）: プログラムのコードとデータベースの間を橋渡しし、<strong>SQL を直接書かずに</strong>データ操作できる仕組み。RDB の操作を書きやすくする定番の道具です。ただし「ORM を通すと何が起きているか」を理解しておかないと、<strong>遅いクエリ</strong>を生むことがある点に注意。</p></div>
+<hr />
+<h2>7. よくある落とし穴と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>落とし穴</th>
+<th>何が起きるか</th>
+<th>正しい対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>最初から大規模向けを選ぶ</strong></td>
+<td>小規模なのに運用コストで疲弊する</td>
+<td>まずは<strong>SQLite 等の軽量版</strong>で始め、必要になったら移行を検討</td>
+</tr>
+<tr>
+<td><strong>SQLite を大規模同時書き込みに使う</strong></td>
+<td>ロックが頻発して詰まる</td>
+<td>同時書き込みが多い本番は<strong>サーバー型</strong>（PostgreSQL 等）へ</td>
+</tr>
+<tr>
+<td><strong>RDB に無理やり非構造データを詰める</strong></td>
+<td>表が複雑化し、運用が破綻する</td>
+<td>形が柔軟なデータは<strong>ドキュメント型</strong>も検討</td>
+</tr>
+<tr>
+<td><strong>インデックスを貼らない</strong></td>
+<td>検索が遅い（全件走査になる）</td>
+<td>よく検索する列に<strong>インデックス</strong>を設定する</td>
+</tr>
+<tr>
+<td><strong>インデックスを貼りすぎる</strong></td>
+<td>今度は<strong>書き込み</strong>が遅くなる</td>
+<td>検索速く＝書き込み遅、の<strong>トレードオフ</strong>を理解して最小限に</td>
+</tr>
+<tr>
+<td><strong>バックアップを怠る</strong></td>
+<td>障害・誤操作でデータが消えて戻せない</td>
+<td><strong>定期的なバックアップ</strong>と<strong>復元確認</strong>を必ず仕組み化</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>インデックス</strong>（<code>index</code>／「索引」）: 本の巻末の「索引」と同じ仕組み。特定の列から高速にデータを見つけられるようにする仕組みです。ただし<strong>索引を作る・更新するコスト</strong>もかかるため、「検索が速くなる＝無条件で良い」ではありません。</p></div>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li><strong>データベース</strong>はデータの保存・検索・整合性を担う仕組み。<strong>万能な1つは存在せず</strong>、目的で選ぶのが適材適所</li>
+<li><strong>RDB</strong>（表で管理・SQL・整合性強）と <strong>NoSQL</strong>（柔軟・特定用途で高速）の2大分類</li>
+<li><strong>RDB の中</strong>でも: <strong>SQLite</strong>（ファイル1つ・軽量・同時書き込み弱）vs <strong>PostgreSQL/MySQL</strong>（サーバー型・同時書き込み強・運用コスト）</li>
+<li><strong>NoSQL</strong> は用途別: <strong>MongoDB</strong>（形が変わるデータ）・<strong>Redis</strong>（超高速な一時データ）</li>
+<li>判断軸は<strong>規模・同時書き込み・データの形・運用コスト・検索の複雑さ</strong>の5つ</li>
+<li>お金等の<strong>絶対に狂ってはいけないデータ</strong>は <strong>ACID</strong> の強い RDB が基本</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: データを「保存する」仕組みが見えました。次は、動いているシステムの<strong>状態を観察する</strong>作法です。第8章では、ログ・モニタリングにより「いま正常に動いているか・問題が起きているか」を把握する方法を扱います。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="06-docker.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">📦 コンテナ（Docker）</span>
+            </a>
+            
+            
+            <a href="14-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
