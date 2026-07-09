@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用語集 — 開発の常識・作法</title>
+    <meta name="description" content="用語集 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="用語集 — 開発の常識・作法">
+    <meta property="og:description" content="用語集 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/14-glossary.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="04-env-secrets.html" class="nav-prev">← 環境変数・シークレット管理</a>
+            
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: 用語集
+icon: 📖
+card_desc: 本書で出た言葉を読み仮名（現場の通称）付きでさっと引ける辞書
+slug: 14-glossary</h2>
+<h1>14 用語集 — 読み方が分からない言葉を引く辞書</h1>
+<div class="callout callout-info"><p>専門用語は「<strong>読み方</strong>」も含めて最初の壁です。「クロンだと思ってたらクーロンだった」みたいな罠がたくさんあります。本書で使った用語を、<strong>読み仮名（現場で大体こう発音する、という通称）付き</strong>でまとめました。</p></div>
+<h2>この辞書の使い方</h2>
+<ul>
+<li><strong>読み仮名は通称です</strong>。正式な発音でなく「現場で通る発音」を載せています（例: <code>Cron</code> は「クロン」に見えますが、現場では「<strong>クーロン</strong>」が通説）。複数読みがある場合は併記しました。</li>
+<li><strong>読み仮名の あいうえお順</strong> で並んでいます。英字略語（<code>CI</code>・<code>API</code> など）も「<strong>シーアイ</strong>」「<strong>エーピーアイ</strong>」の読みで行に並ぶので、似た略語を見比べられます。</li>
+<li><strong>〔第○章〕</strong> は、その用語を詳しく解説した本編の章への道しるべです。</li>
+<li><strong>🔖 筆者の実例</strong> の枠（コラム）がある用語は、汎用解説に加えて<strong>自作プロジェクトでの使われ方</strong>を補足しています。</li>
+</ul>
+<hr />
+<h2>あ行</h2>
+<h3>あ</h3>
+<ul>
+<li><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔第3章〕</li>
+</ul>
+<div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の予約管理システム（<code>reserve-optimizer</code>）では、予約の取得・作成・取消を行う REST API を設計し、フロントと GAS（Google Apps Script）の間を HTTP で結んでいます。</p></div>
+<h3>え</h3>
+<ul>
+<li><strong>HTTP</strong>（エイチティーティーピー／<code>HyperText Transfer Protocol</code>）— Web の通信で事実上の標準になっている「リクエストとレスポンス」の約束事。〔第3章〕</li>
+<li><strong>HTTPS</strong>（エイチティーティーピーエス）— HTTP を<strong>暗号化</strong>したもの（<code>TLS/SSL</code> で通信を守る）。パスワード等の送受信に必須。現場では「エッチティーティーピーエス」とも。〔第3章〕</li>
+<li><strong>エンドポイント</strong>（えんどぽいんと／<code>endpoint</code>）— API の「窓口（住所）」。URL のパス部分で機能を識別する。〔第3章〕</li>
+</ul>
+<hr />
+<h2>か行</h2>
+<h3>か</h3>
+<ul>
+<li><strong>カバレッジ</strong>（かばれっじ／<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔第1章〕</li>
+<li><strong>環境変数</strong>（かんきょうへんすう／<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔第4章〕</li>
+</ul>
+<div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の LLM 中継プロキシ（<code>glm-rate-proxy</code>）では、APIキー等の秘匿値をすべて <code>~/.secrets.env</code> という環境変数ファイルに一元化し、コードには「キー名」しか書かない運用で漏洩を防いでいます。</p></div>
+<h3>き</h3>
+<ul>
+<li><strong>技術的負債</strong>（ぎじゅつてきふさい／<code>technical debt</code>）— 「後で直す」と先送りされた問題が、雪だるま式に膨らんで開発を重くする現象。借金のメタファー。〔第1章〕</li>
+</ul>
+<h3>く</h3>
+<ul>
+<li><strong>GraphQL</strong>（グラフキューエル／通称「グラフキュー」も）— 「欲しいフィールドだけ」を1リクエストで指定できる API 設計スタイル。REST の代替候補。〔第3章〕</li>
+<li><strong>クライアント</strong>（くらいあんと／<code>client</code>）— サービスに<strong>リクエストを送る側</strong>（ブラウザ・アプリ等）。〔第3章〕</li>
+<li><strong>クローン</strong>（くろーん／<code>clone</code>）— リモート（GitHub 等）のリポジトリを<strong>まるごと手元にコピー</strong>する最初の1回の操作。〔第2章〕</li>
+<li><strong>CRUD</strong>（クラッド）— 作成(<code>Create</code>)・読取(<code>Read</code>)・更新(<code>Update</code>)・削除(<code>Delete</code>)の頭文字。データ操作の4基本。〔第3章〕</li>
+</ul>
+<h3>け</h3>
+<ul>
+<li><strong>GET</strong>（ゲット）— HTTP メソッドの1つ。「取得したい（ページを見る）」という意味。〔第3章〕</li>
+</ul>
+<h3>こ</h3>
+<ul>
+<li><strong>コミット</strong>（こみっと／<code>commit</code>）— 変更を「歴史の1ページ」として<strong>ローカルに保存</strong>すること。<code>commit</code> だけではまだ他の人に見えない（→ <code>push</code>）。〔第2章〕</li>
+<li><strong>コンフリクト</strong>（こんふりくと／<code>conflict</code>／「衝突」）— 同じファイルの同じ行を別々に変更してしまい、Git が自動で統合できなくなった状態。人間が解決する。〔第2章〕</li>
+</ul>
+<hr />
+<h2>さ行</h2>
+<h3>し</h3>
+<ul>
+<li><strong>CI</strong>（シーアイ／<code>Continuous Integration</code>＝継続的インテグレーション）— <code>push</code> のたび機械が自動でビルド・テスト・品質チェックを回す仕組み。〔第1章〕</li>
+</ul>
+<div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の AI エージェント基盤 <code>NexusCore</code> では、<code>Bandit</code>（セキュリティスキャン）＋ <code>pytest</code>（テスト）＋ <code>ruff</code>（リンター）を GitHub Actions で毎 <code>push</code> 時に自動実行し、CI が緑（成功）の状態を維持しています。</p></div>
+<ul>
+<li><strong>CD</strong>（シーディー／<code>Continuous Delivery / Deployment</code>＝継続的デリバリー／デプロイ）— CI で検査を通ったコードを「いつでもリリースできる状態」に保つ、または本番まで自動で届ける仕組み。〔第1章〕</li>
+<li><strong>シークレット</strong>（しーくれっと／<code>secret</code>）— 環境変数の中でも<strong>他人に見られてはいけない値</strong>（APIキー・パスワード・トークン等）。基本原則: コードに書かない・Gitに入れない・本番は専用保管場所。〔第4章〕</li>
+<li><strong>gRPC</strong>（ジーアールピーシー）— 「関数呼び出し」風の通信（RPC）を、現代風に<strong>高速・型付き</strong>にしたもの。マイクロサービス間等で使われる。〔第3章〕</li>
+<li><strong>CI/CD の「緑・赤」</strong>（みどり・あか）— GitHub 上の CI 結果の色表示。🟢緑＝全job成功・🔴赤＝どこか失敗・🟡黄（<code>in_progress</code>）＝いま実行中。〔第1章〕</li>
+</ul>
+<h3>す</h3>
+<ul>
+<li><strong>ステージ</strong>（すてーじ／<code>stage</code>／別名 <code>index</code>）— コミット前に「この変更を記録する」と<strong>まとめておく待合室</strong>。ワークツリー→ステージ→リポジトリの中間。〔第2章〕</li>
+<li><strong>ステータスコード</strong>（すてーたすこーど／<code>status code</code>）— HTTP レスポンスに含まれる<strong>3桁の数字</strong>で「結果はどうだったか」を機械的に伝える。<code>200</code>=成功・<code>401</code>=認証無効・<code>403</code>=権限なし・<code>404</code>=見つからない・<code>500</code>=サーバー内部エラー・<code>503</code>=サービス停止中。〔第3章〕</li>
+<li><strong>ステップ</strong>（すてっぷ／<code>step</code>）— GitHub Actions でジョブの中の個々の実行単位。<code>ジョブ &gt; ステップ</code> の階層。〔第1章〕</li>
+</ul>
+<h3>せ</h3>
+<ul>
+<li><strong>セキュリティスキャン</strong>（せきゅりてぃすきゃん）— 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔第1章〕</li>
+<li><strong>セッション</strong>（せっしょん）— ログイン中の状態をサーバーが覚えておく仕組み。〔第5章で予定〕</li>
+</ul>
+<hr />
+<h2>た行</h2>
+<h3>た</h3>
+<ul>
+<li><strong>デプロイ</strong>（でぷろい／<code>deploy</code>＝「リリース」「公開」とほぼ同義）— コードを<strong>本番環境（ユーザーが使う環境）に配置して動かす</strong>こと。〔第1章〕</li>
+</ul>
+<div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: この教科書自身も、<code>main</code> ブランチに <code>push</code> すると GitHub Actions が自動でビルドし、GitHub Pages に自動デプロイ（CD）される仕組みで運用しています。</p></div>
+<ul>
+<li><strong>DELETE</strong>（デリート）— HTTP メソッドの1つ。「削除したい」。〔第3章〕</li>
+<li><strong>diff</strong>（ディフ／「差分」）— 変更前後の<strong>違い</strong>。PR で「何を変えたか」を確認する基本。〔第2章〕</li>
+</ul>
+<h3>て</h3>
+<ul>
+<li><strong>テスト</strong>（てすと／<code>test</code>）— コードが期待通り動くかを確認する仕組み。単体テスト（<code>unit</code>）と統合テスト（<code>integration</code>）が代表的。CI の主役。〔第1章〕</li>
+</ul>
+<hr />
+<h2>は行</h2>
+<h3>ふ</h3>
+<ul>
+<li><strong>feature flag</strong>（フィーチャー・フラグ／機能フラグ）— コードは配置したまま、<strong>設定で機能を ON/OFF</strong> できる仕組み。ロールバックの手段としても使う。〔第1章〕</li>
+<li><strong>fetch</strong>（フェッチ）— リモートの最新情報を<strong>取得だけする</strong>（手元のファイルは書き換えない）。確認用。〔第2章〕</li>
+<li><strong>flaky test</strong>（フレイキー・テスト／「フレーキー」とも）— 環境次第で<strong>たまに落ちる不安定なテスト</strong>。CI が緑でも信頼できない原因になる。〔第1章〕</li>
+<li><strong>fork</strong>（フォーク）— 他人のリポジトリを<strong>自分のアカウントにコピー</strong>する操作。OSS 貢献の入口。〔第2章〕</li>
+</ul>
+<h3>び</h3>
+<ul>
+<li><strong>ビルド</strong>（びるど／<code>build</code>）— コードがエラーなく組み立てられるか確認すること。CI の基本検査の1つ。〔第1章〕</li>
+</ul>
+<h3>ぷ</h3>
+<ul>
+<li><strong>プッシュ</strong>（ぷっしゅ／<code>push</code>）— 手元のコミットを<strong>リモート（GitHub）に送る</strong>こと。<code>push</code> して初めて他の人に共有される（<code>commit</code> ≠ <code>push</code>）。〔第2章〕</li>
+<li><strong>プル</strong>（ぷる／<code>pull</code>）— リモートの最新を取得して<strong>手元に取り込む</strong>こと（＝ <code>fetch</code> + <code>merge</code>）。〔第2章〕</li>
+<li><strong>Pull Request / PR</strong>（プルリクエスト／通称「プルリク」）— 「この変更を取り込んでください」とチームに依頼し、<strong>レビューを経て統合する</strong>仕組み。〔第2章〕</li>
+</ul>
+<h3>ぶ</h3>
+<ul>
+<li><strong>ブランチ</strong>（ぶらんち／<code>branch</code>）— 履歴を枝分かれさせて別々に進められる仕組み。「平行世界」。<code>main</code>（旧称 <code>master</code>）は中心の安定した歴史。〔第2章〕</li>
+</ul>
+<hr />
+<h2>ま行</h2>
+<h3>ま</h3>
+<ul>
+<li><strong>マージ</strong>（まーじ／<code>merge</code>／「統合」）— 別ブランチで進めた作業を main 等に<strong>合わせる</strong>こと。〔第2章〕</li>
+<li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔第2章〕</li>
+</ul>
+<hr />
+<h2>や行</h2>
+<h3>ゆ</h3>
+<ul>
+<li><strong>YAML</strong>（ヤムル／<code>YAML Ain't Markup Language</code>。「ヤメル」と読む人もいるが「ヤムル」が通称）— インデントで階層を表す設定ファイル記法。GitHub Actions のワークフロー定義等で使う。〔第1章〕</li>
+</ul>
+<hr />
+<h2>ら行</h2>
+<h3>り</h3>
+<ul>
+<li><strong>リクエスト</strong>（りくえすと／<code>request</code>／「お願い」）— クライアントからサーバーへ送る「やってほしいこと」の依頼。〔第3章〕</li>
+<li><strong>レスポンス</strong>（れすぽんす／<code>response</code>／「お返事」）— サーバーからクライアントへ返す結果。〔第3章〕</li>
+<li><strong>リモート</strong>（りもーと／<code>remote</code>）— ネットワーク上（GitHub 等）にある<strong>離れたリポジトリ</strong>。<code>ローカル</code>（手元）の対義語。〔第2章〕</li>
+<li><strong>リポジトリ</strong>（りぽじとり／<code>repository</code>／通称「レポ」「リポ」）— 変更が<strong>履歴として保存される場所</strong>（<code>.git/</code> 配下）。〔第2章〕</li>
+<li><strong>リンター</strong>（りんたー／<code>linter</code>）— コードがチームの規約を守っているか（読みやすさ・一貫性）を自動チェックする道具。<code>ruff</code>・<code>ESLint</code> 等が代表。〔第1章〕</li>
+<li><strong>リバート</strong>（りばーと／<code>revert</code>／「取り消す」）— 特定のコミットを打ち消す操作。壊れた変更を main から取り除く時に使う。〔第1章〕</li>
+<li><strong>REST</strong>（レスト／<code>Representational State Transfer</code>）— URL（名詞）と HTTP メソッド（動詞）で機能を表現する API 設計思想。最も普及しているスタイル。〔第3章〕</li>
+<li><strong>RPC</strong>（アールピーシー／<code>Remote Procedure Call</code>）— 「関数呼び出し」風の通信スタイル。これを現代風にしたのが <code>gRPC</code>。〔第3章〕</li>
+</ul>
+<h3>ろ</h3>
+<ul>
+<li><strong>ローカル</strong>（ろーかる／<code>local</code>）— <strong>手元の環境</strong>（自分のPC）。<code>リモート</code> の対義語。〔第2章〕</li>
+<li><strong>ロールバック</strong>（ろーるばっく／<code>rollback</code>／「巻き戻し」）— 公開してみたら不具合が出た時、<strong>前のバージョンに戻す</strong>こと。「デプロイできる」と同じくらい「戻せる」ことが重要。〔第1章〕</li>
+</ul>
+<hr />
+<h2>わ行</h2>
+<h3>わ</h3>
+<ul>
+<li><strong>ワークフロー</strong>（わーくふろー／<code>workflow</code>）— GitHub Actions で「どのタイミングで・何をするか」を定義したもの。<code>.github/workflows/</code> に YAML で置く。〔第1章〕</li>
+<li><strong>WebHook</strong>（ウェブフック）— サーバーが<strong>クライアントに能動的に通知を送る</strong>仕組み。決済完了通知等で使う。公開エンドポイントになるため<strong>署名検証がほぼ必須</strong>。〔第3章〕</li>
+<li><strong>WebSocket</strong>（ウェブソケット）— 双方向・常時接続の通信スタイル。チャットやリアルタイム更新で使う。〔第3章〕</li>
+</ul>
+<hr />
+<h2>英字語・記号始まり（読みで引く）</h2>
+<ul>
+<li><strong>.env</strong>（ドット・イーエヌブイ／通称「ドット・エンブ」も）— ローカル開発で環境変数をまとめた設定ファイル。<strong>Git には入れない</strong>前提。〔第4章〕</li>
+<li><strong>.gitignore</strong>（ドット・ギットイグノア）— Git の追跡から<strong>除外するファイルを指定</strong>する設定ファイル。<code>.env</code> 等の秘匿ファイルを弾くのに使う。〔第4章〕</li>
+<li><strong>Docker</strong>（ドッカー）— 「コンテナ」で環境を丸ごと運ぶ仕組み。〔第6章で予定〕</li>
+<li><strong>Git</strong>（ギット）— コードの変更履歴を記録・管理するバージョン管理システム。〔第2章〕</li>
+<li><strong>GitHub</strong>（ギットハブ）— Git の履歴をインターネット上で共有・協働するプラットフォーム。「みんなで使う作業場」。〔第2章〕</li>
+<li><strong>GitHub Actions</strong>（ギットハブ・アクションズ）— GitHub が提供する CI/CD 実行環境。<code>.github/workflows/</code> に YAML で定義する。〔第1章〕</li>
+<li><strong>issue</strong>（イシュー）— 「やるべきこと・問題・要望」を1件ずつ管理するチケット。〔第2章〕</li>
+<li><strong>job / ジョブ</strong>（ジョブ）— GitHub Actions でワークフロー内の<strong>実行単位</strong>。<code>ワークフロー &gt; ジョブ &gt; ステップ</code> の階層。〔第1章〕</li>
+<li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔第3章〕</li>
+<li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶトークン方式。〔第5章で予定〕</li>
+<li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを大量に運用・管理する基盤。〔第6章で予定〕</li>
+<li><strong>origin</strong>（オリジン）— 自分が <code>push</code>/<code>pull</code> する相手（普通は fork した自分のリポジトリ）のデフォルトの呼び名。<code>upstream</code>（コピー元）の対。〔第2章〕</li>
+<li><strong>PATCH</strong>（パッチ）— HTTP メソッドの1つ。「一部だけ更新したい」。<code>PUT</code>（丸ごと更新）との違いは粒度。〔第3章〕</li>
+<li><strong>POST</strong>（ポスト）— HTTP メソッドの1つ。「新しく作成したい」。〔第3章〕</li>
+<li><strong>PUT</strong>（プット）— HTTP メソッドの1つ。「全体を更新したい（丸ごと置き換え）」。〔第3章〕</li>
+<li><strong>rebase</strong>（リベース）— ブランチの変更を main の最新の先に<strong>積み直す</strong>操作。履歴を一直線にできるが<strong>履歴書き換え</strong>なので要注意（<code>push</code> 済みの <code>rebase</code> は厳禁）。〔第2章〕</li>
+<li><strong>Stripe</strong>（ストライプ）— 決済 API の代表格。WebHook で決済完了通知を受け取る使い方が定番。〔第3章〕</li>
+<li><strong>upstream</strong>（アップストリーム）— コピー元の**「オリジナルのリポジトリ」**を指す呼び方（川の上流＝源流のイメージ）。<code>origin</code> の対。〔第2章〕</li>
+</ul>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li>用語集は<strong>読み仮名（通称）のあいうえお順</strong>。読み方が分からない時は、見出しの（カタカナ読み）を頼りに引いてください</li>
+<li>読み仮名は<strong>正式な発音でなく現場の通称</strong>。複数読みがある場合は併記しました</li>
+<li><strong>🔖 筆者の実例</strong> の枠がある用語は、汎用解説に加えて自作プロジェクトでの使われ方を補足しています</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>この辞書は生き物です</strong>: 本編（第5章以降）が増えるたび、新しい用語を追加していきます。「この言葉が載ってない！」があれば、それが次に追加すべき用語の目安です。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="04-env-secrets.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔐 環境変数・シークレット管理</span>
+            </a>
+            
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">v1.9 · 2026.07.09</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
