@@ -105,13 +105,25 @@ slug: 14-glossary</h2>
 <h3>あ</h3>
 <ul>
 <li><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔第3章〕</li>
+<li><strong>IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）— URL の ID を書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。〔第5章〕</li>
+<li><strong>RBAC</strong>（アールビーエーシー／役割ベースアクセス制御）— 「管理者・一般」等の<strong>役割</strong>で権限を管理する認可の方式。〔第5章〕</li>
 </ul>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の予約管理システム（<code>reserve-optimizer</code>）では、予約の取得・作成・取消を行う REST API を設計し、フロントと GAS（Google Apps Script）の間を HTTP で結んでいます。</p></div>
+<h3>い</h3>
+<ul>
+<li><strong>委譲</strong>（<code>delegation</code>／「任せる」）— 自分の代わりに<strong>限られたことだけ</strong>を外部に許可する仕組み（OAuth の核心）。〔第5章〕</li>
+</ul>
 <h3>え</h3>
 <ul>
 <li><strong>HTTP</strong>（エイチティーティーピー／<code>HyperText Transfer Protocol</code>）— Web の通信で事実上の標準になっている「リクエストとレスポンス」の約束事。〔第3章〕</li>
 <li><strong>HTTPS</strong>（エイチティーティーピーエス）— HTTP を<strong>暗号化</strong>したもの（<code>TLS/SSL</code> で通信を守る）。パスワード等の送受信に必須。現場では「エッチティーティーピーエス」とも。〔第3章〕</li>
 <li><strong>エンドポイント</strong>（<code>endpoint</code>）— API の「窓口（住所）」。URL のパス部分で機能を識別する。〔第3章〕</li>
+<li><strong>MFA</strong>（エムエフエー／多要素認証）— 知識・所有・生体など<strong>異なる性質</strong>の要素を組み合わせる認証。パスワード1つへの依存を減らす。〔第5章〕</li>
+</ul>
+<h3>お</h3>
+<ul>
+<li><strong>OAuth</strong>（オース／通称「オーオース」も／<code>OAuth 2.0</code>）— 委譲: 限られた権限を外部サービスに貸す仕組み。「Googleでログイン」の基盤。〔第5章〕</li>
+<li><strong>OIDC</strong>（オーアイディーシー／<code>OpenID Connect</code>）— OAuth の上に乗った認証仕様。外部アカウント（Google等）で「この人は誰か」を保証してもらう。〔第5章〕</li>
 </ul>
 <hr />
 <h2>か行</h2>
@@ -131,6 +143,7 @@ slug: 14-glossary</h2>
 <li><strong>クライアント</strong>（<code>client</code>）— サービスに<strong>リクエストを送る側</strong>（ブラウザ・アプリ等）。〔第3章〕</li>
 <li><strong>クローン</strong>（<code>clone</code>）— リモート（GitHub 等）のリポジトリを<strong>まるごと手元にコピー</strong>する最初の1回の操作。〔第2章〕</li>
 <li><strong>CRUD</strong>（クラッド）— 作成(<code>Create</code>)・読取(<code>Read</code>)・更新(<code>Update</code>)・削除(<code>Delete</code>)の頭文字。データ操作の4基本。〔第3章〕</li>
+<li><strong>Cookie</strong>（クッキー）— ブラウザに保存される小さなデータ。リクエストのたび<strong>自動で</strong>サーバーに送信される。セッション方式の中核。〔第5章〕</li>
 </ul>
 <h3>け</h3>
 <ul>
@@ -152,6 +165,7 @@ slug: 14-glossary</h2>
 <li><strong>CD</strong>（シーディー／<code>Continuous Delivery / Deployment</code>＝継続的デリバリー／デプロイ）— CI で検査を通ったコードを「いつでもリリースできる状態」に保つ、または本番まで自動で届ける仕組み。〔第1章〕</li>
 <li><strong>シークレット</strong>（<code>secret</code>）— 環境変数の中でも<strong>他人に見られてはいけない値</strong>（APIキー・パスワード・トークン等）。基本原則: コードに書かない・Gitに入れない・本番は専用保管場所。〔第4章〕</li>
 <li><strong>gRPC</strong>（ジーアールピーシー）— 「関数呼び出し」風の通信（RPC）を、現代風に<strong>高速・型付き</strong>にしたもの。マイクロサービス間等で使われる。〔第3章〕</li>
+<li><strong>CSRF</strong>（シーエスアールエフ／<code>Cross-Site Request Forgery</code>／「偽造リクエスト」）— ログイン中の利用者に、悪意ある別サイトから勝手にリクエストを送らせる攻撃。Cookie方式で特に注意。〔第5章〕</li>
 <li><strong>CI/CD の「緑・赤」</strong> — GitHub 上の CI 結果の色表示。🟢緑＝全job成功・🔴赤＝どこか失敗・🟡黄（<code>in_progress</code>）＝いま実行中。〔第1章〕</li>
 </ul>
 <h3>す</h3>
@@ -163,7 +177,7 @@ slug: 14-glossary</h2>
 <h3>せ</h3>
 <ul>
 <li><strong>セキュリティスキャン</strong> — 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔第1章〕</li>
-<li><strong>セッション</strong> — ログイン中の状態をサーバーが覚えておく仕組み。〔第5章で予定〕</li>
+<li><strong>セッション</strong>（<code>session</code>）— ログイン中の状態をサーバー側が記憶する仕組み。Cookieと組み合わせて使うブラウザ型の古典（ステートフル）。〔第5章〕</li>
 </ul>
 <hr />
 <h2>た行</h2>
@@ -175,19 +189,34 @@ slug: 14-glossary</h2>
 <ul>
 <li><strong>DELETE</strong>（デリート）— HTTP メソッドの1つ。「削除したい」。〔第3章〕</li>
 <li><strong>diff</strong>（ディフ／「差分」）— 変更前後の<strong>違い</strong>。PR で「何を変えたか」を確認する基本。〔第2章〕</li>
+<li><strong>2FA</strong>（ツーエフエー／二要素認証）— MFAの「2要素組み合わせ」版。現場では MFA とほぼ同義で使われる。〔第5章〕</li>
 </ul>
 <h3>て</h3>
 <ul>
 <li><strong>テスト</strong>（<code>test</code>）— コードが期待通り動くかを確認する仕組み。単体テスト（<code>unit</code>）と統合テスト（<code>integration</code>）が代表的。CI の主役。〔第1章〕</li>
+<li><strong>トークン</strong>（<code>token</code>）— 入場券のような文字列。ログイン成功後に発行し、以降のリクエストに添えて身元を証明する（<code>JWT</code> 等）。〔第5章〕</li>
+</ul>
+<hr />
+<h2>な行</h2>
+<h3>に</h3>
+<ul>
+<li><strong>認証</strong>（<code>authentication</code>）— 「<strong>あなたは誰か</strong>」を確認すること。パスワード・生体等で身元を特定。〔第5章〕</li>
+<li><strong>認可</strong>（<code>authorization</code>）— 「<strong>何をしてよいか</strong>」を判断すること。認証とは別問題（IDOR等は認可の欠如）。〔第5章〕</li>
 </ul>
 <hr />
 <h2>は行</h2>
+<h3>は</h3>
+<ul>
+<li><strong>ハッシュ</strong>（<code>hash</code>／「すりつぶす」）— 元に戻せない一方向の変換。パスワード保存は必ずハッシュ化（<code>bcrypt</code> 等の専用アルゴリズム）。〔第5章〕</li>
+<li><strong>パスキー</strong>（<code>passkey</code>）— パスワードの代わりにデバイスで認証する仕組み。フィッシング（偽サイト騙し）に強い（<code>FIDO2</code>/<code>WebAuthn</code> 基盤）。〔第5章〕</li>
+</ul>
 <h3>ふ</h3>
 <ul>
 <li><strong>feature flag</strong>（フィーチャー・フラグ／機能フラグ）— コードは配置したまま、<strong>設定で機能を ON/OFF</strong> できる仕組み。ロールバックの手段としても使う。〔第1章〕</li>
 <li><strong>fetch</strong>（フェッチ）— リモートの最新情報を<strong>取得だけする</strong>（手元のファイルは書き換えない）。確認用。〔第2章〕</li>
 <li><strong>flaky test</strong>（フレイキー・テスト／「フレーキー」とも）— 環境次第で<strong>たまに落ちる不安定なテスト</strong>。CI が緑でも信頼できない原因になる。〔第1章〕</li>
 <li><strong>fork</strong>（フォーク）— 他人のリポジトリを<strong>自分のアカウントにコピー</strong>する操作。OSS 貢献の入口。〔第2章〕</li>
+<li><strong>FIDO2</strong>（フィドウ・ツー）— パスワードレス・フィッシング耐性の認証技術。パスキーの基盤。〔第5章〕</li>
 </ul>
 <h3>び</h3>
 <ul>
@@ -202,6 +231,7 @@ slug: 14-glossary</h2>
 <h3>ぶ</h3>
 <ul>
 <li><strong>ブランチ</strong>（<code>branch</code>）— 履歴を枝分かれさせて別々に進められる仕組み。「平行世界」。<code>main</code>（旧称 <code>master</code>）は中心の安定した歴史。〔第2章〕</li>
+<li><strong>ブルートフォース</strong>（<code>brute force</code>／「力技」）— パスワードを総当たりで試す攻撃。試行回数制限・アカウントロックで対策。〔第5章〕</li>
 </ul>
 <hr />
 <h2>ま行</h2>
@@ -241,6 +271,7 @@ slug: 14-glossary</h2>
 <li><strong>ワークフロー</strong>（<code>workflow</code>）— GitHub Actions で「どのタイミングで・何をするか」を定義したもの。<code>.github/workflows/</code> に YAML で置く。〔第1章〕</li>
 <li><strong>WebHook</strong>（ウェブフック）— サーバーが<strong>クライアントに能動的に通知を送る</strong>仕組み。決済完了通知等で使う。公開エンドポイントになるため<strong>署名検証がほぼ必須</strong>。〔第3章〕</li>
 <li><strong>WebSocket</strong>（ウェブソケット）— 双方向・常時接続の通信スタイル。チャットやリアルタイム更新で使う。〔第3章〕</li>
+<li><strong>WebAuthn</strong>（ウェブオースン／<code>Web Authentication</code>）— Web で <code>FIDO2</code>/パスキーを実現する API 仕様。〔第5章〕</li>
 </ul>
 <hr />
 <h2>英字語・記号始まり</h2>
@@ -254,7 +285,7 @@ slug: 14-glossary</h2>
 <li><strong>issue</strong>（イシュー）— 「やるべきこと・問題・要望」を1件ずつ管理するチケット。〔第2章〕</li>
 <li><strong>job</strong>（ジョブ）— GitHub Actions でワークフロー内の<strong>実行単位</strong>。<code>ワークフロー &gt; ジョブ &gt; ステップ</code> の階層。〔第1章〕</li>
 <li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔第3章〕</li>
-<li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶトークン方式。〔第5章で予定〕</li>
+<li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶ<strong>署名付きトークン</strong>。API・モバイル向き（ステートレス・無効化は工夫が要る）。〔第5章〕</li>
 <li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを大量に運用・管理する基盤。〔第6章で予定〕</li>
 <li><strong>origin</strong>（オリジン）— 自分が <code>push</code>/<code>pull</code> する相手（普通は fork した自分のリポジトリ）のデフォルトの呼び名。<code>upstream</code>（コピー元）の対。〔第2章〕</li>
 <li><strong>PATCH</strong>（パッチ）— HTTP メソッドの1つ。「一部だけ更新したい」。<code>PUT</code>（丸ごと更新）との違いは粒度。〔第3章〕</li>
@@ -291,7 +322,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.10 · 2026.07.09</p>
+        <p class="site-version">vTEST · 2026.01.01</p>
     </footer>
 
     <script src="../assets/script.js"></script>
