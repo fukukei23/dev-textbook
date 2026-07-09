@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API &amp; エンドポイント — 開発の常識・作法</title>
+    <meta name="description" content="API &amp; エンドポイント — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="API &amp; エンドポイント — 開発の常識・作法">
+    <meta property="og:description" content="API &amp; エンドポイント — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/03-api-endpoint.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="02-git-github.html" class="nav-prev">← Git &amp; GitHub</a>
+            
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: API &amp; エンドポイント
+icon: 🔌
+card_desc: プログラム同士が通信する窓口の約束事 — HTTP基礎・ステータスコード・REST・GraphQL・WebHook
+slug: 03-api-endpoint</h2>
+<h1>03 API &amp; エンドポイント — プログラム同士が通信する「窓口」の約束事</h1>
+<div class="callout callout-info"><p>「API」「エンドポイント」「REST」、そして「200・404・500」——現場の会話で当たり前のように出るこれらの言葉、何を指しているか正確に言えますか？ この章では、プログラム同士がやり取りするための<strong>約束事</strong>を根本から理解します。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p><strong>API（Application Programming Interface）</strong> は、プログラム同士が<strong>会話するときの約束事（インターフェース）<strong>です。「こういう形式で聞けば、こういう形式で答えます」という取り決めです。<strong>エンドポイント（endpoint）</strong> は、その</strong>窓口（住所）</strong>。「<code>/users/123</code> というURLに聞けば、ユーザー情報が返ってくる」のように、URLで機能を識別します。</p>
+<hr />
+<h2>1. なぜAPIという「約束事」が必要なのか</h2>
+<p>たとえば、天気予報サービスを作りたいとします。自前で観測装置を持ち、気象データを解析し、地図上に表示する——これは現実的ではありません。</p>
+<p>そこで登場するのが<strong>API</strong>です。</p>
+<pre><code>あなたのアプリ  ──→  気象会社のAPI（=約束事）
+                     「/weather?city=Tokyo に GET で聞くとJSONが返る」
+あなたのアプリ  ←──  { &quot;temp&quot;: 22, &quot;weather&quot;: &quot;晴れ&quot; }
+</code></pre>
+<p>APIのおかげで、あなたは気象学の知識ゼロで天気予報アプリを作れます。**「誰かが用意した機能を、自分のアプリから呼び出す」**のがAPIです。</p>
+<div class="callout callout-tip"><p>💡 <strong>「インターフェース」＝ 接点・境界</strong>。人間同士が言葉を介して話すように、プログラム同士がAPIという共通の言葉で話します。</p></div>
+<hr />
+<h2>2. HTTP —— Web APIの共通語</h2>
+<p>現在、APIの事実上の標準は <strong>HTTP（HyperText Transfer Protocol）</strong> です。Web ブラウザが Web ページを取得するときに使うのと同じ仕組みが、プログラム間の通信にも使われます。</p>
+<h3>リクエストとレスポンス</h3>
+<p>HTTP のやりとりは、**「リクエスト（お願い）」と「レスポンス（お返事）」**の2つで成り立ちます。</p>
+<pre><code>[クライアント]                           [サーバー]
+     │                                       │
+     │  ── GET /weather?city=Tokyo ───────&gt;  │  ← リクエスト
+     │                                       │
+     │  &lt;── 200 OK { &quot;temp&quot;: 22 } ────────   │  ← レスポンス
+     │                                       │
+</code></pre>
+<h3>メソッド ——「お願い」の種類</h3>
+<p>HTTP には、**「何をしたいか」**を示すメソッド（動詞）があります：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>メソッド</th>
+<th>意味</th>
+<th>例え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GET</strong></td>
+<td>取得したい（ページを見る）</td>
+<td>本棚から本を取り出して読む</td>
+</tr>
+<tr>
+<td><strong>POST</strong></td>
+<td>新しく作成したい（記事を書く）</td>
+<td>新しく本を出版する</td>
+</tr>
+<tr>
+<td><strong>PUT</strong></td>
+<td>全体を更新したい（記事をまるごと書き換え）</td>
+<td>本を丸ごと改訂する</td>
+</tr>
+<tr>
+<td><strong>PATCH</strong></td>
+<td>一部だけ更新したい（記事の一部を修正）</td>
+<td>本の数ページだけ差し替える</td>
+</tr>
+<tr>
+<td><strong>DELETE</strong></td>
+<td>削除したい</td>
+<td>本を破棄する</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>PUT と PATCH の違い</strong>は初学者がつまずきやすい所です。PUT は「対象を丸ごと置き換え」、PATCH は「一部だけ変更」。<strong>両方とも更新ですが、粒度が違います</strong>。</p></div>
+<h3>CRUD と HTTPメソッドの対応</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>操作（CRUD）</th>
+<th>HTTPメソッド</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C</strong>reate（作成）</td>
+<td>POST</td>
+<td><code>POST /users</code></td>
+</tr>
+<tr>
+<td><strong>R</strong>ead（読み取り）</td>
+<td>GET</td>
+<td><code>GET /users/123</code></td>
+</tr>
+<tr>
+<td><strong>U</strong>pdate（更新）</td>
+<td>PUT / PATCH</td>
+<td><code>PUT /users/123</code>、<code>PATCH /users/123</code></td>
+</tr>
+<tr>
+<td><strong>D</strong>elete（削除）</td>
+<td>DELETE</td>
+<td><code>DELETE /users/123</code></td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p>⚠ <strong>「GET で削除できる API」は設計違反</strong>。GET は「副作用がない」ことが約束で、ブラウザのキャッシュや履歴が混乱します。CRUD と HTTP メソッドの対応を理解するのが第一歩です。</p></div>
+<h3>エンドポイントの完全な形</h3>
+<p>エンドポイントは<strong>完全な URL</strong>の中の「パス部分」です。</p>
+<pre><code>https://api.weather.com/v1/weather?city=Tokyo
+   ───────  ──────── ──────────  ────────
+   スキーム   ドメイン   パス        クエリ
+   (https)  (api...)   ↑ この部分が「エンドポイント」
+</code></pre>
+<ul>
+<li><strong>ベースURL</strong>：<code>https://api.weather.com/v1</code>（サービス提供者が用意）</li>
+<li><strong>エンドポイント</strong>：<code>/weather?city=Tokyo</code>（機能ごとに用意された窓口）</li>
+<li><strong>クエリパラメータ</strong>：<code>?city=Tokyo</code>（追加条件）</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>レスポンスのフォーマット</strong>: 上の例 <code>{ &quot;temp&quot;: 22, &quot;weather&quot;: &quot;晴れ&quot; }</code> は <strong>JSON（JavaScript Object Notation）</strong> と呼ばれる形式です。現在 API の事実上の標準フォーマットで、「キーと値のペア」を <code>{}</code> で囲むだけのシンプルな記法です。</p></div>
+<hr />
+<h2>3. 🔑 ステータスコード —— 「結果はどうだったか」</h2>
+<p>レスポンスには**3桁の数字（ステータスコード）**が必ず含まれます。これは「お返事の結果」を機械的に伝える仕組みです。</p>
+<h3>主要なステータスコード</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>コード</th>
+<th>意味</th>
+<th>ざっくり分類</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>200 OK</strong></td>
+<td>成功</td>
+<td>✅ 成功（2xx）</td>
+</tr>
+<tr>
+<td><strong>201 Created</strong></td>
+<td>作成成功</td>
+<td>✅ 成功（2xx）</td>
+</tr>
+<tr>
+<td><strong>204 No Content</strong></td>
+<td>成功（返す内容なし）</td>
+<td>✅ 成功（2xx）</td>
+</tr>
+<tr>
+<td><strong>301 Moved Permanently</strong></td>
+<td>恒久的に移動した（SEO評価も引き継ぐ）</td>
+<td>🔄 リダイレクト（3xx）</td>
+</tr>
+<tr>
+<td><strong>304 Not Modified</strong></td>
+<td>キャッシュを使ってよい</td>
+<td>🔄 リダイレクト（3xx）</td>
+</tr>
+<tr>
+<td><strong>400 Bad Request</strong></td>
+<td>リクエストの形式がおかしい</td>
+<td>❌ クライアントエラー（4xx）</td>
+</tr>
+<tr>
+<td><strong>401 Unauthorized</strong></td>
+<td>認証情報が無効または未提供（ログインしてない／期限切れ）</td>
+<td>❌ クライアントエラー（4xx）</td>
+</tr>
+<tr>
+<td><strong>403 Forbidden</strong></td>
+<td>認証済みだが権限がない（このリソースを見る権限がない）</td>
+<td>❌ クライアントエラー（4xx）</td>
+</tr>
+<tr>
+<td><strong>404 Not Found</strong></td>
+<td>見つからない</td>
+<td>❌ クライアントエラー（4xx）</td>
+</tr>
+<tr>
+<td><strong>429 Too Many Requests</strong></td>
+<td>リクエスト過多（レート制限）</td>
+<td>❌ クライアントエラー（4xx）</td>
+</tr>
+<tr>
+<td><strong>500 Internal Server Error</strong></td>
+<td>サーバーの内部エラー</td>
+<td>💥 サーバーエラー（5xx）</td>
+</tr>
+<tr>
+<td><strong>502 Bad Gateway</strong></td>
+<td>上流サーバーが応答不能</td>
+<td>💥 サーバーエラー（5xx）</td>
+</tr>
+<tr>
+<td><strong>503 Service Unavailable</strong></td>
+<td>サービス停止中（メンテ・過負荷）</td>
+<td>💥 サーバーエラー（5xx）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>コード番号の法則</h3>
+<p>コードは<strong>百の位</strong>で大分類できます：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>範囲</th>
+<th>意味</th>
+<th>誰が対処すべきか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2xx</strong></td>
+<td>成功</td>
+<td>問題なし</td>
+</tr>
+<tr>
+<td><strong>3xx</strong></td>
+<td>リダイレクト（別の場所を見て）</td>
+<td>クライアントが自動で追従</td>
+</tr>
+<tr>
+<td><strong>4xx</strong></td>
+<td>クライアント側のミス</td>
+<td><strong>リクエストを直す</strong></td>
+</tr>
+<tr>
+<td><strong>5xx</strong></td>
+<td>サーバー側のミス</td>
+<td><strong>サーバーを直す</strong>（リトライで治ることもある）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 「4xx と 5xx の区別」は面接頻出です。「404 Not Found」は「あなたのURL指定が間違っている（=あなたの責任）」、「500 Internal Server Error」は「サーバー側が悪い（=サーバー提供者の責任）」。<strong>コード番号を見ただけで、どこを直すべきか当たりがつく</strong>のが理想です。</p></div>
+<hr />
+<h2>4. REST —— 「URLとHTTPメソッドで機能を表現する」設計思想</h2>
+<p>API の設計スタイルとして最も普及しているのが <strong>REST（Representational State Transfer）</strong> です。</p>
+<h3>RESTの基本原則</h3>
+<ol>
+<li><strong>URLは「リソース（資源）」を表す</strong>：<code>/users/123</code>（ユーザー123）、<code>/posts/456/comments</code>（記事456へのコメント）</li>
+<li><strong>HTTPメソッドで「何をするか」を表現</strong>：<code>GET /users/123</code>（取得）、<code>DELETE /users/123</code>（削除）</li>
+<li><strong>ステートレス</strong>：サーバーはクライアントの状態を記憶しない（セッション・Cookie 自体は使ってよいが、サーバー側で「このクライアントはさっき何をしていたか」を保持しない。各リクエストに必要な情報を全部載せる）</li>
+</ol>
+<h3>RESTfulなURL設計の例</h3>
+<pre><code>GET     /users           ユーザー一覧を取得
+GET     /users/123       ユーザー123を取得
+POST    /users           新しいユーザーを作成
+PUT     /users/123       ユーザー123を更新
+DELETE  /users/123       ユーザー123を削除
+GET     /users/123/posts ユーザー123の記事一覧を取得
+</code></pre>
+<div class="callout callout-warn"><p>⚠ 重要: <strong>「名詞」で URL を設計し、「動詞」はメソッドで表現</strong>します。<code>/getUser</code> や <code>/deleteUser</code> のような URL は REST らしくありません。<code>GET /users/123</code> のように、URLは「対象」、メソッドは「操作」を担当させるのが REST の流儀です。</p></div>
+<h3>REST ≠ 必須</h3>
+<p>REST は<strong>設計思想</strong>であり、唯一の正解ではありません。API 設計スタイルには他にもあります：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>スタイル</th>
+<th>特徴</th>
+<th>主な用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>REST</strong></td>
+<td>URL + HTTPメソッド + ステータスコード。リソース中心</td>
+<td>一般的なWeb API</td>
+</tr>
+<tr>
+<td><strong>GraphQL</strong></td>
+<td>「欲しいフィールドだけ」を1リクエストで指定。過不足なく取得</td>
+<td>フロントエンド主体・複雑なデータ関係</td>
+</tr>
+<tr>
+<td><strong>RPC / gRPC</strong></td>
+<td>「関数呼び出し」風。高速・型付き</td>
+<td>マイクロサービス間通信</td>
+</tr>
+<tr>
+<td><strong>WebSocket</strong></td>
+<td>双方向・常時接続</td>
+<td>チャット・リアルタイム更新</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>「REST が一番」と覚えず、**「場面に応じて選ぶ」**のがプロの視点です。</p></div>
+<hr />
+<h2>5. WebHook —— 「サーバーがクライアントに通知する」仕組み</h2>
+<p>通常の API は<strong>クライアント起点</strong>（クライアントがサーバーに聞きに行く）です。しかし「ユーザー登録が完了したら通知がほしい」「決済が完了したら自動で処理したい」のように、<strong>サーバーが能動的に教えてくれる</strong>仕組みが必要な場合があります。</p>
+<p>それが <strong>WebHook（ウェブフック）</strong> です。</p>
+<pre><code>通常のAPI:    [あなたのアプリ] ──問合せ──&gt; [決済サービス]
+             [あなたのアプリ] &lt;─回答────  [決済サービス]
+
+WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービス]
+              （事前に「通知先URL」を登録しておく）
+</code></pre>
+<h3>使いどころ</h3>
+<ul>
+<li><strong>決済完了通知</strong>（Stripe・PayPal 等）: 決済サービス → あなたのサーバー</li>
+<li><strong>CI 完了通知</strong>（GitHub Actions）: GitHub → あなたのサーバー</li>
+<li><strong>フォーム送信通知</strong>: フォームサービス → あなたのチャットツール</li>
+</ul>
+<div class="callout callout-warn"><p>⚠ <strong>設計の勘所</strong>: WebHook は<strong>公開エンドポイント</strong>になるため、**署名検証（secret による認証）**がほぼ必須です。さもなければ、攻撃者が偽の通知を送れてしまいます。</p></div>
+<hr />
+<h2>6. API設計でよくある失敗と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>失敗</th>
+<th>何が起きるか</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>エラーを一律 200 で返す</strong></td>
+<td>クライアントが失敗を検知できない</td>
+<td>失敗時は必ず<strong>意味のある 4xx/5xx</strong> を返す</td>
+</tr>
+<tr>
+<td><strong>エラーメッセージが曖昧</strong></td>
+<td>「エラーが発生しました」だけだと直せない</td>
+<td>構造化エラー（<code>{ &quot;code&quot;: &quot;INVALID_EMAIL&quot;, &quot;message&quot;: &quot;...&quot;, &quot;field&quot;: &quot;email&quot; }</code>）で<strong>機械的に処理可能</strong>にする</td>
+</tr>
+<tr>
+<td><strong>バージョンを変えない</strong></td>
+<td>クライアントが壊れる恐怖で変更できない</td>
+<td>URL か ヘッダで <strong>API バージョン</strong> を明示（<code>/v1/users</code> 等）</td>
+</tr>
+<tr>
+<td><strong>認証・認可が甘すぎる</strong></td>
+<td>不正アクセス・データ漏洩</td>
+<td>認証必須・権限チェック・HTTPS 強制（→ 第4章・第5章）</td>
+</tr>
+<tr>
+<td><strong>レート制限がない</strong></td>
+<td>大量アクセスでサーバーが落ちる</td>
+<td>リクエスト数の上限を設定（429 で返す）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. 面接・実務での意味</h2>
+<div class="callout callout-info"><p>「API 設計で気をつけることは？」</p></div>
+<p>この質問は、単に「REST 知っていますか」を聞いているのではありません。**「相手と約束事を交わせるか・想定外の利用に耐えられるか・壊れた時に何が悪いか即座に判定できるか」**を聞いています。</p>
+<ul>
+<li><strong>ステータスコード</strong>を適切に返しているか</li>
+<li><strong>URLがリソース指向</strong>か</li>
+<li><strong>エラーの形式</strong>が構造化されているか</li>
+<li><strong>認証・認可</strong>が漏れていないか</li>
+<li><strong>バージョニング</strong>の方針があるか</li>
+</ul>
+<p>これらを<strong>自覚して設計できる</strong>ことが、「API を使える」ではなく「<strong>API を設計できる</strong>」エンジニアの証です。</p>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li><strong>API</strong> はプログラム間の<strong>約束事</strong>。<strong>エンドポイント</strong>は<strong>窓口（URL）</strong></li>
+<li><strong>HTTP</strong> は事実上の標準。<strong>GET/POST/PUT/DELETE</strong> で操作を伝える</li>
+<li><strong>ステータスコード</strong>で結果を機械的に判定。<strong>2xx=成功・4xx=クライアント側の問題・5xx=サーバー側の問題</strong></li>
+<li><strong>REST</strong> は URL（名詞）+ メソッド（動詞）で機能を表現する設計思想。唯一の正解ではない</li>
+<li><strong>WebHook</strong> は「サーバーから能動的に通知する」仕組み。<strong>署名検証必須</strong></li>
+<li>API 設計の品質は、<strong>エラー処理・バージョニング・認証・レート制限</strong>で決まる</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: API が「プログラム同士の約束事」だと分かると、<strong>「APIキーやパスワードはどうやって渡すのか」<strong>が気になります。第4章では、認証情報・秘密情報を</strong>コードに直接書かない</strong>作法（環境変数・シークレット管理）を扱います。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="02-git-github.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🌿 Git &amp; GitHub</span>
+            </a>
+            
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
