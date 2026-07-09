@@ -79,6 +79,12 @@
             データベース適材適所
         </a>
         
+        <a href="08-logging.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📊</span>
+            ログ・モニタリング
+        </a>
+        
         <a href="14-glossary.html"
            class="sidebar-link active">
             <span class="sidebar-icon">📖</span>
@@ -91,7 +97,7 @@
     <main class="content">
         <div class="chapter-nav-top">
             
-            <a href="07-database.html" class="nav-prev">← データベース適材適所</a>
+            <a href="08-logging.html" class="nav-prev">← ログ・モニタリング</a>
             
             
         </div>
@@ -119,6 +125,7 @@ slug: 14-glossary</h2>
 <li><strong>ACID</strong>（アシッド）— トランザクションが満たすべき<strong>4つの整合性の性質</strong>（原子性・一貫性・隔離性・耐久性）。お金等の絶対に狂ってはいけないデータは ACID の強い RDB が基本。〔第7章〕</li>
 <li><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔第3章〕</li>
 <li><strong>IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）— URL の ID を書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。〔第5章〕</li>
+<li><strong>アラート</strong>（<code>alert</code>）— 監視で<strong>異常を検知した時に人に知らせる</strong>通知。閾値（限界値）を超えた等の条件で発火。多用しすぎると「アラート疲労」に。〔第8章〕</li>
 <li><strong>RDB</strong>（アールディービー／<code>Relational Database</code>／リレーショナルデータベース）— データを**表（テーブル）**で管理する方式。SQL で操作し、データの整合性が強い。〔第7章〕</li>
 <li><strong>RBAC</strong>（アールビーエーシー／役割ベースアクセス制御）— 「管理者・一般」等の<strong>役割</strong>で権限を管理する認可の方式。〔第5章〕</li>
 </ul>
@@ -204,6 +211,7 @@ slug: 14-glossary</h2>
 <h2>た行</h2>
 <h3>た</h3>
 <ul>
+<li><strong>ダッシュボード</strong>（<code>dashboard</code>）— メトリクス（CPU・エラー率等）を<strong>グラフ等で可視化</strong>する画面。システム全体の状態を一目で把握する。〔第8章〕</li>
 <li><strong>デプロイ</strong>（<code>deploy</code>＝「リリース」「公開」とほぼ同義）— コードを<strong>本番環境（ユーザーが使う環境）に配置して動かす</strong>こと。〔第1章〕</li>
 </ul>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: この教科書自身も、<code>main</code> ブランチに <code>push</code> すると GitHub Actions が自動でビルドし、GitHub Pages に自動デプロイ（CD）される仕組みで運用しています。</p></div>
@@ -274,6 +282,8 @@ slug: 14-glossary</h2>
 <li><strong>MySQL</strong>（マイエスキューエル）— サーバー型の本格的な RDB。同時書き込みに強く大規模向きだが、運用コストがかかる。〔第7章〕</li>
 <li><strong>マージ</strong>（<code>merge</code>／「統合」）— 別ブランチで進めた作業を main 等に<strong>合わせる</strong>こと。〔第2章〕</li>
 <li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔第2章〕</li>
+<li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔第2章〕</li>
+<li><strong>メトリクス</strong>（<code>metrics</code>／「指標」）— システムの状態を表す<strong>数値</strong>（CPU使用率・レスポンス時間・エラー率等）。モニタリングの中身。〔第8章〕</li>
 <li><strong>MongoDB</strong>（モンゴディービー）— <code>JSON</code> のような<strong>形が変わるデータ</strong>を扱うドキュメント型 NoSQL。事前のスキーマ定義が不要で柔軟。〔第7章〕</li>
 </ul>
 <hr />
@@ -301,6 +311,7 @@ slug: 14-glossary</h2>
 </ul>
 <h3>ろ</h3>
 <ul>
+<li><strong>ログレベル</strong>（<code>DEBUG</code>/<code>INFO</code>/<code>WARN</code>/<code>ERROR</code>/<code>FATAL</code>）— ログの「重さ（深刻度）」の分類。本番では <code>DEBUG</code> を絞り、レベルで絞り込み・優先度判断する。〔第8章〕</li>
 <li><strong>ローカル</strong>（<code>local</code>）— <strong>手元の環境</strong>（自分のPC）。<code>リモート</code> の対義語。〔第2章〕</li>
 <li><strong>ロールバック</strong>（<code>rollback</code>／「巻き戻し」）— 公開してみたら不具合が出た時、<strong>前のバージョンに戻す</strong>こと。「デプロイできる」と同じくらい「戻せる」ことが重要。〔第1章〕</li>
 </ul>
@@ -320,6 +331,7 @@ slug: 14-glossary</h2>
 <li><strong>.gitignore</strong>（ドット・ギットイグノア）— Git の追跡から<strong>除外するファイルを指定</strong>する設定ファイル。<code>.env</code> 等の秘匿ファイルを弾くのに使う。〔第4章〕</li>
 <li><strong>Docker</strong>（ドッカー）— コンテナを作り・動かす<strong>最も普及したツール兼フォーマット</strong>。「環境を丸ごと箱詰め」して運ぶ。〔第6章〕</li>
 <li><strong>Dockerfile</strong>（ドッカーファイル）— イメージの作り方を書いた<strong>手順書</strong>。これをビルドするとイメージができる。〔第6章〕</li>
+<li><strong>ELK</strong>（イーエルケー／<code>Elasticsearch</code>+<code>Logstash</code>+<code>Kibana</code>）— 大量の構造化ログを集めて<strong>検索・可視化</strong>するログ集計スタックの代表例。〔第8章〕</li>
 <li><strong>Git</strong>（ギット）— コードの変更履歴を記録・管理するバージョン管理システム。〔第2章〕</li>
 <li><strong>GitHub</strong>（ギットハブ）— Git の履歴をインターネット上で共有・協働するプラットフォーム。「みんなで使う作業場」。〔第2章〕</li>
 <li><strong>GitHub Actions</strong>（ギットハブ・アクションズ）— GitHub が提供する CI/CD 実行環境。<code>.github/workflows/</code> に YAML で定義する。〔第1章〕</li>
@@ -328,11 +340,13 @@ slug: 14-glossary</h2>
 <li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔第3章〕</li>
 <li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶ<strong>署名付きトークン</strong>。API・モバイル向き（ステートレス・無効化は工夫が要る）。〔第5章〕</li>
 <li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを本番で<strong>大量に運用・自動管理</strong>する基盤。〔第6章〕</li>
+<li><strong>Observability</strong>（オブザーバビリティ／観測可能性）— システムの<strong>内部状態を外部から把握できる度合い</strong>。ログ・メトリクス等を整えて高める。〔第8章〕</li>
 <li><strong>origin</strong>（オリジン）— 自分が <code>push</code>/<code>pull</code> する相手（普通は fork した自分のリポジトリ）のデフォルトの呼び名。<code>upstream</code>（コピー元）の対。〔第2章〕</li>
 <li><strong>PATCH</strong>（パッチ）— HTTP メソッドの1つ。「一部だけ更新したい」。<code>PUT</code>（丸ごと更新）との違いは粒度。〔第3章〕</li>
 <li><strong>POST</strong>（ポスト）— HTTP メソッドの1つ。「新しく作成したい」。〔第3章〕</li>
 <li><strong>PUT</strong>（プット）— HTTP メソッドの1つ。「全体を更新したい（丸ごと置き換え）」。〔第3章〕</li>
 <li><strong>rebase</strong>（リベース）— ブランチの変更を main の最新の先に<strong>積み直す</strong>操作。履歴を一直線にできるが<strong>履歴書き換え</strong>なので要注意（<code>push</code> 済みの <code>rebase</code> は厳禁）。〔第2章〕</li>
+<li><strong>SLA/SLI/SLO</strong>（エスエルエー等／合意・指標・目標）— サービスの信頼性を**約束（SLA）・計測（SLI）・目標（SLO）**として数値管理する作法。「可用性99.9%」等。〔第8章〕</li>
 <li><strong>Stripe</strong>（ストライプ）— 決済 API の代表格。WebHook で決済完了通知を受け取る使い方が定番。〔第3章〕</li>
 <li><strong>upstream</strong>（アップストリーム）— コピー元の**「オリジナルのリポジトリ」**を指す呼び方（川の上流＝源流のイメージ）。<code>origin</code> の対。〔第2章〕</li>
 <li><strong>VM</strong>（ブイエム／<code>Virtual Machine</code>／仮想マシン）— <strong>OSごと</strong>丸ごと隔離する従来の仮想化方式。コンテナより重い・起動が遅いが、完全な隔離を持つ。〔第6章〕</li>
@@ -350,9 +364,9 @@ slug: 14-glossary</h2>
 
         <nav class="chapter-nav-bottom">
             
-            <a href="07-database.html" class="nav-card prev">
+            <a href="08-logging.html" class="nav-card prev">
                 <span class="nav-label">← 前の章</span>
-                <span class="nav-title">🗄️ データベース適材適所</span>
+                <span class="nav-title">📊 ログ・モニタリング</span>
             </a>
             
             
@@ -364,7 +378,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.10 · 2026.07.09</p>
+        <p class="site-version">vTEST · 2026.01.01</p>
     </footer>
 
     <script src="../assets/script.js"></script>

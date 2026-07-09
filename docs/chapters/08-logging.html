@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログ・モニタリング — 開発の常識・作法</title>
+    <meta name="description" content="ログ・モニタリング — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="ログ・モニタリング — 開発の常識・作法">
+    <meta property="og:description" content="ログ・モニタリング — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/08-logging.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="05-auth.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔑</span>
+            認証・認可
+        </a>
+        
+        <a href="06-docker.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📦</span>
+            コンテナ（Docker）
+        </a>
+        
+        <a href="07-database.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗄️</span>
+            データベース適材適所
+        </a>
+        
+        <a href="08-logging.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">📊</span>
+            ログ・モニタリング
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="07-database.html" class="nav-prev">← データベース適材適所</a>
+            
+            
+            <a href="14-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: ログ・モニタリング
+icon: 📊
+card_desc: 動いているシステムの状態を観察する作法 — ログレベル・構造化ログ・メトリクス・アラート・観測可能性
+slug: 08-logging</h2>
+<h1>08 ログ・モニタリング — 動いているシステムの状態を観察する作法</h1>
+<div class="callout callout-info"><p>本番で動いているシステムは、外から見えない「箱」の中にあります。「いま正常に動いているか・問題が起きていないか」を知るには、システムが<strong>自分の状態を記録し・観察する仕組み</strong>が要ります。この章では、ログとモニタリングによる「観察の作法」を根本から理解します。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p><strong>ログ</strong>は、システムが「<strong>何を・いつ・どうしたか</strong>」を時系列に記録したもの。<strong>モニタリング</strong>は、CPU使用率・レスポンス時間・エラー率等の<strong>状態を数値で常時監視</strong>すること。この2つで「動いているシステムの今の状態」と「問題が起きた時の原因」を把握します。これらを<strong>観測可能性</strong>（<strong>Observability</strong>／オブザーバビリティ）と呼びます。</p>
+<hr />
+<h2>1. なぜログ・モニタリングが必要なのか</h2>
+<p>本番環境で動くシステムは、手元のPCと違い<strong>外から中身が見えません</strong>。「たぶん動いているだろう」で放置するのは、<strong>目隠しして車を運転する</strong>ようなものです。</p>
+<ul>
+<li><strong>平常時</strong>: 「いま正常に動いているか」をどう確認しますか？</li>
+<li><strong>障害時</strong>: 「何が原因で止まったか」をどう突き止めますか？</li>
+<li><strong>成長時</strong>: 「ユーザーが増えても耐えられるか」をどう予測しますか？</li>
+</ul>
+<p>これらに共通するのは、<strong>システムの状態を何らかの形で見える化しておく</strong>必要がある、ということ。それがログとモニタリングです。</p>
+<div class="callout callout-tip"><p>💡 障害が起きた後で「ログを取っておけば分かったのに」と後悔するのは、現場で一番よくある光景です。<strong>障害対応の速さは、ふだんの観察の仕込みで決まります</strong>。ログ・モニタリングは「いざという時のため」でなく「日々の基本」です。</p></div>
+<hr />
+<h2>2. ログとは何か</h2>
+<p><strong>ログ</strong>は、アプリが動く中で起きた出来事を<strong>時系列に記録したもの</strong>です。「誰が・いつ・何をしたか」「どこでエラーが起きたか」等を、後から追える形で残します。</p>
+<p>開発中の <code>print</code> デバッグ（動作確認用の一時出力）と似ていますが、ログは<strong>本番環境で恒常的に出し続け・後から検索できる形</strong>にします。</p>
+<p>ログの代表的な中身:</p>
+<ul>
+<li><strong>アクセスログ</strong>: 誰が・いつ・どのページ/APIを訪れたか</li>
+<li><strong>エラーログ</strong>: どこで・どんな例外（エラー）が起きたか（<strong>スタックトレース</strong>＝エラーの発生経路も記録）</li>
+<li><strong>操作ログ</strong>: 重要な操作（ログイン・決済・データ変更等）の記録</li>
+</ul>
+<div class="callout callout-danger"><p>💡 <strong>スタックトレース</strong>（<code>stack trace</code>／「呼び出し履歴」）: エラーが起きた時、<strong>「どの関数のどの行で起きたか」の経路</strong>を示す情報。エラー原因を特定する最重要の手がかりです。</p></div>
+<hr />
+<h2>3. 🔑 ログレベル —— 記録の「重さ」を使い分ける</h2>
+<p>ここが本章の核心の1つ目です。すべてのログを同じ重さで出すと、<strong>大事な情報が埋もれて探せなく</strong>なります。ログには**「重さ（深刻度）」で分類したレベル**があります:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>レベル</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DEBUG</strong>（デバッグ）</td>
+<td>開発用の詳細。本番では通常<strong>出さない</strong></td>
+<td>変数の中身・処理の細かい経路</td>
+</tr>
+<tr>
+<td><strong>INFO</strong>（インフォ）</td>
+<td><strong>正常な動作</strong>の記録</td>
+<td>サーバー起動・ユーザーログイン・注文完了</td>
+</tr>
+<tr>
+<td><strong>WARN</strong>（ワーン）</td>
+<td><strong>注意</strong>: 今は動いているが、将来問題になりうる</td>
+<td>リトライ発生・リソース残りわずか・閾値接近</td>
+</tr>
+<tr>
+<td><strong>ERROR</strong>（エラー）</td>
+<td><strong>エラー発生</strong>: 処理は失敗したが、システム全体は動き続ける</td>
+<td>API呼び出し失敗・DB保存失敗</td>
+</tr>
+<tr>
+<td><strong>FATAL</strong>（フェイタル）</td>
+<td><strong>致命的</strong>: システム全体が停止・継続不可</td>
+<td>必須サービス停止・起動失敗</td>
+</tr>
+</tbody>
+</table></div>
+<h3>使い分けの作法</h3>
+<ul>
+<li><strong>本番では DEBUG を絞る</strong>: 詳細すぎるとノイズとコスト（保存容量）が膨らむ</li>
+<li><strong>INFO は「正常の証拠」</strong>: 後で「あの時ちゃんと動いていたか」を確認できる</li>
+<li><strong>WARN は「予兆」</strong>: 放っておくと ERROR に進むことが多い。早期対応のチャンス</li>
+<li><strong>ERROR/FATAL は「要対応」</strong>: アラート（通知）対象にすることが多い</li>
+</ul>
+<div class="callout callout-danger"><p>重要 ログレベルは**「後から探す時のフィルタ」**です。障害時に「ERROR 以上だけ絞り込む」「WARN から時系列で見る」等、レベルがあるからこそ素早く原因に辿り着けます。すべて INFO で出すと、この絞り込みが効きません。</p></div>
+<hr />
+<h2>4. 構造化ログ —— 機械が処理しやすい形で出す</h2>
+<p>ログは<strong>後から検索・集計するため</strong>に出します。人が読む文章（「ユーザーがログインしました」）より、<strong>機械が処理しやすい形（キーと値のセット）<strong>の方が、検索や分析が圧倒的に容易です。これが</strong>構造化ログ</strong>です。</p>
+<h3>例: 非構造化 vs 構造化</h3>
+<pre><code class="language-text"># 非構造化（人が読む文章・探しにくい）
+2026-07-10 12:34:56 ユーザーID=123 がログインに成功しました
+</code></pre>
+<pre><code class="language-json"># 構造化（JSON・フィールドで検索できる）
+{&quot;timestamp&quot;: &quot;2026-07-10T12:34:56&quot;, &quot;level&quot;: &quot;INFO&quot;, &quot;event&quot;: &quot;login&quot;, &quot;user_id&quot;: 123, &quot;status&quot;: &quot;success&quot;}
+</code></pre>
+<p>構造化しておけば、「<code>user_id</code> が 123 のログだけ」「<code>level</code> が ERROR のログだけ」等、<strong>特定のフィールドで絞り込み</strong>ができます。</p>
+<div class="callout callout-tip"><p>💡 大量の構造化ログを集めて検索・可視化する道具として、<strong>ELK</strong>（イーエルケー／<code>Elasticsearch</code> + <code>Logstash</code> + <code>Kibana</code> の頭文字）等のスタックがよく使われます。規模が大きくなると、ただの <code>grep</code>（文字列検索）では追いつかなくなり、専用のログ集計基盤が要ります。</p></div>
+<hr />
+<h2>5. 🔑 モニタリングとアラート —— 数値で常時監視し・人に気づかせる</h2>
+<p>ここが本章の核心の2つ目です。ログが**「詳細な文字の記録」<strong>なら、モニタリングは</strong>「全体の状態を数値（メトリクス）で常時監視」**することです。</p>
+<h3>メトリクス（指標）で見る</h3>
+<p>モニタリングは、システムの健康状態を<strong>数値</strong>で把握します:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>メトリクス</th>
+<th>何が分かるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU・メモリ使用率</strong></td>
+<td>リソースが枯渇していないか</td>
+</tr>
+<tr>
+<td><strong>レスポンス時間</strong></td>
+<td>ユーザーを待たせていないか</td>
+</tr>
+<tr>
+<td><strong>エラー率</strong></td>
+<td>どれくらいの割合で失敗しているか</td>
+</tr>
+<tr>
+<td><strong>リクエスト数</strong></td>
+<td>どれくらいの負荷があるか</td>
+</tr>
+</tbody>
+</table></div>
+<p>これらを<strong>ダッシュボード</strong>で可視化し、常時変化を観察します。</p>
+<h3>アラート —— 閾値で人に気づかせる</h3>
+<p>モニタリングの目的は「見る」だけでなく**「異常を検知して人に知らせる」<strong>ことです。あらかじめ</strong>閾値**（しきいち／限界の値）を決めておき、超えたら<strong>アラート</strong>（通知）を飛ばします:</p>
+<ul>
+<li>「エラー率が5分間で10%を超えたら通知」</li>
+<li>「CPU使用率が90%超えが10分続いたら通知」</li>
+</ul>
+<h3>例えていうと: 車のメーターと警告灯</h3>
+<ul>
+<li><strong>ログ</strong>は「<strong>航海日誌</strong>」。詳細な出来事を時系列に記録し、後で原因を追える。</li>
+<li><strong>モニタリング（メトリクス）<strong>は「<strong>車のメーター</strong>」。速度・燃料等の</strong>今の数値</strong>を常時表示。</li>
+<li><strong>アラート</strong>は「<strong>警告灯</strong>」。異常を検知して<strong>運転手に知らせる</strong>。</li>
+</ul>
+<div class="callout callout-danger"><p>重要 <strong>ログは「詳細」・メトリクスは「全体」</strong>。この2つを使い分けます。「レスポンス時間が悪化している（メトリクスで検知）→ 該当時刻のエラーログを確認（ログで詳細）」のように、<strong>メトリクスで異常に気づき・ログで原因を掘る</strong>のが基本の連携です。</p></div>
+<hr />
+<h2>6. なぜ「ログ・モニタリング」が開発の作法なのか</h2>
+<p>ここまでを読むと、ログ・モニタリングが「動かす技術」でなく**「動いている状態を把握する技術（観測可能性）**」だと分かります。</p>
+<h3>作法として位置づけられる理由</h3>
+<ol>
+<li><strong>障害対応の速さを決める</strong>: ログとモニタリングの有無で、復旧時間が何倍も変わる</li>
+<li><strong>「観測可能性」は品質</strong>: 内部状態を外部から把握できるシステムは、運用しやすく信頼される</li>
+<li><strong>事後でなく事前</strong>: メトリクスの傾き（ WARN の増加等）を見て、<strong>障害が起きる前に手を打てる</strong></li>
+</ol>
+<h3>面接・実務での意味</h3>
+<div class="callout callout-info"><p>「本番で障害が起きた時、どう調査しますか？」</p></div>
+<p>この質問は、**「観測の仕組みを理解しているか」**を聞いています。「アラートで異常に気づき、該当時刻の ERROR ログとメトリクスを突き合わせて原因を絞る」と答えられる人は、現場で信頼されます。</p>
+<div class="callout callout-tip"><p>💡 サービスの信頼性を表す指標として <strong>SLA</strong>／<strong>SLI</strong>／<strong>SLO</strong>（いずれもエスエル〜／合意・指標・目標）という概念もあります。「可用性99.9%」等の<strong>約束と実績</strong>を数値で管理する作法で、モニタリングはその計測基盤になります。</p></div>
+<hr />
+<h2>7. よくある落とし穴と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>落とし穴</th>
+<th>何が起きるか</th>
+<th>正しい対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ログを出しすぎる</strong></td>
+<td>保存コスト増・ノイズで重要情報が埋もれる</td>
+<td>本番は DEBUG を絞り、<strong>必要な分だけ</strong>出す</td>
+</tr>
+<tr>
+<td><strong>個人情報をログに書く</strong></td>
+<td>パスワード・カード番号等の漏洩</td>
+<td><strong>機密情報は絶対にログに出さない</strong>（マスキング）</td>
+</tr>
+<tr>
+<td><strong>ログレベルを適当に決める</strong></td>
+<td>絞り込みが効かず、原因追及が困難</td>
+<td><strong>意図を持って</strong> DEBUG/INFO/WARN/ERROR を使い分ける</td>
+</tr>
+<tr>
+<td><strong>非構造化のまま出す</strong></td>
+<td>検索・集計が困難</td>
+<td><strong>構造化ログ</strong>（JSON等）で出す</td>
+</tr>
+<tr>
+<td><strong>アラートを多用しすぎる</strong></td>
+<td>「アラート疲労」で重要な通知を見逃す</td>
+<td><strong>本当に対応が必要なものだけ</strong>アラート化する</td>
+</tr>
+<tr>
+<td><strong>モニタリングを後回しにする</strong></td>
+<td>障害時に手がかりゼロで途方に暮れる</td>
+<td><strong>最初から基本メトリクスだけでも</strong>仕込む</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-tip"><p>💡 <strong>アラート疲労</strong>: アラートが多すぎると、人は次第に<strong>通知を無視</strong>するようになります。すると本当の重大障害の通知も見逃されます。「すべてにアラート」でなく**「対応が要るものだけ」**に絞るのが作法です。</p></div>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li>本番システムは<strong>外から見えない</strong>。状態を把握するには<strong>ログとモニタリング</strong>が要る</li>
+<li><strong>ログ</strong>は「何を・いつ・どうしたか」の時系列記録。<strong>ログレベル</strong>（DEBUG/INFO/WARN/ERROR/FATAL）で重さを使い分け</li>
+<li><strong>構造化ログ</strong>（JSON等）で出せば、後からの検索・集計が容易になる</li>
+<li><strong>モニタリング</strong>はメトリクス（CPU・レスポンス時間・エラー率等）で<strong>全体を数値監視</strong>・<strong>ダッシュボード</strong>で可視化</li>
+<li><strong>アラート</strong>は閾値超えで人に通知。<strong>多用しすぎず</strong>本当に要るものだけ</li>
+<li><strong>ログ（詳細）とメトリクス（全体）の連携</strong>で原因を掘る。これが<strong>観測可能性</strong>（Observability）</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: システムの状態を「観察」する作法が見えました。次は、処理を<strong>速くする・後回しにする</strong>技術です。第9章では、キャッシュ（結果の使い回しで高速化）と非同期処理（時間のかかる処理を後回しにする）の使い分けを扱います。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="07-database.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🗄️ データベース適材適所</span>
+            </a>
+            
+            
+            <a href="14-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
