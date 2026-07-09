@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git &amp; GitHub — 開発の常識・作法</title>
+    <meta name="description" content="Git &amp; GitHub — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="Git &amp; GitHub — 開発の常識・作法">
+    <meta property="og:description" content="Git &amp; GitHub — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/02-git-github.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="01-ci-cd.html" class="nav-prev">← CI/CD</a>
+            
+            
+        </div>
+
+        <article class="chapter-body">
+            <h1>02 Git &amp; GitHub — 変更履歴を管理し、チームで協働する作法</h1>
+<div class="callout callout-info"><p>「コミット」「プルリク」「コンフリクト」「マージ」——現場では当たり前に使われるこれらの言葉、正確に説明できますか？ この章では、コードの変更を記録し、チームで協働するための作法を根本から理解します。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p><strong>Git（ギット）</strong> は、コードの変更履歴を記録・管理する<strong>バージョン管理システム</strong>です。「いつ・誰が・何を変えたか」をすべて保存し、過去の任意の時点に戻れるようにします。<strong>GitHub（ギットハブ）</strong> は、そのGitの履歴を<strong>インターネット上で共有・協働するためのプラットフォーム</strong>です。Gitが「手元の道具」なら、GitHubは「みんなで使う作業場」と言えます。</p>
+<hr />
+<h2>1. なぜバージョン管理が必要なのか</h2>
+<p>Gitが生まれる前、ファイルの変更はこんなふうに管理されていました：</p>
+<ul>
+<li><code>report.docx</code></li>
+<li><code>report_修正版.docx</code></li>
+<li><code>report_最終.docx</code></li>
+<li><code>report_最終_本当に最終.docx</code></li>
+<li><code>report_本気で最終_先方確認済.docx</code></li>
+</ul>
+<p>笑い話に聞こえますが、コードでも同じことが起きます。そして、ここには致命的な問題が3つあります：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>問題</th>
+<th>何が起きるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>「どれが最新？」が分からない</strong></td>
+<td>古い版を編集し続けて作業が無駄になる</td>
+</tr>
+<tr>
+<td><strong>「前の状態」に戻せない</strong></td>
+<td>変更で壊れた時、元に戻す手段がない</td>
+</tr>
+<tr>
+<td><strong>複数人の変更を合わせられない</strong></td>
+<td>誰かの変更を上書きして消してしまう</td>
+</tr>
+</tbody>
+</table></div>
+<p>Gitは、これらを**「変更を1本の歴史（履歴）として記録し、自由に行き来・分岐・合流できる仕組み」**で解決します。</p>
+<div class="callout callout-tip"><p>💡 <strong>「バージョン管理」</strong> ＝ 変更の履歴を管理すること。「第3版」「第4版」と番号を振る代わりに、変更のたびに記録を残して、いつでも過去に戻れるようにする仕組みです。</p></div>
+<hr />
+<h2>2. Gitの3つの領域と「コミット」</h2>
+<p>Gitを理解する鍵は、<strong>ファイルが3つの領域（場所）を移動する</strong>というモデルです。</p>
+<pre><code>[ワークツリー]  --add--&gt;  [ステージ]  --commit--&gt;  [リポジトリ]
+  今編集中の場所         「確定予定」の待合室      履歴として保存
+</code></pre>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>領域</th>
+<th>別名</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ワークツリー</strong>（working tree）</td>
+<td>作業ディレクトリ</td>
+<td>あなたが今、実際にファイルを編集している場所</td>
+</tr>
+<tr>
+<td><strong>ステージ</strong>（stage / index）</td>
+<td>インデックス</td>
+<td>「次の記録に含める変更」をまとめておく待合室</td>
+</tr>
+<tr>
+<td><strong>リポジトリ</strong>（repository）</td>
+<td>—</td>
+<td>変更が<strong>履歴として保存</strong>される場所（<code>.git/</code> 配下）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>コミット（commit）＝ 変更の1ページを歴史に追加する</h3>
+<pre><code class="language-bash">git add report.md       # ワークツリー → ステージ（「この変更を記録します」と指定）
+git commit -m &quot;レポートの誤字を修正&quot;   # ステージ → リポジトリ（履歴に1ページ追加）
+</code></pre>
+<p><strong>コミット（commit）</strong> は、変更を**「歴史の1ページ」として保存する**ことです。1回のコミットには「いつ・誰が・何を・なぜ変えたか」が記録されます。</p>
+<div class="callout callout-tip"><p>💡 なぜ「ワークツリー→ステージ→リポジトリ」と2段階なのか？ —— 一度に<strong>関連する変更だけをまとめて</strong>記録するためです。「機能Aの変更」と「タイポ修正」を別々のコミットに分ければ、後で「機能Aを取り消す」が簡単にできます。ステージは「記録する粒度をコントロールする」ための仕組みです。</p></div>
+<hr />
+<h2>3. 保存・共有・取得の5コマンド —— どう違う？</h2>
+<p>Gitで一番混乱するのが、<strong>「保存・共有・取得」系のコマンド</strong>です。それぞれ「どこ↔どこ」を動くかで整理します。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>何をするか</th>
+<th>向き</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>clone</strong>（クローン）</td>
+<td>リモート（GitHub）のリポジトリを<strong>まるごと手元にコピー</strong>して初次取得する</td>
+<td>リモート → ローカル（最初の1回）</td>
+</tr>
+<tr>
+<td><strong>fetch</strong>（フェッチ）</td>
+<td>リモートの最新情報を<strong>取得だけする</strong>（手元のファイルは書き換えない）</td>
+<td>リモート → ローカル（確認用）</td>
+</tr>
+<tr>
+<td><strong>pull</strong>（プル）</td>
+<td>リモートの最新を取得して、<strong>手元に取り込む</strong>（＝ fetch + merge）</td>
+<td>リモート → ローカル（反映）</td>
+</tr>
+<tr>
+<td><strong>push</strong>（プッシュ）</td>
+<td>手元のコミットを<strong>リモートに送る</strong>（共有・公開）</td>
+<td>ローカル → リモート</td>
+</tr>
+<tr>
+<td><strong>commit</strong>（コミット）</td>
+<td>手元の変更を<strong>ローカルの履歴に保存する</strong>（※まだ共有されない）</td>
+<td>ローカル内</td>
+</tr>
+</tbody>
+</table></div>
+<h3>よくある誤解：commit ≠ push</h3>
+<p>ここが重要です。<strong><code>commit</code> しても、まだ他の人には見えていません。</strong> <code>push</code> して初めてGitHubに届き、共有されます。</p>
+<pre><code>あなたの編集 → [commit] → ローカル履歴（あなただけ）
+                    └→ [push] → GitHub（みんなに共有）
+</code></pre>
+<div class="callout callout-warn"><p>⚠ 「コミットしたのに共有されていない！」という事故は、<code>push</code> 忘れが原因です。逆に、<code>commit</code> せずに <code>push</code> しようとしても「記録がないので送るものがない」と弾かれます。<strong>commit（記録）→ push（共有）の2段階</strong>を覚えてください。</p></div>
+<hr />
+<h2>4. ブランチ —— 別々に進む「平行世界」</h2>
+<p>ここまでの履歴は「1本の直線」でした。しかし現場では、複数人が<strong>同時に別の作業</strong>をします。これを可能にするのが**ブランチ（branch）**です。</p>
+<h3>ブランチとは</h3>
+<p><strong>ブランチ</strong>は、履歴を<strong>枝分かれさせて、別々に進められる仕組み</strong>です。「平行世界」のようなもので、ある世界で機能Aを開発しながら、別の世界でバグ修正を進められます。</p>
+<pre><code>          ┌── (feature/login) ログイン機能を開発 ──┐
+main ─────┤                                    ├── 統合
+          └── (feature/design) デザイン調整 ────┘
+</code></pre>
+<pre><code class="language-bash">git branch feature/login      # ブランチを作る
+git switch feature/login      # そのブランチに移動（＝そちらの世界に入る）
+# ...作業・コミット...
+git switch main               # main（中心の世界）に戻る
+</code></pre>
+<div class="callout callout-tip"><p>💡 <code>main</code>（旧称 <code>master</code>）は、リポジトリの**「中心となる安定した歴史」**を指すブランチ名です。多くの現場では「mainは常に動く・壊れない状態を保つ」という合意があります。</p></div>
+<h3>統合（merge）と3つの方法</h3>
+<p>別ブランチで進めた作業を、mainに**統合する（merge）**方法は、大きく3つあります：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>仕組み</th>
+<th>履歴の見た目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>fast-forward</strong>（早送り）</td>
+<td>mainが動いていなければ、ポインタを「前に進める」だけ。枝が無かったことになる</td>
+<td>直線</td>
+</tr>
+<tr>
+<td><strong>mergeコミット</strong>（通常マージ）</td>
+<td>両方の変更を合わせた「統合コミット」を作る。「どこで合流したか」が残る</td>
+<td>分岐・合流が明示</td>
+</tr>
+<tr>
+<td><strong>rebase</strong>（リベース）</td>
+<td>ブランチの変更を「mainの最新の先」に<strong>積み直す</strong>。履歴を一直線に整形できる</td>
+<td>直線（綺麗）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p>⚠ <strong>rebase は履歴を書き換える操作</strong>です。綺麗な履歴になる反面、既に共有したコミットをrebaseすると<strong>他の人の履歴と矛盾して大混乱</strong>を引き起こします。そのため**「push済みのコミットはrebaseしない」「複雑なrebaseは慎重に」**が現場の鉄則です。特に <code>git rebase -i</code>（対話的rebase／コミット履歴を編集する強力な操作）は、取り返しのつかない変更もできるため、個人運用では避ける・チームでは運用ルールを決めるのが普通です。</p></div>
+<hr />
+<h2>5. Pull Request —— レビューを経て統合する作法</h2>
+<p><strong>Pull Request（PR／プルリク）</strong> は、「<strong>この変更を取り込んでください（pullしてね）</strong>」と<strong>チームに依頼し、レビューを経て統合する仕組み</strong>です。</p>
+<h3>なぜ直接mainにpushせず、PRを経るのか</h3>
+<p>個人の一人プロジェクトなら、直接mainにpushしても問題ありません。しかし<strong>チーム開発ではPRベースが作法</strong>です。理由は：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>直接pushのリスク</th>
+<th>PRが防ぐこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>壊れたコードがいきなりmainに入る</td>
+<td><strong>レビュー</strong>が挟まり、問題を事前に発見できる</td>
+</tr>
+<tr>
+<td>「なぜこの変更をしたか」が分からない</td>
+<td>PRの<strong>説明文</strong>に意図と背景を残せる</td>
+</tr>
+<tr>
+<td>変更の影響範囲が分からない</td>
+<td><strong>差分（diff）</strong> とCI（→第1章）を確認してから統合できる</td>
+</tr>
+<tr>
+<td>誰が何をしたか追いにくい</td>
+<td>PR単位で「機能追加の一連の作業」が整理される</td>
+</tr>
+</tbody>
+</table></div>
+<h3>PRの流れ</h3>
+<pre><code>1. トピックブランチを作る（feature/xxx）
+2. 作業してコミット → push
+3. GitHub上で「Pull Request」を作成
+4. CIが自動で回る（テスト・Lint等）← 第1章 CI/CDの出番
+5. レビュアーが確認 → コメント・承認
+6. 問題なければ統合（merge）
+7. ブランチを削除して完了
+</code></pre>
+<div class="callout callout-tip"><p>💡 PRは「<strong>完成した変更の提案</strong>」です。だからこそ、CIを通す・セルフレビューする・説明文を書くなど、<strong>提案する前に品質を整える</strong>のが作法です（→第13章 レビュー文化で詳しく）。</p></div>
+<hr />
+<h2>6. コンフリクト —— 同じ場所を別変更した時の解決</h2>
+<p>複数人が同時に作業していると、<strong>同じファイルの同じ行を別の内容で変更</strong>してしまうことがあります。これが**コンフリクト（conflict／衝突）**です。</p>
+<h3>なぜ起きるか</h3>
+<pre><code>main:     「今日は晴れです」
+Aさんの変更:「今日はとても晴れです」   （「とても」を追加）
+Bさんの変更:「今日は雨です」          （文全体を書き換え）
+</code></pre>
+<p>AもBも<strong>同じ行</strong>を変えたため、Gitは「どちらを正とするか」を自動判断できません。これを人間が決める必要があります。</p>
+<h3>コンフリクトの解決</h3>
+<p>コンフリクトが起きると、ファイルには<strong>両方の変更がマーカ付きで残ります</strong>：</p>
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+今日はとても晴れです        （あなたの変更）
+=======
+今日は雨です                （相手の変更）
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/other
+</code></pre>
+<p>この部分を<strong>編集して「最終的にどうしたいか」1つにまとめ</strong>、マーカを消して保存→コミットします。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>対処</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>自分のを採用</strong></td>
+<td>Aさんの変更を残す</td>
+</tr>
+<tr>
+<td><strong>相手のを採用</strong></td>
+<td>Bさんの変更を残す</td>
+</tr>
+<tr>
+<td><strong>両方を組み合わせる</strong></td>
+<td>新しく書き直して両方の意図を取り入れる（一番多い）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-warn"><p>⚠ コンフリクトは「異常」ではありません。<strong>並行作業の必然的な結果</strong>です。慌てずに「何をどうしたいか」を考え、必要なら相手と相談して解決するのがプロの対応です。mergeでもrebaseでも発生しえます。</p></div>
+<hr />
+<h2>7. GitHub回りの協働機能</h2>
+<p>GitHubは、Gitの履歴を共有するだけでなく、<strong>チームで協働するための機能</strong>を多数提供しています。</p>
+<h3>issue（イシュー）</h3>
+<p><strong>issue</strong>は、<strong>「やるべきこと・問題・要望」を1件ずつ管理するチケット</strong>です。「バグ報告」「この機能を追加したい」「ドキュメントを整備」などをissueとして起票し、議論・対応します。多くのチームは「1issue = 1タスク」で運用します。</p>
+<h3>ラベル・マイルストーン</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>役割</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ラベル</strong>（label）</td>
+<td>issue/PRを<strong>分類</strong>する色付きタグ</td>
+<td><code>bug</code>（不具報）/ <code>enhancement</code>（機能追加）/ <code>good first issue</code>（初心者向け）</td>
+</tr>
+<tr>
+<td><strong>マイルストーン</strong>（milestone）</td>
+<td><strong>期限・目標</strong>でissue/PRを束ねる</td>
+<td>「v1.0リリース」「スプリント7月」</td>
+</tr>
+</tbody>
+</table></div>
+<h3>fork・upstream・トピックブランチ戦略</h3>
+<p>他の人のプロジェクトに貢献する（<strong>OSS＝オープンソースソフトウェアへの参加</strong>）時によく使う概念です：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>fork</strong>（フォーク）</td>
+<td>他人のリポジトリを<strong>自分のアカウントにコピー</strong>する（オリジナルとは別物として自由に編集できる）</td>
+</tr>
+<tr>
+<td><strong>upstream</strong>（アップストリーム）</td>
+<td>コピー元の**「オリジナルのリポジトリ」**を指す呼び方（川の上流＝源流のイメージ）</td>
+</tr>
+<tr>
+<td><strong>origin</strong>（オリジン）</td>
+<td>自分が<strong>push/pullする相手</strong>（普通はforkした自分のリポジトリ）のデフォルトの呼び名</td>
+</tr>
+<tr>
+<td><strong>トピックブランチ</strong></td>
+<td><strong>1つの目的（issue/機能）ごとに切る</strong>ブランチ。<code>feature/xxx</code> <code>fix/yyy</code> 等。終わったら消す</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>OSS貢献の流れ</strong>: fork → clone → トピックブランチ作成 → 作業 → push（自分のforkへ） → GitHub上で<strong>オリジナル（upstream）へPull Request</strong> → レビュー → 統合。</p>
+<div class="callout callout-tip"><p>💡 「ブランチを切る＝作る」「PRを出す＝作成する」「マージする＝統合する」など、現場では独特の言い回しが使われます。最初は用語の壁がありますが、やっていることは「枝を作って作業して、レビューして、本流に戻す」の繰り返しです。</p></div>
+<hr />
+<h2>8. コミットメッセージの作法</h2>
+<p>コミットメーションは**「履歴を読む人（未来の自分・チームメイト）へのメッセージ」**です。いい加減に書くと、後で「この変更、何のためにやったっけ？」と困ります。</p>
+<h3>Conventional Commits（規約化コミット）</h3>
+<p>現場で広く使われている<strong>コミットメッセージの書き方のルール</strong>が <strong>Conventional Commits</strong> です。冒頭に**変更の種類を表すキーワード（プレフィックス）**を付けます：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>プレフィックス</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>feat</strong></td>
+<td>新機能（feature）</td>
+<td><code>feat: ログイン機能を追加</code></td>
+</tr>
+<tr>
+<td><strong>fix</strong></td>
+<td>バグ修正</td>
+<td><code>fix: ログイン時のクラッシュを修正</code></td>
+</tr>
+<tr>
+<td><strong>docs</strong></td>
+<td>ドキュメント変更</td>
+<td><code>docs: READMEを更新</code></td>
+</tr>
+<tr>
+<td><strong>refactor</strong></td>
+<td>挙動を変えない整理（リファクタリング）</td>
+<td><code>refactor: 関数を分割して見やすく</code></td>
+</tr>
+<tr>
+<td><strong>test</strong></td>
+<td>テスト追加・修正</td>
+<td><code>test: ログインのテストを追加</code></td>
+</tr>
+<tr>
+<td><strong>chore</strong></td>
+<td>雑務（設定・ビルド・依存更新等）</td>
+<td><code>chore: ライブラリを最新化</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>良いコミットメッセージのポイント</h3>
+<ul>
+<li><strong>1行目は「何をしたか」を簡潔に</strong>（日本語で50字程度が目安）</li>
+<li><strong>1コミット1テーマ</strong>（関係ない変更を混ぜない）</li>
+<li><strong>「なぜ」は本文やPRに</strong>（1行目に詰め込まない）</li>
+</ul>
+<pre><code class="language-bash"># 良い例
+git commit -m &quot;feat: パスワードリセット機能を追加&quot;
+
+# 悪い例（情報がない）
+git commit -m &quot;修正&quot;
+git commit -m &quot;いろいろ変えた&quot;
+</code></pre>
+<div class="callout callout-tip"><p>💡 コミットメッセージは**「未来の自分への手紙」**です。「なぜこの変更が必要だったか」が履歴から読み取れるようにしておくと、後日のトラブル調査や振り返りが圧倒的に楽になります。</p></div>
+<hr />
+<h2>9. よくある失敗と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>失敗</th>
+<th>何が起きるか</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>push忘れ</strong></td>
+<td>「直したはず」が共有されておらず、他の人が古い版を見る</td>
+<td>commit後は<strong>pushまでが1セット</strong>と覚える</td>
+</tr>
+<tr>
+<td><strong>commit粒度が大きすぎる</strong></td>
+<td>「機能Aとタイポ修正と設定変更」が1コミットに混ざり、取り消しや調査が困難に</td>
+<td><strong>1テーマ1コミット</strong>を心がける（ステージで取捨選択）</td>
+</tr>
+<tr>
+<td><strong>mainを直接いじって壊す</strong></td>
+<td>中心の歴史が壊れ、全員に影響</td>
+<td>チーム開発では<strong>トピックブランチ＋PR</strong>を経る</td>
+</tr>
+<tr>
+<td><strong>共有済みコミットをrebase</strong></td>
+<td>他の人の履歴と矛盾し、深刻なコンフリクトが多発</td>
+<td><strong>push済みはrebaseしない</strong>（特に <code>rebase -i</code>）</td>
+</tr>
+<tr>
+<td><strong>コンフリクトを放置</strong></td>
+<td>マージできず開発が止まる</td>
+<td>慌てず<strong>両者の意図を読み取り</strong>、1つにまとめる</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li><strong>Git</strong> はコードの変更履歴を記録・管理するバージョン管理システム。<strong>GitHub</strong> はそれを共有・協働するプラットフォーム</li>
+<li>ファイルは<strong>ワークツリー → ステージ → リポジトリ</strong>と流れ、<code>commit</code> で記録・<code>push</code> で共有（<strong>commit ≠ push</strong>）</li>
+<li><strong>ブランチ</strong>で平行世界を作り、<strong>merge / rebase</strong> で統合。<strong>push済みのrebaseは厳禁</strong></li>
+<li><strong>Pull Request</strong> は、レビューとCIを経て安全に統合する作法。チーム開発の基本単位</li>
+<li><strong>コンフリクト</strong>は並行作業の必然。人間が「どうしたいか」を決めて解決する</li>
+<li><strong>コミットメッセージ</strong>は未来の自分・チームへの手紙。<strong>Conventional Commits</strong>（feat/fix/docs…）で分かりやすく</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: Git/GitHubで「コードを管理・共有」する作法が見えました。次は、そのコードの上で<strong>プログラム同士が通信する窓口</strong>である <strong>API</strong> を扱います。第3章では、エンドポイント・ステータスコード・REST/GraphQLなど、開発現場で毎日触れるAPIの常識を解説します。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="01-ci-cd.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🔄 CI/CD</span>
+            </a>
+            
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">vTEST · 2026.01.01</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>

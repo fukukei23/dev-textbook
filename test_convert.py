@@ -1,5 +1,6 @@
 """convert.py のテスト — リンク書き換え・HTML生成・章スキャン."""
 
+import html
 import re
 from unittest.mock import patch
 
@@ -360,7 +361,9 @@ class TestBuildIntegrity:
     def test_chapter_titles_in_index(self):
         index = (OUTPUT_DIR / "index.html").read_text(encoding="utf-8")
         for info in CHAPTER_MAP.values():
-            assert info["title"] in index
+            # タイトルはHTML出力時にエスケープされる（"&" → "&amp;" 等）。
+            # "&" を含むタイトル（"Git & GitHub"）に対応するためエスケープ済み文字列で比較。
+            assert html.escape(info["title"]) in index
 
     def test_mermaid_rendered_when_defined(self):
         for md_name in MERMAID_DIAGRAMS:

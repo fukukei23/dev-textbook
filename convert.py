@@ -41,10 +41,11 @@ def get_build_info() -> tuple[str, str]:
     today = date.today().strftime("%Y.%m.%d")
     return new_version, today
 
-# 既存章の手動定義（第1章完成フェーズ: 00 はじめに + 01 CI/CD。02-14は追加時に追記・自動スキャンで対応）
+# 既存章の手動定義（第2章完成フェーズ: 00 はじめに + 01 CI/CD + 02 Git & GitHub。03-14は追加時に追記・自動スキャンで対応）
 CHAPTER_MAP = {
     "00_はじめに.md": {"slug": "00-intro", "title": "はじめに", "icon": "📚", "desc": "この教科書の対象読者・使い方・全14章の全体構成"},
     "01_CI-CD.md": {"slug": "01-ci-cd", "title": "CI/CD", "icon": "🔄", "desc": "継続的インテグレーション・緑が証明すること/しないこと・デプロイ・ロールバック"},
+    "02_Git-GitHub.md": {"slug": "02-git-github", "title": "Git & GitHub", "icon": "🌿", "desc": "変更履歴の管理・commit/push/pullの違い・ブランチ・Pull Request・コンフリクト解決・コミットメッセージ作法"},
 }
 
 
