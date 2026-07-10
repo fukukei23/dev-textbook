@@ -109,6 +109,12 @@
             開発プロセス・品質
         </a>
         
+        <a href="13-review-design.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🏗️</span>
+            レビュー文化・設計
+        </a>
+        
         <a href="14-glossary.html"
            class="sidebar-link active">
             <span class="sidebar-icon">📖</span>
@@ -121,7 +127,7 @@
     <main class="content">
         <div class="chapter-nav-top">
             
-            <a href="12-quality.html" class="nav-prev">← 開発プロセス・品質</a>
+            <a href="13-review-design.html" class="nav-prev">← レビュー文化・設計</a>
             
             
         </div>
@@ -187,6 +193,7 @@ slug: 14-glossary</h2>
 <li><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔第12章〕</li>
 <li><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔第1章〕</li>
 <li><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔第4章〕</li>
+<li><strong>関心の分離</strong>（<code>SoC</code>／エスオーシー／<code>separation of concerns</code>）— 異なる関心事（UI・DB・業務ロジック等）を<strong>分離して別の部品に</strong>。混ざると1箇所の変更が全体に波及する。〔第13章〕</li>
 </ul>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の LLM 中継プロキシ（<code>glm-rate-proxy</code>）では、APIキー等の秘匿値をすべて <code>~/.secrets.env</code> という環境変数ファイルに一元化し、コードには「キー名」しか書かない運用で漏洩を防いでいます。</p></div>
 <ul>
@@ -199,6 +206,7 @@ slug: 14-glossary</h2>
 <li><strong>キュー</strong>（<code>queue</code>／「列」）— 非同期処理で依頼を<strong>順に並べておく場所</strong>。ワーカーが取り出して処理する。〔第9章〕</li>
 <li><strong>git bisect</strong>（ギット・バイセクション／<code>git bisect</code>）— 良い版と悪い版を指定し、原因のコミットを<strong>二分探索</strong>で特定するGit機能。〔第11章〕</li>
 <li><strong>技術的負債</strong>（<code>technical debt</code>）— 「後で直す」と先送りされた問題が、雪だるま式に膨らんで開発を重くする現象。借金のメタファー。〔第1章〕</li>
+<li><strong>凝集度</strong>（<code>cohesion</code>／コヒージョン）— 1つのモジュール（部品）内の<strong>機能のまとまり</strong>。<strong>高い（強い）ほど良い</strong>。1モジュール＝1責務に集中すると凝集が強くなる（→ 結合度）。〔第13章〕</li>
 </ul>
 <h3>く</h3>
 <ul>
@@ -210,10 +218,12 @@ slug: 14-glossary</h2>
 </ul>
 <h3>け</h3>
 <ul>
+<li><strong>結合度</strong>（<code>coupling</code>／カプリング）— モジュール（部品）同士の<strong>依存の強さ</strong>。<strong>低い（ゆるい）ほど良い</strong>。片方を変えるともう片方も壊れる＝結合が強い（→ 凝集度）。〔第13章〕</li>
 <li><strong>GET</strong>（ゲット）— HTTP メソッドの1つ。「取得したい（ページを見る）」という意味。〔第3章〕</li>
 </ul>
 <h3>こ</h3>
 <ul>
+<li><strong>コードレビュー</strong>（<code>code review</code>）— 他の人が書いたコードを<strong>確認し、改善点を伝え合う</strong>作業。Pull Request で実施するのが現代の定番。ミス探しでなく知見共有の場。〔第13章〕</li>
 <li><strong>コミット</strong>（<code>commit</code>）— 変更を「歴史の1ページ」として<strong>ローカルに保存</strong>すること。<code>commit</code> だけではまだ他の人に見えない（→ <code>push</code>）。〔第2章〕</li>
 <li><strong>コンテナ</strong>（<code>container</code>）— アプリと実行環境を**「丸ごと1つの箱」**に詰め込む技術。イメージ（設計図）を起動した「動いている実体」でもある。<code>Docker</code> が代表実装。〔第6章〕</li>
 <li><strong>コンフリクト</strong>（<code>conflict</code>／「衝突」）— 同じファイルの同じ行を別々に変更してしまい、Git が自動で統合できなくなった状態。人間が解決する。〔第2章〕</li>
@@ -249,6 +259,7 @@ slug: 14-glossary</h2>
 <h2>た行</h2>
 <h3>た</h3>
 <ul>
+<li><strong>単一責任</strong>（<code>SRP</code>／エスアールピー／単一責任原則／<code>single responsibility</code>）— 1つのモジュール・関数は<strong>1つの責務</strong>だけ持つという原則。複数の役目を持つと、一部を変えたい時にも全部に影響する。〔第13章〕</li>
 <li><strong>ダッシュボード</strong>（<code>dashboard</code>）— メトリクス（CPU・エラー率等）を<strong>グラフ等で可視化</strong>する画面。システム全体の状態を一目で把握する。〔第8章〕</li>
 <li><strong>デプロイ</strong>（<code>deploy</code>＝「リリース」「公開」とほぼ同義）— コードを<strong>本番環境（ユーザーが使う環境）に配置して動かす</strong>こと。〔第1章〕</li>
 </ul>
@@ -335,6 +346,7 @@ slug: 14-glossary</h2>
 <h3>や</h3>
 <ul>
 <li><strong>yarn</strong>（ヤーン／<code>yarn</code>）— JavaScript の<strong>パッケージマネージャ</strong>（<code>npm</code> の代替）。〔第10章〕</li>
+<li><strong>YAGNI</strong>（ヤグニ／<code>You Aren't Gonna Need It</code>／それはまだ要らない）— <strong>今不要な機能・抽象を作らない</strong>原則。「将来使うかも」で作った複雑さは負債になりがち。〔第13章〕</li>
 </ul>
 <h3>ゆ</h3>
 <ul>
@@ -389,6 +401,7 @@ slug: 14-glossary</h2>
 <li><strong>.env</strong>（ドット・イーエンヴイ／通称「ドット・エンブ」も）— ローカル開発で環境変数をまとめた設定ファイル。<strong>Git には入れない</strong>前提。〔第4章〕</li>
 <li><strong>.gitignore</strong>（ドット・ギットイグノア）— Git の追跡から<strong>除外するファイルを指定</strong>する設定ファイル。<code>.env</code> 等の秘匿ファイルを弾くのに使う。〔第4章〕</li>
 <li><strong>CDN</strong>（シーディーエヌ／<code>Content Delivery Network</code>）— 静的ファイル（画像・CSS等）を世界中のサーバーに配置し、<strong>ユーザーに近い所から配信</strong>する仕組み。静的配信のキャッシュ代表。〔第9章〕</li>
+<li><strong>DRY</strong>（ドライ／<code>Don't Repeat Yourself</code>／繰り返すな）— 同じコード・知識を<strong>重複させない</strong>原則。直す時に複数箇所触る重複は修正漏れの温床。〔第13章〕</li>
 <li><strong>Docker</strong>（ドッカー）— コンテナを作り・動かす<strong>最も普及したツール兼フォーマット</strong>。「環境を丸ごと箱詰め」して運ぶ。〔第6章〕</li>
 <li><strong>Dockerfile</strong>（ドッカーファイル）— イメージの作り方を書いた<strong>手順書</strong>。これをビルドするとイメージができる。〔第6章〕</li>
 <li><strong>ELK</strong>（イーエルケー／<code>Elasticsearch</code>+<code>Logstash</code>+<code>Kibana</code>）— 大量の構造化ログを集めて<strong>検索・可視化</strong>するログ集計スタックの代表例。〔第8章〕</li>
@@ -399,6 +412,7 @@ slug: 14-glossary</h2>
 <li><strong>job</strong>（ジョブ）— GitHub Actions でワークフロー内の<strong>実行単位</strong>。<code>ワークフロー &gt; ジョブ &gt; ステップ</code> の階層。〔第1章〕</li>
 <li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔第3章〕</li>
 <li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶ<strong>署名付きトークン</strong>。API・モバイル向き（ステートレス・無効化は工夫が要る）。〔第5章〕</li>
+<li><strong>KISS</strong>（キス／<code>Keep It Simple, Stupid</code>／シンプルに）— <strong>必要以上に複雑にしない</strong>原則。賢い書き方より分かる書き方。〔第13章〕</li>
 <li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを本番で<strong>大量に運用・自動管理</strong>する基盤。〔第6章〕</li>
 <li><strong>left shift</strong>（レフトシフト／「左へずらす」）— 問題を工程の**手前（左）**で見つけるほど直すコストが安い、という思想。エディタ・pre-commit・CI など手前に検査を置く根拠。〔第12章〕</li>
 <li><strong>Observability</strong>（オブザーバビリティ／観測可能性）— システムの<strong>内部状態を外部から把握できる度合い</strong>。ログ・メトリクス等を整えて高める。〔第8章〕</li>
@@ -427,9 +441,9 @@ slug: 14-glossary</h2>
 
         <nav class="chapter-nav-bottom">
             
-            <a href="12-quality.html" class="nav-card prev">
+            <a href="13-review-design.html" class="nav-card prev">
                 <span class="nav-label">← 前の章</span>
-                <span class="nav-title">🛡️ 開発プロセス・品質</span>
+                <span class="nav-title">🏗️ レビュー文化・設計</span>
             </a>
             
             
@@ -441,7 +455,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.27 · 2026.07.10</p>
+        <p class="site-version">vTEST · 2026.01.01</p>
     </footer>
 
     <script src="../assets/script.js"></script>
