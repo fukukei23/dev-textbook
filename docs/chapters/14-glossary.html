@@ -152,14 +152,23 @@ slug: 14-glossary</h2>
 <h2>あ行</h2>
 <h3>あ</h3>
 <ul>
-<li><strong>ACID</strong>（アシッド）— トランザクションが満たすべき<strong>4つの整合性の性質</strong>（原子性・一貫性・隔離性・耐久性）。お金等の絶対に狂ってはいけないデータは ACID の強い RDB が基本。〔<a href="07-database.html">第7章</a>〕</li>
-<li><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<li><strong>ACID</strong>（アシッド）— トランザクションが満たすべき<strong>4つの整合性の性質</strong>（原子性・一貫性・隔離性・耐久性）。お金等の絶対に狂ってはいけないデータは ACID の強い RDB が基本。〔<a href="07-database.html">第7章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 決済など「絶対に途中で止まってはいけない」処理は ACID を満たす RDB で。「全て成功」か「全てなかったこと」のどちらかが保証される。</p></div>
+</details><details class="glossary-item">
+<summary><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
 <div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 天気アプリが「気象庁の API を叩いて明日の天気を取得」する等。人間が画面を操作するのでなく、<strong>プログラム同士の窓口</strong>。LINE Bot も LINE の API 経由でメッセージを送受信。</p></div>
 </details><details class="glossary-item">
-<summary><strong>IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）— URL の ID を書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>アラート</strong>（<code>alert</code>）— 監視で<strong>異常を検知した時に人に知らせる</strong>通知。閾値（限界値）を超えた等の条件で発火。多用しすぎると「アラート疲労」に。〔<a href="08-logging.html">第8章</a>〕</li>
-<li><strong>RDB</strong>（アールディービー／<code>Relational Database</code>／リレーショナルデータベース）— データを**表（テーブル）**で管理する方式。SQL で操作し、データの整合性が強い。〔<a href="07-database.html">第7章</a>〕</li>
-<li><strong>RBAC</strong>（アールビーエーシー／役割ベースアクセス制御）— 「管理者・一般」等の<strong>役割</strong>で権限を管理する認可の方式。〔<a href="05-auth.html">第5章</a>〕</summary>
+<summary><strong>IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）— URL の ID を書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: URL の <code>?id=123</code> を <code>?id=124</code> に書き換えただけで他人の予約が見えた＝IDOR。「ログインは通った」だけでなく「この人はこのデータを見てよいか」の認可チェックが漏れていた。</p></div>
+</details><details class="glossary-item">
+<summary><strong>アラート</strong>（<code>alert</code>）— 監視で<strong>異常を検知した時に人に知らせる</strong>通知。閾値（限界値）を超えた等の条件で発火。多用しすぎると「アラート疲労」に。〔<a href="08-logging.html">第8章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「CPU使用率90%超でアラート発報→Slackに通知」等。ただし毎日鳴るアラートは次第に無視される（アラート疲労）ので、本当に人間が見るべき時だけ鳴らす設計が要る。</p></div>
+</details><details class="glossary-item">
+<summary><strong>RDB</strong>（アールディービー／<code>Relational Database</code>／リレーショナルデータベース）— データを**表（テーブル）**で管理する方式。SQL で操作し、データの整合性が強い。〔<a href="07-database.html">第7章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 顧客管理・注文管理等、「表で整理できて整合性が要る」データは RDB。SQL で「先月売上上位10件」等の集計が柔軟にできる（→ NoSQL は不向きな場合が多い）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>RBAC</strong>（アールビーエーシー／役割ベースアクセス制御）— 「管理者・一般」等の<strong>役割</strong>で権限を管理する認可の方式。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「管理者ロール」「一般ロール」等の<strong>役割</strong>で権限を分ける。新しい人には役割を割り当てるだけで権限が設定済（人ごとに個別設定しない）。</p></div>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の予約管理システム（<code>reserve-optimizer</code>）では、予約の取得・作成・取消を行う REST API を設計し、フロントと GAS（Google Apps Script）の間を HTTP で結んでいます。</p></div>
 </details><h3>い</h3>
 <details class="glossary-item">
@@ -453,7 +462,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.35 · 2026.07.10</p>
+        <p class="site-version">v1.36 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>
