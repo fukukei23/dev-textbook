@@ -136,17 +136,35 @@
 
         <article class="chapter-body">
             <hr />
-<h2>title: キャッシュ・非同期処理
+<details class="page-toc" open>
+<summary>📑 この章の目次</summary>
+<ul>
+<li><a href="#sec-1">title: キャッシュ・非同期処理
+icon: ⚡
+card_desc: 処理を速くする・後回しにする技術の使い分け — キャッシュ/無効化/TTL・非同期/キュー・同期との違い
+slug: 09-cache-async</a></li>
+<li><a href="#sec-2">一言でいうと</a></li>
+<li><a href="#sec-3">1. なぜキャッシュ・非同期処理が必要なのか</a></li>
+<li><a href="#sec-4">2. キャッシュとは —— 結果を使い回す</a></li>
+<li><a href="#sec-5">3. 🔑 キャッシュの核心 —— 速さと新しさのトレードオフ</a></li>
+<li><a href="#sec-6">4. 非同期処理とは —— 重い処理を後回しにする</a></li>
+<li><a href="#sec-7">5. 🔑 キャッシュと非同期の使い分け</a></li>
+<li><a href="#sec-8">6. なぜ「キャッシュ・非同期」が開発の作法なのか</a></li>
+<li><a href="#sec-9">7. よくある落とし穴と対処</a></li>
+<li><a href="#sec-10">まとめ</a></li>
+</ul>
+</details>
+<h2 id="sec-1">title: キャッシュ・非同期処理
 icon: ⚡
 card_desc: 処理を速くする・後回しにする技術の使い分け — キャッシュ/無効化/TTL・非同期/キュー・同期との違い
 slug: 09-cache-async</h2>
 <h1>09 キャッシュ・非同期処理 — 処理を速くする・後回しにする技術の使い分け</h1>
 <div class="callout callout-info"><p>「ページの表示が遅い」「重い処理でユーザーを待たせている」——この2つの問題に、開発現場は決まって2つの技術で立ち向かいます。<strong>キャッシュ</strong>（結果を使い回して速くする）と<strong>非同期処理</strong>（重い処理を後回しにする）です。この章では、この2つの本質と使い分けを根本から理解します。</p></div>
 <hr />
-<h2>一言でいうと</h2>
+<h2 id="sec-2">一言でいうと</h2>
 <p><strong>キャッシュ</strong>は、一度取得・計算した結果を<strong>使い回して速くする</strong>技術。<strong>非同期処理</strong>は、時間のかかる処理を<strong>後回しにしてユーザーを待たせない</strong>技術。この2つは「速くする」という目的で語られますが、<strong>根本的に別の仕組み</strong>です。キャッシュは「同じ計算を何度もしない」・非同期は「重い処理を待たせない」と、それぞれの得意な問題に使い分けます。</p>
 <hr />
-<h2>1. なぜキャッシュ・非同期処理が必要なのか</h2>
+<h2 id="sec-3">1. なぜキャッシュ・非同期処理が必要なのか</h2>
 <p>Webサービスにおいて、<strong>速さは機能と同じくらい重要</strong>です。</p>
 <ul>
 <li>ユーザーは<strong>数秒の待ちで離脱</strong>する（「3秒ルール」と呼ばれる目安がある）</li>
@@ -177,7 +195,7 @@ slug: 09-cache-async</h2>
 </table></div>
 <p>キャッシュと非同期処理は、この**別々の「遅さ」**にそれぞれ効く技術です。</p>
 <hr />
-<h2>2. キャッシュとは —— 結果を使い回す</h2>
+<h2 id="sec-4">2. キャッシュとは —— 結果を使い回す</h2>
 <p><strong>キャッシュ</strong>（<code>cache</code>／「隠し場所」由来）は、<strong>一度取得・計算した結果を一時保存しておき、次はそれを使い回す</strong>仕組みです。「同じ問いには同じ答え」を、毎回やり直さずに返せます。</p>
 <h3>どこに置くか</h3>
 <p>キャッシュは、本来のデータ源（データベース等）の<strong>手前</strong>に置きます:</p>
@@ -188,11 +206,11 @@ slug: 09-cache-async</h2>
 <li>キャッシュにあれば<strong>キャッシュヒット</strong>（即座に返す・速い）</li>
 <li>なければ<strong>キャッシュミス</strong>（本来の源へ取りに行き・キャッシュにも保存）</li>
 </ul>
-<div class="callout callout-tip"><p>💡 キャッシュの保管場所としては、<strong>Redis</strong>（→ 第7章）のようなキー・バリュー型 NoSQL や、アプリのメモリがよく使われます。静的ファイル（画像・CSS等）なら <strong>CDN</strong>（シーディーエヌ／<code>Content Delivery Network</code>）—— 世界中のサーバーにファイルを配置し、ユーザーに<strong>地理的に近い所</strong>から配信する仕組み —— が代表例です。</p></div>
+<div class="callout callout-tip"><p>💡 キャッシュの保管場所としては、<strong>Redis</strong>（→ <a href="07-database.html">第7章</a>）のようなキー・バリュー型 NoSQL や、アプリのメモリがよく使われます。静的ファイル（画像・CSS等）なら <strong>CDN</strong>（シーディーエヌ／<code>Content Delivery Network</code>）—— 世界中のサーバーにファイルを配置し、ユーザーに<strong>地理的に近い所</strong>から配信する仕組み —— が代表例です。</p></div>
 <h3>例えていうと: 冷蔵庫</h3>
 <p>毎回スーパー（データベース）に行かず、**冷蔵庫（キャッシュ）**に食材を保存しておいて使い回す。冷蔵庫にあれば早いが、在庫が古くなる問題（後述）もある。</p>
 <hr />
-<h2>3. 🔑 キャッシュの核心 —— 速さと新しさのトレードオフ</h2>
+<h2 id="sec-5">3. 🔑 キャッシュの核心 —— 速さと新しさのトレードオフ</h2>
 <p>ここが本章の核心の1つ目です。キャッシュの最大の難しさは**「古くなる」**ことです。</p>
 <h3>古さ（一貫性）の問題</h3>
 <p>キャッシュは**「副本（コピー）」<strong>です。本体（データベース）が変わっても、キャッシュが古いままなら</strong>「更新したのに画面が変わらない」**事故が起きます。</p>
@@ -206,7 +224,7 @@ slug: 09-cache-async</h2>
 <div class="callout callout-danger"><p>重要 <strong>キャッシュは「速さ」と「新しさ」のトレードオフ</strong>です。速くすればするほど古いデータを見せるリスクが増え、新しさを厳密に保てばキャッシュの効果が薄れます。**「どのデータを・どの程度古くても許すか」**をデータごとに判断するのが設計の核心です。</p></div>
 <div class="callout callout-tip"><p>💡 業界有名な格言: <strong>「計算機科学の難問題は2つしかない。命名とキャッシュ無効化だ」</strong>。キャッシュ無効化の設計がいかに難しいかを示す冗談で、現場でも共感されて広く使われます。</p></div>
 <hr />
-<h2>4. 非同期処理とは —— 重い処理を後回しにする</h2>
+<h2 id="sec-6">4. 非同期処理とは —— 重い処理を後回しにする</h2>
 <p><strong>非同期処理</strong>（<code>asynchronous</code>／通称 <strong>async</strong>／エイシンク）は、<strong>時間のかかる処理の完了を待たず、先へ進む</strong>方式です。「後でやる」仕組みで、ユーザーを待たせません。</p>
 <h3>同期 vs 非同期</h3>
 <ul>
@@ -230,7 +248,7 @@ slug: 09-cache-async</h2>
 <h3>例えていうと: レストラン</h3>
 <p>注文をとったら<strong>伝票を厨房に回して、すぐ客席に戻る</strong>（非同期）。料理ができるまで客をカウンターで立たせ続けない（同期ならそうなる）。料理は厨房（ワーカー）が順に作る。</p>
 <hr />
-<h2>5. 🔑 キャッシュと非同期の使い分け</h2>
+<h2 id="sec-7">5. 🔑 キャッシュと非同期の使い分け</h2>
 <p>ここが本章の核心の2つ目です。この2つは「速くする」で語られますが、<strong>目的が違います</strong>。混同しないことが大切です:</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -270,7 +288,7 @@ slug: 09-cache-async</h2>
 </table></div>
 <div class="callout callout-danger"><p>重要 <strong>「速くする＝キャッシュ」ではありません</strong>。「同じ結果を何度も計算している」ならキャッシュ、「1回の処理がそもそも重い」なら非同期、と<strong>原因</strong>で選びます。両方組み合わせる（重い処理の結果をキャッシュする等）こともあります。</p></div>
 <hr />
-<h2>6. なぜ「キャッシュ・非同期」が開発の作法なのか</h2>
+<h2 id="sec-8">6. なぜ「キャッシュ・非同期」が開発の作法なのか</h2>
 <p>ここまでを読むと、パフォーマンス改善が「道具を知っているか」でなく**「遅さの原因を見極めて適切な技術を選べるか」**の問題だと分かります。</p>
 <h3>作法として位置づけられる理由</h3>
 <ol>
@@ -282,7 +300,7 @@ slug: 09-cache-async</h2>
 <div class="callout callout-info"><p>「サービスが遅いと聞きました。どう調査し、どう改善しますか？」</p></div>
 <p>この質問は、<strong>「パフォーマンス問題を論理的に切り分けられるか」<strong>を聞いています。「まず原因を特定する（DBは速いか・ネットワークは・計算量は）→ それに応じてインデックス・キャッシュ・非同期のいずれかを選ぶ」と</strong>原因から手段を逆算</strong>できる人が、現場で信頼されます。</p>
 <hr />
-<h2>7. よくある落とし穴と対処</h2>
+<h2 id="sec-9">7. よくある落とし穴と対処</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -310,7 +328,7 @@ slug: 09-cache-async</h2>
 <tr>
 <td><strong>非同期のエラー握り潰し</strong></td>
 <td>失敗に気づかず、依頼が「消えた」ように見える</td>
-<td>失敗を<strong>ログ・リトライ</strong>で確実に扱う（→ 第8章）</td>
+<td>失敗を<strong>ログ・リトライ</strong>で確実に扱う（→ <a href="08-logging.html">第8章</a>）</td>
 </tr>
 <tr>
 <td><strong>非同期の順序依存を見落とす</strong></td>
@@ -326,7 +344,7 @@ slug: 09-cache-async</h2>
 </table></div>
 <div class="callout callout-tip"><p>💡 <strong>キャッシュ雪崩</strong>（スタンピード／<code>cache stampede</code>）: 多くのキャッシュが<strong>同時にTTL切れ</strong>すると、一気に全リクエストがキャッシュミスになり、本来のデータ源（DB等）に<strong>殺到してダウン</strong>させる事故。TTLに多少のランダムさを持たせる等で防ぎます。</p></div>
 <hr />
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <ul>
 <li>遅さには<strong>2種類</strong>: 同じ問いの反復（→キャッシュ）・1回の処理が重い（→非同期）</li>
 <li><strong>キャッシュ</strong>は結果を<strong>使い回して速く</strong>する。最大の難問は**「古さ（一貫性）」**・<strong>無効化</strong>・<strong>TTL</strong>で管理</li>
@@ -334,7 +352,7 @@ slug: 09-cache-async</h2>
 <li>「速くする＝キャッシュ」でなく、<strong>原因</strong>で選ぶ（使い回し vs 後回し）・両方組み合わせも</li>
 <li>パフォーマンス改善は<strong>原因を見極めて適切な技術を選べるか</strong>が問われる・トレードオフ（新しさ・即時性）を理解して使う</li>
 </ul>
-<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: 処理を「速くする・後回しにする」技術が見えました。次は、ソフトウェアの**「バージョン」**の話です。第10章では、「1.2.3」のような番号の意味と、依存ライブラリの管理（パッケージ管理）の作法を扱います。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: 処理を「速くする・後回しにする」技術が見えました。次は、ソフトウェアの**「バージョン」**の話です。<a href="10-versioning-package.html">第10章</a>では、「1.2.3」のような番号の意味と、依存ライブラリの管理（パッケージ管理）の作法を扱います。</p></div>
 
         </article>
 
@@ -359,7 +377,7 @@ slug: 09-cache-async</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">vTEST · 2026.01.01</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

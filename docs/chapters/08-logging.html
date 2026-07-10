@@ -136,17 +136,35 @@
 
         <article class="chapter-body">
             <hr />
-<h2>title: ログ・モニタリング
+<details class="page-toc" open>
+<summary>📑 この章の目次</summary>
+<ul>
+<li><a href="#sec-1">title: ログ・モニタリング
+icon: 📊
+card_desc: 動いているシステムの状態を観察する作法 — ログレベル・構造化ログ・メトリクス・アラート・観測可能性
+slug: 08-logging</a></li>
+<li><a href="#sec-2">一言でいうと</a></li>
+<li><a href="#sec-3">1. なぜログ・モニタリングが必要なのか</a></li>
+<li><a href="#sec-4">2. ログとは何か</a></li>
+<li><a href="#sec-5">3. 🔑 ログレベル —— 記録の「重さ」を使い分ける</a></li>
+<li><a href="#sec-6">4. 構造化ログ —— 機械が処理しやすい形で出す</a></li>
+<li><a href="#sec-7">5. 🔑 モニタリングとアラート —— 数値で常時監視し・人に気づかせる</a></li>
+<li><a href="#sec-8">6. なぜ「ログ・モニタリング」が開発の作法なのか</a></li>
+<li><a href="#sec-9">7. よくある落とし穴と対処</a></li>
+<li><a href="#sec-10">まとめ</a></li>
+</ul>
+</details>
+<h2 id="sec-1">title: ログ・モニタリング
 icon: 📊
 card_desc: 動いているシステムの状態を観察する作法 — ログレベル・構造化ログ・メトリクス・アラート・観測可能性
 slug: 08-logging</h2>
 <h1>08 ログ・モニタリング — 動いているシステムの状態を観察する作法</h1>
 <div class="callout callout-info"><p>本番で動いているシステムは、外から見えない「箱」の中にあります。「いま正常に動いているか・問題が起きていないか」を知るには、システムが<strong>自分の状態を記録し・観察する仕組み</strong>が要ります。この章では、ログとモニタリングによる「観察の作法」を根本から理解します。</p></div>
 <hr />
-<h2>一言でいうと</h2>
+<h2 id="sec-2">一言でいうと</h2>
 <p><strong>ログ</strong>は、システムが「<strong>何を・いつ・どうしたか</strong>」を時系列に記録したもの。<strong>モニタリング</strong>は、CPU使用率・レスポンス時間・エラー率等の<strong>状態を数値で常時監視</strong>すること。この2つで「動いているシステムの今の状態」と「問題が起きた時の原因」を把握します。これらを<strong>観測可能性</strong>（<strong>Observability</strong>／オブザーバビリティ）と呼びます。</p>
 <hr />
-<h2>1. なぜログ・モニタリングが必要なのか</h2>
+<h2 id="sec-3">1. なぜログ・モニタリングが必要なのか</h2>
 <p>本番環境で動くシステムは、手元のPCと違い<strong>外から中身が見えません</strong>。「たぶん動いているだろう」で放置するのは、<strong>目隠しして車を運転する</strong>ようなものです。</p>
 <ul>
 <li><strong>平常時</strong>: 「いま正常に動いているか」をどう確認しますか？</li>
@@ -156,7 +174,7 @@ slug: 08-logging</h2>
 <p>これらに共通するのは、<strong>システムの状態を何らかの形で見える化しておく</strong>必要がある、ということ。それがログとモニタリングです。</p>
 <div class="callout callout-tip"><p>💡 障害が起きた後で「ログを取っておけば分かったのに」と後悔するのは、現場で一番よくある光景です。<strong>障害対応の速さは、ふだんの観察の仕込みで決まります</strong>。ログ・モニタリングは「いざという時のため」でなく「日々の基本」です。</p></div>
 <hr />
-<h2>2. ログとは何か</h2>
+<h2 id="sec-4">2. ログとは何か</h2>
 <p><strong>ログ</strong>は、アプリが動く中で起きた出来事を<strong>時系列に記録したもの</strong>です。「誰が・いつ・何をしたか」「どこでエラーが起きたか」等を、後から追える形で残します。</p>
 <p>開発中の <code>print</code> デバッグ（動作確認用の一時出力）と似ていますが、ログは<strong>本番環境で恒常的に出し続け・後から検索できる形</strong>にします。</p>
 <p>ログの代表的な中身:</p>
@@ -167,7 +185,7 @@ slug: 08-logging</h2>
 </ul>
 <div class="callout callout-danger"><p>💡 <strong>スタックトレース</strong>（<code>stack trace</code>／「呼び出し履歴」）: エラーが起きた時、<strong>「どの関数のどの行で起きたか」の経路</strong>を示す情報。エラー原因を特定する最重要の手がかりです。</p></div>
 <hr />
-<h2>3. 🔑 ログレベル —— 記録の「重さ」を使い分ける</h2>
+<h2 id="sec-5">3. 🔑 ログレベル —— 記録の「重さ」を使い分ける</h2>
 <p>ここが本章の核心の1つ目です。すべてのログを同じ重さで出すと、<strong>大事な情報が埋もれて探せなく</strong>なります。ログには**「重さ（深刻度）」で分類したレベル**があります:</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -214,7 +232,7 @@ slug: 08-logging</h2>
 </ul>
 <div class="callout callout-danger"><p>重要 ログレベルは**「後から探す時のフィルタ」**です。障害時に「ERROR 以上だけ絞り込む」「WARN から時系列で見る」等、レベルがあるからこそ素早く原因に辿り着けます。すべて INFO で出すと、この絞り込みが効きません。</p></div>
 <hr />
-<h2>4. 構造化ログ —— 機械が処理しやすい形で出す</h2>
+<h2 id="sec-6">4. 構造化ログ —— 機械が処理しやすい形で出す</h2>
 <p>ログは<strong>後から検索・集計するため</strong>に出します。人が読む文章（「ユーザーがログインしました」）より、<strong>機械が処理しやすい形（キーと値のセット）<strong>の方が、検索や分析が圧倒的に容易です。これが</strong>構造化ログ</strong>です。</p>
 <h3>例: 非構造化 vs 構造化</h3>
 <pre><code class="language-text"># 非構造化（人が読む文章・探しにくい）
@@ -226,7 +244,7 @@ slug: 08-logging</h2>
 <p>構造化しておけば、「<code>user_id</code> が 123 のログだけ」「<code>level</code> が ERROR のログだけ」等、<strong>特定のフィールドで絞り込み</strong>ができます。</p>
 <div class="callout callout-tip"><p>💡 大量の構造化ログを集めて検索・可視化する道具として、<strong>ELK</strong>（イーエルケー／<code>Elasticsearch</code> + <code>Logstash</code> + <code>Kibana</code> の頭文字）等のスタックがよく使われます。規模が大きくなると、ただの <code>grep</code>（文字列検索）では追いつかなくなり、専用のログ集計基盤が要ります。</p></div>
 <hr />
-<h2>5. 🔑 モニタリングとアラート —— 数値で常時監視し・人に気づかせる</h2>
+<h2 id="sec-7">5. 🔑 モニタリングとアラート —— 数値で常時監視し・人に気づかせる</h2>
 <p>ここが本章の核心の2つ目です。ログが**「詳細な文字の記録」<strong>なら、モニタリングは</strong>「全体の状態を数値（メトリクス）で常時監視」**することです。</p>
 <h3>メトリクス（指標）で見る</h3>
 <p>モニタリングは、システムの健康状態を<strong>数値</strong>で把握します:</p>
@@ -271,7 +289,7 @@ slug: 08-logging</h2>
 </ul>
 <div class="callout callout-danger"><p>重要 <strong>ログは「詳細」・メトリクスは「全体」</strong>。この2つを使い分けます。「レスポンス時間が悪化している（メトリクスで検知）→ 該当時刻のエラーログを確認（ログで詳細）」のように、<strong>メトリクスで異常に気づき・ログで原因を掘る</strong>のが基本の連携です。</p></div>
 <hr />
-<h2>6. なぜ「ログ・モニタリング」が開発の作法なのか</h2>
+<h2 id="sec-8">6. なぜ「ログ・モニタリング」が開発の作法なのか</h2>
 <p>ここまでを読むと、ログ・モニタリングが「動かす技術」でなく**「動いている状態を把握する技術（観測可能性）**」だと分かります。</p>
 <h3>作法として位置づけられる理由</h3>
 <ol>
@@ -284,7 +302,7 @@ slug: 08-logging</h2>
 <p>この質問は、**「観測の仕組みを理解しているか」**を聞いています。「アラートで異常に気づき、該当時刻の ERROR ログとメトリクスを突き合わせて原因を絞る」と答えられる人は、現場で信頼されます。</p>
 <div class="callout callout-tip"><p>💡 サービスの信頼性を表す指標として <strong>SLA</strong>／<strong>SLI</strong>／<strong>SLO</strong>（いずれもエスエル〜／合意・指標・目標）という概念もあります。「可用性99.9%」等の<strong>約束と実績</strong>を数値で管理する作法で、モニタリングはその計測基盤になります。</p></div>
 <hr />
-<h2>7. よくある落とし穴と対処</h2>
+<h2 id="sec-9">7. よくある落とし穴と対処</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -328,7 +346,7 @@ slug: 08-logging</h2>
 </table></div>
 <div class="callout callout-tip"><p>💡 <strong>アラート疲労</strong>: アラートが多すぎると、人は次第に<strong>通知を無視</strong>するようになります。すると本当の重大障害の通知も見逃されます。「すべてにアラート」でなく**「対応が要るものだけ」**に絞るのが作法です。</p></div>
 <hr />
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <ul>
 <li>本番システムは<strong>外から見えない</strong>。状態を把握するには<strong>ログとモニタリング</strong>が要る</li>
 <li><strong>ログ</strong>は「何を・いつ・どうしたか」の時系列記録。<strong>ログレベル</strong>（DEBUG/INFO/WARN/ERROR/FATAL）で重さを使い分け</li>
@@ -337,7 +355,7 @@ slug: 08-logging</h2>
 <li><strong>アラート</strong>は閾値超えで人に通知。<strong>多用しすぎず</strong>本当に要るものだけ</li>
 <li><strong>ログ（詳細）とメトリクス（全体）の連携</strong>で原因を掘る。これが<strong>観測可能性</strong>（Observability）</li>
 </ul>
-<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: システムの状態を「観察」する作法が見えました。次は、処理を<strong>速くする・後回しにする</strong>技術です。第9章では、キャッシュ（結果の使い回しで高速化）と非同期処理（時間のかかる処理を後回しにする）の使い分けを扱います。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: システムの状態を「観察」する作法が見えました。次は、処理を<strong>速くする・後回しにする</strong>技術です。<a href="09-cache-async.html">第9章</a>では、キャッシュ（結果の使い回しで高速化）と非同期処理（時間のかかる処理を後回しにする）の使い分けを扱います。</p></div>
 
         </article>
 
@@ -362,7 +380,7 @@ slug: 08-logging</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">vTEST · 2026.01.01</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

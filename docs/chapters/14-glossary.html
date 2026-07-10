@@ -152,281 +152,286 @@ slug: 14-glossary</h2>
 <h2>あ行</h2>
 <h3>あ</h3>
 <ul>
-<li><strong>ACID</strong>（アシッド）— トランザクションが満たすべき<strong>4つの整合性の性質</strong>（原子性・一貫性・隔離性・耐久性）。お金等の絶対に狂ってはいけないデータは ACID の強い RDB が基本。〔第7章〕</li>
-<li><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔第3章〕</li>
-<li><strong>IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）— URL の ID を書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。〔第5章〕</li>
-<li><strong>アラート</strong>（<code>alert</code>）— 監視で<strong>異常を検知した時に人に知らせる</strong>通知。閾値（限界値）を超えた等の条件で発火。多用しすぎると「アラート疲労」に。〔第8章〕</li>
-<li><strong>RDB</strong>（アールディービー／<code>Relational Database</code>／リレーショナルデータベース）— データを**表（テーブル）**で管理する方式。SQL で操作し、データの整合性が強い。〔第7章〕</li>
-<li><strong>RBAC</strong>（アールビーエーシー／役割ベースアクセス制御）— 「管理者・一般」等の<strong>役割</strong>で権限を管理する認可の方式。〔第5章〕</li>
+<li><strong>ACID</strong>（アシッド）— トランザクションが満たすべき<strong>4つの整合性の性質</strong>（原子性・一貫性・隔離性・耐久性）。お金等の絶対に狂ってはいけないデータは ACID の強い RDB が基本。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>API</strong>（エーピーアイ／<code>Application Programming Interface</code>）— プログラム同士が通信するための「約束事」。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 天気アプリが「気象庁の API を叩いて明日の天気を取得」する等。人間が画面を操作するのでなく、<strong>プログラム同士の窓口</strong>。LINE Bot も LINE の API 経由でメッセージを送受信。</p></div>
+<ul>
+<li><strong>IDOR</strong>（アイディーオーアール／<code>Insecure Direct Object Reference</code>）— URL の ID を書き換えるだけで他人データにアクセスできる脆弱性。認可チェック忘れの代表例。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>アラート</strong>（<code>alert</code>）— 監視で<strong>異常を検知した時に人に知らせる</strong>通知。閾値（限界値）を超えた等の条件で発火。多用しすぎると「アラート疲労」に。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>RDB</strong>（アールディービー／<code>Relational Database</code>／リレーショナルデータベース）— データを**表（テーブル）**で管理する方式。SQL で操作し、データの整合性が強い。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>RBAC</strong>（アールビーエーシー／役割ベースアクセス制御）— 「管理者・一般」等の<strong>役割</strong>で権限を管理する認可の方式。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の予約管理システム（<code>reserve-optimizer</code>）では、予約の取得・作成・取消を行う REST API を設計し、フロントと GAS（Google Apps Script）の間を HTTP で結んでいます。</p></div>
 <h3>い</h3>
 <ul>
-<li><strong>委譲</strong>（<code>delegation</code>／「任せる」）— 自分の代わりに<strong>限られたことだけ</strong>を外部に許可する仕組み（OAuth の核心）。〔第5章〕</li>
-<li><strong>dependency hell</strong>（依存地獄／<code>dependency hell</code>）— 依存ライブラリの<strong>版の矛盾</strong>で身動きが取れなくなる状態。SemVer・ロックファイル・棚卸しで防ぐ。〔第10章〕</li>
-<li><strong>イメージ</strong>（<code>image</code>）— コンテナの<strong>設計図（読み取り専用のテンプレート）</strong>。イメージを起動するとコンテナ（実体）が動き出す。1イメージからコンテナを複数起動できる。〔第6章〕</li>
-<li><strong>インデックス</strong>（<code>index</code>／「索引」）— 本の巻末の索引のように、特定の列から<strong>高速にデータを見つける</strong>仕組み。ただし作成・更新コストもかかり、貼りすぎると書き込みが遅くなる。〔第7章〕</li>
+<li><strong>委譲</strong>（<code>delegation</code>／「任せる」）— 自分の代わりに<strong>限られたことだけ</strong>を外部に許可する仕組み（OAuth の核心）。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>dependency hell</strong>（依存地獄／<code>dependency hell</code>）— 依存ライブラリの<strong>版の矛盾</strong>で身動きが取れなくなる状態。SemVer・ロックファイル・棚卸しで防ぐ。〔<a href="10-versioning-package.html">第10章</a>〕</li>
+<li><strong>イメージ</strong>（<code>image</code>）— コンテナの<strong>設計図（読み取り専用のテンプレート）</strong>。イメージを起動するとコンテナ（実体）が動き出す。1イメージからコンテナを複数起動できる。〔<a href="06-docker.html">第6章</a>〕</li>
+<li><strong>インデックス</strong>（<code>index</code>／「索引」）— 本の巻末の索引のように、特定の列から<strong>高速にデータを見つける</strong>仕組み。ただし作成・更新コストもかかり、貼りすぎると書き込みが遅くなる。〔<a href="07-database.html">第7章</a>〕</li>
 </ul>
 <h3>え</h3>
 <ul>
-<li><strong>SQL</strong>（エスキューエル／<code>Structured Query Language</code>／「シークェル」とも）— RDB を操作するための<strong>共通言語</strong>。「このデータを取得/更新して」をほぼ共通の文法で書ける。〔第7章〕</li>
-<li><strong>SQLite</strong>（エスキューライト）— データベース全体が<strong>ファイル1つ</strong>に収まる軽量な RDB。サーバー不要で導入が簡単だが、同時書き込みに弱い。〔第7章〕</li>
-<li><strong>HTTP</strong>（エイチティーティーピー／<code>HyperText Transfer Protocol</code>）— Web の通信で事実上の標準になっている「リクエストとレスポンス」の約束事。〔第3章〕</li>
-<li><strong>HTTPS</strong>（エイチティーティーピーエス）— HTTP を<strong>暗号化</strong>したもの（<code>TLS/SSL</code> で通信を守る）。パスワード等の送受信に必須。現場では「エッチティーティーピーエス」とも。〔第3章〕</li>
-<li><strong>エンドポイント</strong>（<code>endpoint</code>）— API の「窓口（住所）」。URL のパス部分で機能を識別する。〔第3章〕</li>
-<li><strong>MRE</strong>（エムアールイー／<code>Minimal Reproducible Example</code>／最小再現例）— バグを再現する<strong>不要部分を削ぎ落とした最小</strong>の手順・コード。作る過程で原因が際立つ。〔第11章〕</li>
-<li><strong>MFA</strong>（エムエフエー／多要素認証）— 知識・所有・生体など<strong>異なる性質</strong>の要素を組み合わせる認証。パスワード1つへの依存を減らす。〔第5章〕</li>
-<li><strong>npm</strong>（エヌピーエム／<code>npm</code>）— JavaScript（Node.js）の<strong>パッケージマネージャ</strong>（荷物の管理係）。〔第10章〕</li>
+<li><strong>SQL</strong>（エスキューエル／<code>Structured Query Language</code>／「シークェル」とも）— RDB を操作するための<strong>共通言語</strong>。「このデータを取得/更新して」をほぼ共通の文法で書ける。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>SQLite</strong>（エスキューライト）— データベース全体が<strong>ファイル1つ</strong>に収まる軽量な RDB。サーバー不要で導入が簡単だが、同時書き込みに弱い。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>HTTP</strong>（エイチティーティーピー／<code>HyperText Transfer Protocol</code>）— Web の通信で事実上の標準になっている「リクエストとレスポンス」の約束事。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>HTTPS</strong>（エイチティーティーピーエス）— HTTP を<strong>暗号化</strong>したもの（<code>TLS/SSL</code> で通信を守る）。パスワード等の送受信に必須。現場では「エッチティーティーピーエス」とも。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>エンドポイント</strong>（<code>endpoint</code>）— API の「窓口（住所）」。URL のパス部分で機能を識別する。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>MRE</strong>（エムアールイー／<code>Minimal Reproducible Example</code>／最小再現例）— バグを再現する<strong>不要部分を削ぎ落とした最小</strong>の手順・コード。作る過程で原因が際立つ。〔<a href="11-debugging.html">第11章</a>〕</li>
+<li><strong>MFA</strong>（エムエフエー／多要素認証）— 知識・所有・生体など<strong>異なる性質</strong>の要素を組み合わせる認証。パスワード1つへの依存を減らす。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>npm</strong>（エヌピーエム／<code>npm</code>）— JavaScript（Node.js）の<strong>パッケージマネージャ</strong>（荷物の管理係）。〔<a href="10-versioning-package.html">第10章</a>〕</li>
 </ul>
 <h3>お</h3>
 <ul>
-<li><strong>OAuth</strong>（オース／通称「オーオース」も／<code>OAuth 2.0</code>）— 委譲: 限られた権限を外部サービスに貸す仕組み。「Googleでログイン」の基盤。〔第5章〕</li>
-<li><strong>OIDC</strong>（オーアイディーシー／<code>OpenID Connect</code>）— OAuth の上に乗った認証仕様。外部アカウント（Google等）で「この人は誰か」を保証してもらう。〔第5章〕</li>
-<li><strong>ORM</strong>（オーアールエム／<code>Object-Relational Mapping</code>／オブジェクト関係マッピング）— プログラムのコードとデータベースの間を橋渡しし、<strong>SQL を直接書かずに</strong>データ操作できる仕組み。〔第7章〕</li>
-<li><strong>オーケストレーション</strong>（<code>orchestration</code>／「楽団の指揮」由来）— 複数のコンテナを本番で<strong>大量に運用・自動管理</strong>する仕組み。<code>Kubernetes</code>（K8s）が代表。〔第6章〕</li>
+<li><strong>OAuth</strong>（オース／通称「オーオース」も／<code>OAuth 2.0</code>）— 委譲: 限られた権限を外部サービスに貸す仕組み。「Googleでログイン」の基盤。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>OIDC</strong>（オーアイディーシー／<code>OpenID Connect</code>）— OAuth の上に乗った認証仕様。外部アカウント（Google等）で「この人は誰か」を保証してもらう。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>ORM</strong>（オーアールエム／<code>Object-Relational Mapping</code>／オブジェクト関係マッピング）— プログラムのコードとデータベースの間を橋渡しし、<strong>SQL を直接書かずに</strong>データ操作できる仕組み。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>オーケストレーション</strong>（<code>orchestration</code>／「楽団の指揮」由来）— 複数のコンテナを本番で<strong>大量に運用・自動管理</strong>する仕組み。<code>Kubernetes</code>（K8s）が代表。〔<a href="06-docker.html">第6章</a>〕</li>
 </ul>
 <hr />
 <h2>か行</h2>
 <h3>か</h3>
 <ul>
-<li><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔第12章〕</li>
-<li><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔第12章〕</li>
-<li><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔第1章〕</li>
-<li><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔第4章〕</li>
-<li><strong>関心の分離</strong>（<code>SoC</code>／エスオーシー／<code>separation of concerns</code>）— 異なる関心事（UI・DB・業務ロジック等）を<strong>分離して別の部品に</strong>。混ざると1箇所の変更が全体に波及する。〔第13章〕</li>
+<li><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔<a href="12-quality.html">第12章</a>〕</li>
+<li><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔<a href="12-quality.html">第12章</a>〕</li>
+<li><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔<a href="04-env-secrets.html">第4章</a>〕</li>
+<li><strong>関心の分離</strong>（<code>SoC</code>／エスオーシー／<code>separation of concerns</code>）— 異なる関心事（UI・DB・業務ロジック等）を<strong>分離して別の部品に</strong>。混ざると1箇所の変更が全体に波及する。〔<a href="13-review-design.html">第13章</a>〕</li>
 </ul>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の LLM 中継プロキシ（<code>glm-rate-proxy</code>）では、APIキー等の秘匿値をすべて <code>~/.secrets.env</code> という環境変数ファイルに一元化し、コードには「キー名」しか書かない運用で漏洩を防いでいます。</p></div>
 <ul>
-<li><strong>cargo</strong>（カルゴ／<code>cargo</code>）— Rust の<strong>パッケージマネージャ</strong>。〔第10章〕</li>
+<li><strong>cargo</strong>（カルゴ／<code>cargo</code>）— Rust の<strong>パッケージマネージャ</strong>。〔<a href="10-versioning-package.html">第10章</a>〕</li>
 </ul>
 <h3>き</h3>
 <ul>
-<li><strong>キャッシュ</strong>（<code>cache</code>）— 一度取得・計算した結果を<strong>使い回して速くする</strong>仕組み。古さ（一貫性）の管理が難問。〔第9章〕</li>
-<li><strong>キャッシュ雪崩</strong>（スタンピード／<code>cache stampede</code>）— TTL一斉切れで全キャッシュミス→本来のデータ源に<strong>殺到してダウン</strong>させる事故。〔第9章〕</li>
-<li><strong>キュー</strong>（<code>queue</code>／「列」）— 非同期処理で依頼を<strong>順に並べておく場所</strong>。ワーカーが取り出して処理する。〔第9章〕</li>
-<li><strong>git bisect</strong>（ギット・バイセクション／<code>git bisect</code>）— 良い版と悪い版を指定し、原因のコミットを<strong>二分探索</strong>で特定するGit機能。〔第11章〕</li>
-<li><strong>技術的負債</strong>（<code>technical debt</code>）— 「後で直す」と先送りされた問題が、雪だるま式に膨らんで開発を重くする現象。借金のメタファー。〔第1章〕</li>
-<li><strong>凝集度</strong>（<code>cohesion</code>／コヒージョン）— 1つのモジュール（部品）内の<strong>機能のまとまり</strong>。<strong>高い（強い）ほど良い</strong>。1モジュール＝1責務に集中すると凝集が強くなる（→ 結合度）。〔第13章〕</li>
+<li><strong>キャッシュ</strong>（<code>cache</code>）— 一度取得・計算した結果を<strong>使い回して速くする</strong>仕組み。古さ（一貫性）の管理が難問。〔<a href="09-cache-async.html">第9章</a>〕</li>
+<li><strong>キャッシュ雪崩</strong>（スタンピード／<code>cache stampede</code>）— TTL一斉切れで全キャッシュミス→本来のデータ源に<strong>殺到してダウン</strong>させる事故。〔<a href="09-cache-async.html">第9章</a>〕</li>
+<li><strong>キュー</strong>（<code>queue</code>／「列」）— 非同期処理で依頼を<strong>順に並べておく場所</strong>。ワーカーが取り出して処理する。〔<a href="09-cache-async.html">第9章</a>〕</li>
+<li><strong>git bisect</strong>（ギット・バイセクション／<code>git bisect</code>）— 良い版と悪い版を指定し、原因のコミットを<strong>二分探索</strong>で特定するGit機能。〔<a href="11-debugging.html">第11章</a>〕</li>
+<li><strong>技術的負債</strong>（<code>technical debt</code>）— 「後で直す」と先送りされた問題が、雪だるま式に膨らんで開発を重くする現象。借金のメタファー。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>凝集度</strong>（<code>cohesion</code>／コヒージョン）— 1つのモジュール（部品）内の<strong>機能のまとまり</strong>。<strong>高い（強い）ほど良い</strong>。1モジュール＝1責務に集中すると凝集が強くなる（→ 結合度）。〔<a href="13-review-design.html">第13章</a>〕</li>
 </ul>
 <h3>く</h3>
 <ul>
-<li><strong>GraphQL</strong>（グラフキューエル／通称「グラフキュー」も）— 「欲しいフィールドだけ」を1リクエストで指定できる API 設計スタイル。REST の代替候補。〔第3章〕</li>
-<li><strong>クライアント</strong>（<code>client</code>）— サービスに<strong>リクエストを送る側</strong>（ブラウザ・アプリ等）。〔第3章〕</li>
-<li><strong>クローン</strong>（<code>clone</code>）— リモート（GitHub 等）のリポジトリを<strong>まるごと手元にコピー</strong>する最初の1回の操作。〔第2章〕</li>
-<li><strong>CRUD</strong>（クラッド）— 作成(<code>Create</code>)・読取(<code>Read</code>)・更新(<code>Update</code>)・削除(<code>Delete</code>)の頭文字。データ操作の4基本。〔第3章〕</li>
-<li><strong>Cookie</strong>（クッキー）— ブラウザに保存される小さなデータ。リクエストのたび<strong>自動で</strong>サーバーに送信される。セッション方式の中核。〔第5章〕</li>
+<li><strong>GraphQL</strong>（グラフキューエル／通称「グラフキュー」も）— 「欲しいフィールドだけ」を1リクエストで指定できる API 設計スタイル。REST の代替候補。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>クライアント</strong>（<code>client</code>）— サービスに<strong>リクエストを送る側</strong>（ブラウザ・アプリ等）。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>クローン</strong>（<code>clone</code>）— リモート（GitHub 等）のリポジトリを<strong>まるごと手元にコピー</strong>する最初の1回の操作。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>CRUD</strong>（クラッド）— 作成(<code>Create</code>)・読取(<code>Read</code>)・更新(<code>Update</code>)・削除(<code>Delete</code>)の頭文字。データ操作の4基本。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>Cookie</strong>（クッキー）— ブラウザに保存される小さなデータ。リクエストのたび<strong>自動で</strong>サーバーに送信される。セッション方式の中核。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>け</h3>
 <ul>
-<li><strong>結合度</strong>（<code>coupling</code>／カプリング）— モジュール（部品）同士の<strong>依存の強さ</strong>。<strong>低い（ゆるい）ほど良い</strong>。片方を変えるともう片方も壊れる＝結合が強い（→ 凝集度）。〔第13章〕</li>
-<li><strong>GET</strong>（ゲット）— HTTP メソッドの1つ。「取得したい（ページを見る）」という意味。〔第3章〕</li>
+<li><strong>結合度</strong>（<code>coupling</code>／カプリング）— モジュール（部品）同士の<strong>依存の強さ</strong>。<strong>低い（ゆるい）ほど良い</strong>。片方を変えるともう片方も壊れる＝結合が強い（→ 凝集度）。〔<a href="13-review-design.html">第13章</a>〕</li>
+<li><strong>GET</strong>（ゲット）— HTTP メソッドの1つ。「取得したい（ページを見る）」という意味。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
 </ul>
 <h3>こ</h3>
 <ul>
-<li><strong>コードレビュー</strong>（<code>code review</code>）— 他の人が書いたコードを<strong>確認し、改善点を伝え合う</strong>作業。Pull Request で実施するのが現代の定番。ミス探しでなく知見共有の場。〔第13章〕</li>
-<li><strong>コミット</strong>（<code>commit</code>）— 変更を「歴史の1ページ」として<strong>ローカルに保存</strong>すること。<code>commit</code> だけではまだ他の人に見えない（→ <code>push</code>）。〔第2章〕</li>
-<li><strong>コンテナ</strong>（<code>container</code>）— アプリと実行環境を**「丸ごと1つの箱」**に詰め込む技術。イメージ（設計図）を起動した「動いている実体」でもある。<code>Docker</code> が代表実装。〔第6章〕</li>
-<li><strong>コンフリクト</strong>（<code>conflict</code>／「衝突」）— 同じファイルの同じ行を別々に変更してしまい、Git が自動で統合できなくなった状態。人間が解決する。〔第2章〕</li>
+<li><strong>コードレビュー</strong>（<code>code review</code>）— 他の人が書いたコードを<strong>確認し、改善点を伝え合う</strong>作業。Pull Request で実施するのが現代の定番。ミス探しでなく知見共有の場。〔<a href="13-review-design.html">第13章</a>〕</li>
+<li><strong>コミット</strong>（<code>commit</code>）— 変更を「歴史の1ページ」として<strong>ローカルに保存</strong>すること。<code>commit</code> だけではまだ他の人に見えない（→ <code>push</code>）。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>コンテナ</strong>（<code>container</code>）— アプリと実行環境を**「丸ごと1つの箱」**に詰め込む技術。イメージ（設計図）を起動した「動いている実体」でもある。<code>Docker</code> が代表実装。〔<a href="06-docker.html">第6章</a>〕</li>
+<li><strong>コンフリクト</strong>（<code>conflict</code>／「衝突」）— 同じファイルの同じ行を別々に変更してしまい、Git が自動で統合できなくなった状態。人間が解決する。〔<a href="02-git-github.html">第2章</a>〕</li>
 </ul>
 <hr />
 <h2>さ行</h2>
 <h3>し</h3>
 <ul>
-<li><strong>CI</strong>（シーアイ／<code>Continuous Integration</code>＝継続的インテグレーション）— <code>push</code> のたび機械が自動でビルド・テスト・品質チェックを回す仕組み。〔第1章〕</li>
+<li><strong>CI</strong>（シーアイ／<code>Continuous Integration</code>＝継続的インテグレーション）— <code>push</code> のたび機械が自動でビルド・テスト・品質チェックを回す仕組み。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 </ul>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「CI回してますか？」＝「<code>push</code> ごとに自動テスト走らせてますか」。GitHub の Actions タブで緑 ✓ が並んでいる状態が「CI が通っている」。</p></div>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の AI エージェント基盤 <code>NexusCore</code> では、<code>Bandit</code>（セキュリティスキャン）＋ <code>pytest</code>（テスト）＋ <code>ruff</code>（リンター）を GitHub Actions で毎 <code>push</code> 時に自動実行し、CI が緑（成功）の状態を維持しています。</p></div>
 <ul>
-<li><strong>CD</strong>（シーディー／<code>Continuous Delivery / Deployment</code>＝継続的デリバリー／デプロイ）— CI で検査を通ったコードを「いつでもリリースできる状態」に保つ、または本番まで自動で届ける仕組み。〔第1章〕</li>
-<li><strong>シークレット</strong>（<code>secret</code>）— 環境変数の中でも<strong>他人に見られてはいけない値</strong>（APIキー・パスワード・トークン等）。基本原則: コードに書かない・Gitに入れない・本番は専用保管場所。〔第4章〕</li>
-<li><strong>gRPC</strong>（ジーアールピーシー）— 「関数呼び出し」風の通信（RPC）を、現代風に<strong>高速・型付き</strong>にしたもの。マイクロサービス間等で使われる。〔第3章〕</li>
-<li><strong>CSRF</strong>（シーエスアールエフ／<code>Cross-Site Request Forgery</code>／「偽造リクエスト」）— ログイン中の利用者に、悪意ある別サイトから勝手にリクエストを送らせる攻撃。Cookie方式で特に注意。〔第5章〕</li>
-<li><strong>CI/CD の「緑・赤」</strong> — GitHub 上の CI 結果の色表示。🟢緑＝全job成功・🔴赤＝どこか失敗・🟡黄（<code>in_progress</code>）＝いま実行中。〔第1章〕</li>
+<li><strong>CD</strong>（シーディー／<code>Continuous Delivery / Deployment</code>＝継続的デリバリー／デプロイ）— CI で検査を通ったコードを「いつでもリリースできる状態」に保つ、または本番まで自動で届ける仕組み。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>シークレット</strong>（<code>secret</code>）— 環境変数の中でも<strong>他人に見られてはいけない値</strong>（APIキー・パスワード・トークン等）。基本原則: コードに書かない・Gitに入れない・本番は専用保管場所。〔<a href="04-env-secrets.html">第4章</a>〕</li>
+<li><strong>gRPC</strong>（ジーアールピーシー）— 「関数呼び出し」風の通信（RPC）を、現代風に<strong>高速・型付き</strong>にしたもの。マイクロサービス間等で使われる。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>CSRF</strong>（シーエスアールエフ／<code>Cross-Site Request Forgery</code>／「偽造リクエスト」）— ログイン中の利用者に、悪意ある別サイトから勝手にリクエストを送らせる攻撃。Cookie方式で特に注意。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>CI/CD の「緑・赤」</strong> — GitHub 上の CI 結果の色表示。🟢緑＝全job成功・🔴赤＝どこか失敗・🟡黄（<code>in_progress</code>）＝いま実行中。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 </ul>
 <h3>す</h3>
 <ul>
-<li><strong>ステージ</strong>（<code>stage</code>／別名 <code>index</code>）— コミット前に「この変更を記録する」と<strong>まとめておく待合室</strong>。ワークツリー→ステージ→リポジトリの中間。〔第2章〕</li>
-<li><strong>ステータスコード</strong>（<code>status code</code>）— HTTP レスポンスに含まれる<strong>3桁の数字</strong>で「結果はどうだったか」を機械的に伝える。<code>200</code>=成功・<code>401</code>=認証無効・<code>403</code>=権限なし・<code>404</code>=見つからない・<code>500</code>=サーバー内部エラー・<code>503</code>=サービス停止中。〔第3章〕</li>
-<li><strong>ステップ</strong>（<code>step</code>）— GitHub Actions でジョブの中の個々の実行単位。<code>ジョブ &gt; ステップ</code> の階層。〔第1章〕</li>
+<li><strong>ステージ</strong>（<code>stage</code>／別名 <code>index</code>）— コミット前に「この変更を記録する」と<strong>まとめておく待合室</strong>。ワークツリー→ステージ→リポジトリの中間。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>ステータスコード</strong>（<code>status code</code>）— HTTP レスポンスに含まれる<strong>3桁の数字</strong>で「結果はどうだったか」を機械的に伝える。<code>200</code>=成功・<code>401</code>=認証無効・<code>403</code>=権限なし・<code>404</code>=見つからない・<code>500</code>=サーバー内部エラー・<code>503</code>=サービス停止中。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>ステップ</strong>（<code>step</code>）— GitHub Actions でジョブの中の個々の実行単位。<code>ジョブ &gt; ステップ</code> の階層。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 </ul>
 <h3>せ</h3>
 <ul>
-<li><strong>静的解析</strong>（<code>static analysis</code>／スタティックアナリシス）— コードを<strong>実行せずに</strong>解析する手法。Lint・型チェックを含む上位概念。実行不要で速く、人間の見落としを補う。〔第12章〕</li>
-<li><strong>セキュリティスキャン</strong> — 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔第1章〕</li>
-<li><strong>セッション</strong>（<code>session</code>）— ログイン中の状態をサーバー側が記憶する仕組み。Cookieと組み合わせて使うブラウザ型の古典（ステートフル）。〔第5章〕</li>
-<li><strong>SemVer</strong>（セムヴァー／<code>Semantic Versioning</code>／セマンティックバージョニング）— バージョン番号 <code>メジャー.マイナー.パッチ</code> で<strong>後方互換性の有無</strong>を伝える約束。メジャー上がり＝壊れる変更。〔第10章〕</li>
+<li><strong>静的解析</strong>（<code>static analysis</code>／スタティックアナリシス）— コードを<strong>実行せずに</strong>解析する手法。Lint・型チェックを含む上位概念。実行不要で速く、人間の見落としを補う。〔<a href="12-quality.html">第12章</a>〕</li>
+<li><strong>セキュリティスキャン</strong> — 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>セッション</strong>（<code>session</code>）— ログイン中の状態をサーバー側が記憶する仕組み。Cookieと組み合わせて使うブラウザ型の古典（ステートフル）。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>SemVer</strong>（セムヴァー／<code>Semantic Versioning</code>／セマンティックバージョニング）— バージョン番号 <code>メジャー.マイナー.パッチ</code> で<strong>後方互換性の有無</strong>を伝える約束。メジャー上がり＝壊れる変更。〔<a href="10-versioning-package.html">第10章</a>〕</li>
 </ul>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「<code>^1.2.3</code> で入れたら <code>2.0.0</code> が出て壊れた」＝メジャー上がりで後方互換性が壊れた例。番号の<strong>桁</strong>で警戒度を変える（パッチ=安心・マイナー=ほぼ安心・メジャー=要確認）。</p></div>
 <hr />
 <h2>た行</h2>
 <h3>た</h3>
 <ul>
-<li><strong>単一責任</strong>（<code>SRP</code>／エスアールピー／単一責任原則／<code>single responsibility</code>）— 1つのモジュール・関数は<strong>1つの責務</strong>だけ持つという原則。複数の役目を持つと、一部を変えたい時にも全部に影響する。〔第13章〕</li>
-<li><strong>ダッシュボード</strong>（<code>dashboard</code>）— メトリクス（CPU・エラー率等）を<strong>グラフ等で可視化</strong>する画面。システム全体の状態を一目で把握する。〔第8章〕</li>
-<li><strong>デプロイ</strong>（<code>deploy</code>＝「リリース」「公開」とほぼ同義）— コードを<strong>本番環境（ユーザーが使う環境）に配置して動かす</strong>こと。〔第1章〕</li>
+<li><strong>単一責任</strong>（<code>SRP</code>／エスアールピー／単一責任原則／<code>single responsibility</code>）— 1つのモジュール・関数は<strong>1つの責務</strong>だけ持つという原則。複数の役目を持つと、一部を変えたい時にも全部に影響する。〔<a href="13-review-design.html">第13章</a>〕</li>
+<li><strong>ダッシュボード</strong>（<code>dashboard</code>）— メトリクス（CPU・エラー率等）を<strong>グラフ等で可視化</strong>する画面。システム全体の状態を一目で把握する。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>デプロイ</strong>（<code>deploy</code>＝「リリース」「公開」とほぼ同義）— コードを<strong>本番環境（ユーザーが使う環境）に配置して動かす</strong>こと。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 </ul>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: この教科書自身も、<code>main</code> ブランチに <code>push</code> すると GitHub Actions が自動でビルドし、GitHub Pages に自動デプロイ（CD）される仕組みで運用しています。</p></div>
 <ul>
-<li><strong>DELETE</strong>（デリート）— HTTP メソッドの1つ。「削除したい」。〔第3章〕</li>
-<li><strong>diff</strong>（ディフ／「差分」）— 変更前後の<strong>違い</strong>。PR で「何を変えたか」を確認する基本。〔第2章〕</li>
-<li><strong>2FA</strong>（ツーエフエー／二要素認証）— MFAの「2要素組み合わせ」版。現場では MFA とほぼ同義で使われる。〔第5章〕</li>
+<li><strong>DELETE</strong>（デリート）— HTTP メソッドの1つ。「削除したい」。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>diff</strong>（ディフ／「差分」）— 変更前後の<strong>違い</strong>。PR で「何を変えたか」を確認する基本。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>2FA</strong>（ツーエフエー／二要素認証）— MFAの「2要素組み合わせ」版。現場では MFA とほぼ同義で使われる。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>て</h3>
 <ul>
-<li><strong>テスト</strong>（<code>test</code>）— コードが期待通り動くかを確認する仕組み。単体テスト（<code>unit</code>）と統合テスト（<code>integration</code>）が代表的。CI の主役。〔第1章〕</li>
-<li><strong>トークン</strong>（<code>token</code>）— 入場券のような文字列。ログイン成功後に発行し、以降のリクエストに添えて身元を証明する（<code>JWT</code> 等）。〔第5章〕</li>
+<li><strong>テスト</strong>（<code>test</code>）— コードが期待通り動くかを確認する仕組み。単体テスト（<code>unit</code>）と統合テスト（<code>integration</code>）が代表的。CI の主役。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>トークン</strong>（<code>token</code>）— 入場券のような文字列。ログイン成功後に発行し、以降のリクエストに添えて身元を証明する（<code>JWT</code> 等）。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>と</h3>
 <ul>
-<li><strong>トランザクション</strong>（<code>transaction</code>）— 複数の処理を<strong>1つのまとまり</strong>にし、「全て成功」か「全てなかったこと」のどちらかにする仕組み。RDB の強み（→ ACID）。〔第7章〕</li>
+<li><strong>トランザクション</strong>（<code>transaction</code>）— 複数の処理を<strong>1つのまとまり</strong>にし、「全て成功」か「全てなかったこと」のどちらかにする仕組み。RDB の強み（→ ACID）。〔<a href="07-database.html">第7章</a>〕</li>
 </ul>
 <hr />
 <h2>な行</h2>
 <h3>に</h3>
 <ul>
-<li><strong>認証</strong>（<code>authentication</code>）— 「<strong>あなたは誰か</strong>」を確認すること。パスワード・生体等で身元を特定。〔第5章〕</li>
-<li><strong>認可</strong>（<code>authorization</code>）— 「<strong>何をしてよいか</strong>」を判断すること。認証とは別問題（IDOR等は認可の欠如）。〔第5章〕</li>
+<li><strong>認証</strong>（<code>authentication</code>）— 「<strong>あなたは誰か</strong>」を確認すること。パスワード・生体等で身元を特定。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>認可</strong>（<code>authorization</code>）— 「<strong>何をしてよいか</strong>」を判断すること。認証とは別問題（IDOR等は認可の欠如）。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>の</h3>
 <ul>
-<li><strong>NoSQL</strong>（ノーエスキューエル／「SQLでない」）— 表以外の形でデータを扱うデータベースの総称。柔軟・特定用途で高速だが、厳密な整合性は RDB ほどでないことが多い。〔第7章〕</li>
+<li><strong>NoSQL</strong>（ノーエスキューエル／「SQLでない」）— 表以外の形でデータを扱うデータベースの総称。柔軟・特定用途で高速だが、厳密な整合性は RDB ほどでないことが多い。〔<a href="07-database.html">第7章</a>〕</li>
 </ul>
 <hr />
 <h2>は行</h2>
 <h3>は</h3>
 <ul>
-<li><strong>ハッシュ</strong>（<code>hash</code>／「すりつぶす」）— 元に戻せない一方向の変換。パスワード保存は必ずハッシュ化（<code>bcrypt</code> 等の専用アルゴリズム）。〔第5章〕</li>
-<li><strong>bundler</strong>（バンドラー／<code>bundler</code>）— Ruby の<strong>パッケージ管理ツール</strong>。〔第10章〕</li>
-<li><strong>パスキー</strong>（<code>passkey</code>）— パスワードの代わりにデバイスで認証する仕組み。フィッシング（偽サイト騙し）に強い（<code>FIDO2</code>/<code>WebAuthn</code> 基盤）。〔第5章〕</li>
+<li><strong>ハッシュ</strong>（<code>hash</code>／「すりつぶす」）— 元に戻せない一方向の変換。パスワード保存は必ずハッシュ化（<code>bcrypt</code> 等の専用アルゴリズム）。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>bundler</strong>（バンドラー／<code>bundler</code>）— Ruby の<strong>パッケージ管理ツール</strong>。〔<a href="10-versioning-package.html">第10章</a>〕</li>
+<li><strong>パスキー</strong>（<code>passkey</code>）— パスワードの代わりにデバイスで認証する仕組み。フィッシング（偽サイト騙し）に強い（<code>FIDO2</code>/<code>WebAuthn</code> 基盤）。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>ひ</h3>
 <ul>
-<li><strong>非同期</strong>（<code>async</code>／エイシンク）— 時間のかかる処理の完了を<strong>待たず先へ進む</strong>方式（後回し）。<strong>同期</strong>（<code>sync</code>／シンク＝待ってから次へ）の対。〔第9章〕</li>
-<li><strong>pip</strong>（ピップ／<code>pip</code>）— Python の<strong>パッケージマネージャ</strong>。〔第10章〕</li>
+<li><strong>非同期</strong>（<code>async</code>／エイシンク）— 時間のかかる処理の完了を<strong>待たず先へ進む</strong>方式（後回し）。<strong>同期</strong>（<code>sync</code>／シンク＝待ってから次へ）の対。〔<a href="09-cache-async.html">第9章</a>〕</li>
+<li><strong>pip</strong>（ピップ／<code>pip</code>）— Python の<strong>パッケージマネージャ</strong>。〔<a href="10-versioning-package.html">第10章</a>〕</li>
 </ul>
 <h3>ふ</h3>
 <ul>
-<li><strong>feature flag</strong>（フィーチャー・フラグ／機能フラグ）— コードは配置したまま、<strong>設定で機能を ON/OFF</strong> できる仕組み。ロールバックの手段としても使う。〔第1章〕</li>
-<li><strong>fetch</strong>（フェッチ）— リモートの最新情報を<strong>取得だけする</strong>（手元のファイルは書き換えない）。確認用。〔第2章〕</li>
-<li><strong>flaky test</strong>（フレイキー・テスト／「フレーキー」とも）— 環境次第で<strong>たまに落ちる不安定なテスト</strong>。CI が緑でも信頼できない原因になる。〔第1章〕</li>
-<li><strong>fork</strong>（フォーク）— 他人のリポジトリを<strong>自分のアカウントにコピー</strong>する操作。OSS 貢献の入口。〔第2章〕</li>
-<li><strong>FIDO2</strong>（フィドウ・ツー）— パスワードレス・フィッシング耐性の認証技術。パスキーの基盤。〔第5章〕</li>
+<li><strong>feature flag</strong>（フィーチャー・フラグ／機能フラグ）— コードは配置したまま、<strong>設定で機能を ON/OFF</strong> できる仕組み。ロールバックの手段としても使う。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>fetch</strong>（フェッチ）— リモートの最新情報を<strong>取得だけする</strong>（手元のファイルは書き換えない）。確認用。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>flaky test</strong>（フレイキー・テスト／「フレーキー」とも）— 環境次第で<strong>たまに落ちる不安定なテスト</strong>。CI が緑でも信頼できない原因になる。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>fork</strong>（フォーク）— 他人のリポジトリを<strong>自分のアカウントにコピー</strong>する操作。OSS 貢献の入口。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>FIDO2</strong>（フィドウ・ツー）— パスワードレス・フィッシング耐性の認証技術。パスキーの基盤。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>び</h3>
 <ul>
-<li><strong>ビルド</strong>（<code>build</code>）— コードがエラーなく組み立てられるか確認すること。CI の基本検査の1つ。〔第1章〕</li>
+<li><strong>ビルド</strong>（<code>build</code>）— コードがエラーなく組み立てられるか確認すること。CI の基本検査の1つ。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 </ul>
 <h3>ぷ</h3>
 <ul>
-<li><strong>プッシュ</strong>（<code>push</code>）— 手元のコミットを<strong>リモート（GitHub）に送る</strong>こと。<code>push</code> して初めて他の人に共有される（<code>commit</code> ≠ <code>push</code>）。〔第2章〕</li>
-<li><strong>プル</strong>（<code>pull</code>）— リモートの最新を取得して<strong>手元に取り込む</strong>こと（＝ <code>fetch</code> + <code>merge</code>）。〔第2章〕</li>
-<li><strong>Pull Request / PR</strong>（プルリクエスト／通称「プルリク」）— 「この変更を取り込んでください」とチームに依頼し、<strong>レビューを経て統合する</strong>仕組み。〔第2章〕</li>
+<li><strong>プッシュ</strong>（<code>push</code>）— 手元のコミットを<strong>リモート（GitHub）に送る</strong>こと。<code>push</code> して初めて他の人に共有される（<code>commit</code> ≠ <code>push</code>）。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>プル</strong>（<code>pull</code>）— リモートの最新を取得して<strong>手元に取り込む</strong>こと（＝ <code>fetch</code> + <code>merge</code>）。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>Pull Request / PR</strong>（プルリクエスト／通称「プルリク」）— 「この変更を取り込んでください」とチームに依頼し、<strong>レビューを経て統合する</strong>仕組み。〔<a href="02-git-github.html">第2章</a>〕</li>
 </ul>
 <h3>ぶ</h3>
 <ul>
-<li><strong>ブランチ</strong>（<code>branch</code>）— 履歴を枝分かれさせて別々に進められる仕組み。「平行世界」。<code>main</code>（旧称 <code>master</code>）は中心の安定した歴史。〔第2章〕</li>
-<li><strong>ブルートフォース</strong>（<code>brute force</code>／「力技」）— パスワードを総当たりで試す攻撃。試行回数制限・アカウントロックで対策。〔第5章〕</li>
+<li><strong>ブランチ</strong>（<code>branch</code>）— 履歴を枝分かれさせて別々に進められる仕組み。「平行世界」。<code>main</code>（旧称 <code>master</code>）は中心の安定した歴史。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>ブルートフォース</strong>（<code>brute force</code>／「力技」）— パスワードを総当たりで試す攻撃。試行回数制限・アカウントロックで対策。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <h3>ほ</h3>
 <ul>
-<li><strong>PostgreSQL</strong>（ポストグレス・キューエル／通称「ポストグレス」）— サーバー型の本格的な RDB。同時書き込みに強く大規模向き。MySQL と並ぶ代表格。〔第7章〕</li>
-<li><strong>ボリューム</strong>（<code>volume</code>）— コンテナの**「外」にデータを保存**し、コンテナから参照させる仕組み。DBのデータ等、消してはいけないものはコンテナ内でなくボリュームに置く。〔第6章〕</li>
+<li><strong>PostgreSQL</strong>（ポストグレス・キューエル／通称「ポストグレス」）— サーバー型の本格的な RDB。同時書き込みに強く大規模向き。MySQL と並ぶ代表格。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>ボリューム</strong>（<code>volume</code>）— コンテナの**「外」にデータを保存**し、コンテナから参照させる仕組み。DBのデータ等、消してはいけないものはコンテナ内でなくボリュームに置く。〔<a href="06-docker.html">第6章</a>〕</li>
 </ul>
 <hr />
 <h2>ま行</h2>
 <h3>ま</h3>
 <ul>
-<li><strong>MySQL</strong>（マイエスキューエル）— サーバー型の本格的な RDB。同時書き込みに強く大規模向きだが、運用コストがかかる。〔第7章〕</li>
-<li><strong>マージ</strong>（<code>merge</code>／「統合」）— 別ブランチで進めた作業を main 等に<strong>合わせる</strong>こと。〔第2章〕</li>
-<li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔第2章〕</li>
-<li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔第2章〕</li>
-<li><strong>メトリクス</strong>（<code>metrics</code>／「指標」）— システムの状態を表す<strong>数値</strong>（CPU使用率・レスポンス時間・エラー率等）。モニタリングの中身。〔第8章〕</li>
-<li><strong>MongoDB</strong>（モンゴディービー）— <code>JSON</code> のような<strong>形が変わるデータ</strong>を扱うドキュメント型 NoSQL。事前のスキーマ定義が不要で柔軟。〔第7章〕</li>
+<li><strong>MySQL</strong>（マイエスキューエル）— サーバー型の本格的な RDB。同時書き込みに強く大規模向きだが、運用コストがかかる。〔<a href="07-database.html">第7章</a>〕</li>
+<li><strong>マージ</strong>（<code>merge</code>／「統合」）— 別ブランチで進めた作業を main 等に<strong>合わせる</strong>こと。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>main</strong>（メイン／旧称 <code>master</code>）— リポジトリの<strong>中心となる安定した歴史</strong>を指すブランチ名。「main は常に動く・壊れない状態を保つ」のが現場の合意。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>メトリクス</strong>（<code>metrics</code>／「指標」）— システムの状態を表す<strong>数値</strong>（CPU使用率・レスポンス時間・エラー率等）。モニタリングの中身。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>MongoDB</strong>（モンゴディービー）— <code>JSON</code> のような<strong>形が変わるデータ</strong>を扱うドキュメント型 NoSQL。事前のスキーマ定義が不要で柔軟。〔<a href="07-database.html">第7章</a>〕</li>
 </ul>
 <hr />
 <h2>や行</h2>
 <h3>や</h3>
 <ul>
-<li><strong>yarn</strong>（ヤーン／<code>yarn</code>）— JavaScript の<strong>パッケージマネージャ</strong>（<code>npm</code> の代替）。〔第10章〕</li>
-<li><strong>YAGNI</strong>（ヤグニ／<code>You Aren't Gonna Need It</code>／それはまだ要らない）— <strong>今不要な機能・抽象を作らない</strong>原則。「将来使うかも」で作った複雑さは負債になりがち。〔第13章〕</li>
+<li><strong>yarn</strong>（ヤーン／<code>yarn</code>）— JavaScript の<strong>パッケージマネージャ</strong>（<code>npm</code> の代替）。〔<a href="10-versioning-package.html">第10章</a>〕</li>
+<li><strong>YAGNI</strong>（ヤグニ／<code>You Aren't Gonna Need It</code>／それはまだ要らない）— <strong>今不要な機能・抽象を作らない</strong>原則。「将来使うかも」で作った複雑さは負債になりがち。〔<a href="13-review-design.html">第13章</a>〕</li>
 </ul>
 <h3>ゆ</h3>
 <ul>
-<li><strong>YAML</strong>（ヤムル／<code>YAML Ain't Markup Language</code>。「ヤメル」と読む人もいるが「ヤムル」が通称）— インデントで階層を表す設定ファイル記法。GitHub Actions のワークフロー定義等で使う。〔第1章〕</li>
-<li><strong>uv</strong>（ユーブイ／<code>uv</code>）— Python の<strong>高速なパッケージマネージャ</strong>（<code>pip</code> の代替候補）。〔第10章〕</li>
+<li><strong>YAML</strong>（ヤムル／<code>YAML Ain't Markup Language</code>。「ヤメル」と読む人もいるが「ヤムル」が通称）— インデントで階層を表す設定ファイル記法。GitHub Actions のワークフロー定義等で使う。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>uv</strong>（ユーブイ／<code>uv</code>）— Python の<strong>高速なパッケージマネージャ</strong>（<code>pip</code> の代替候補）。〔<a href="10-versioning-package.html">第10章</a>〕</li>
 </ul>
 <hr />
 <h2>ら行</h2>
 <h3>ら</h3>
 <ul>
-<li><strong>rubber duck debugging</strong>（ラバーダック・デバッグ／ゴムアヒル技法）— ゴムアヒル（または誰か）にコードを<strong>口頭で1行ずつ説明</strong>し、自分の勘違いに気づいて原因を見つけるデバッグ技法。〔第11章〕</li>
+<li><strong>rubber duck debugging</strong>（ラバーダック・デバッグ／ゴムアヒル技法）— ゴムアヒル（または誰か）にコードを<strong>口頭で1行ずつ説明</strong>し、自分の勘違いに気づいて原因を見つけるデバッグ技法。〔<a href="11-debugging.html">第11章</a>〕</li>
 </ul>
 <h3>り</h3>
 <ul>
-<li><strong>リクエスト</strong>（<code>request</code>／「お願い」）— クライアントからサーバーへ送る「やってほしいこと」の依頼。〔第3章〕</li>
-<li><strong>レスポンス</strong>（<code>response</code>／「お返事」）— サーバーからクライアントへ返す結果。〔第3章〕</li>
-<li><strong>リモート</strong>（<code>remote</code>）— ネットワーク上（GitHub 等）にある<strong>離れたリポジトリ</strong>。<code>ローカル</code>（手元）の対義語。〔第2章〕</li>
-<li><strong>リポジトリ</strong>（<code>repository</code>／通称「レポ」「リポ」）— 変更が<strong>履歴として保存される場所</strong>（<code>.git/</code> 配下）。〔第2章〕</li>
-<li><strong>リンター</strong>（<code>linter</code>）— コードがチームの規約を守っているか（読みやすさ・一貫性）を自動チェックする道具。<code>ruff</code>・<code>ESLint</code> 等が代表。〔第1章〕</li>
-<li><strong>Lint</strong>（リント）— コードを<strong>実行せずに（静的解析）</strong>、書き方の問題・バグの種を見つける検査そのもの。リンターが担当する。〔第12章〕</li>
-<li><strong>リバート</strong>（<code>revert</code>／「取り消す」）— 特定のコミットを打ち消す操作。壊れた変更を main から取り除く時に使う。〔第1章〕</li>
-<li><strong>REST</strong>（レスト／<code>Representational State Transfer</code>）— URL（名詞）と HTTP メソッド（動詞）で機能を表現する API 設計思想。最も普及しているスタイル。〔第3章〕</li>
-<li><strong>RPC</strong>（アールピーシー／<code>Remote Procedure Call</code>）— 「関数呼び出し」風の通信スタイル。これを現代風にしたのが <code>gRPC</code>。〔第3章〕</li>
+<li><strong>リクエスト</strong>（<code>request</code>／「お願い」）— クライアントからサーバーへ送る「やってほしいこと」の依頼。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>レスポンス</strong>（<code>response</code>／「お返事」）— サーバーからクライアントへ返す結果。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>リモート</strong>（<code>remote</code>）— ネットワーク上（GitHub 等）にある<strong>離れたリポジトリ</strong>。<code>ローカル</code>（手元）の対義語。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>リポジトリ</strong>（<code>repository</code>／通称「レポ」「リポ」）— 変更が<strong>履歴として保存される場所</strong>（<code>.git/</code> 配下）。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>リンター</strong>（<code>linter</code>）— コードがチームの規約を守っているか（読みやすさ・一貫性）を自動チェックする道具。<code>ruff</code>・<code>ESLint</code> 等が代表。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>Lint</strong>（リント）— コードを<strong>実行せずに（静的解析）</strong>、書き方の問題・バグの種を見つける検査そのもの。リンターが担当する。〔<a href="12-quality.html">第12章</a>〕</li>
+<li><strong>リバート</strong>（<code>revert</code>／「取り消す」）— 特定のコミットを打ち消す操作。壊れた変更を main から取り除く時に使う。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>REST</strong>（レスト／<code>Representational State Transfer</code>）— URL（名詞）と HTTP メソッド（動詞）で機能を表現する API 設計思想。最も普及しているスタイル。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>RPC</strong>（アールピーシー／<code>Remote Procedure Call</code>）— 「関数呼び出し」風の通信スタイル。これを現代風にしたのが <code>gRPC</code>。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
 </ul>
 <h3>る</h3>
 <ul>
-<li><strong>root cause</strong>（ルートコーズ／根本原因）— バグの<strong>表面でなく根っこの原因</strong>。ここまで直さないと同じバグが再発する。例:「クラッシュ直前にnullチェックを足す」は対症療法・「なぜnullが渡るか」を直すのが根本解決。〔第11章〕</li>
+<li><strong>root cause</strong>（ルートコーズ／根本原因）— バグの<strong>表面でなく根っこの原因</strong>。ここまで直さないと同じバグが再発する。例:「クラッシュ直前にnullチェックを足す」は対症療法・「なぜnullが渡るか」を直すのが根本解決。〔<a href="11-debugging.html">第11章</a>〕</li>
 </ul>
 <h3>れ</h3>
 <ul>
-<li><strong>Redis</strong>（レディース）— 「鍵に対する値」を<strong>超高速</strong>で読み書きするキー・バリュー型の<strong>インメモリ</strong> NoSQL。電源切断で消えうるため一時データ（キャッシュ等）向け。〔第7章〕</li>
+<li><strong>Redis</strong>（レディース）— 「鍵に対する値」を<strong>超高速</strong>で読み書きするキー・バリュー型の<strong>インメモリ</strong> NoSQL。電源切断で消えうるため一時データ（キャッシュ等）向け。〔<a href="07-database.html">第7章</a>〕</li>
 </ul>
 <h3>ろ</h3>
 <ul>
-<li><strong>lock file</strong>（ロックファイル／<code>lock file</code>）— 実際にインストールした版組み合わせを<strong>全件記録</strong>し再現性を担保するファイル（<code>package-lock.json</code>・<code>Cargo.lock</code> 等）。原則コミット。〔第10章〕</li>
-<li><strong>ログレベル</strong>（<code>DEBUG</code>/<code>INFO</code>/<code>WARN</code>/<code>ERROR</code>/<code>FATAL</code>）— ログの「重さ（深刻度）」の分類。本番では <code>DEBUG</code> を絞り、レベルで絞り込み・優先度判断する。〔第8章〕</li>
-<li><strong>ローカル</strong>（<code>local</code>）— <strong>手元の環境</strong>（自分のPC）。<code>リモート</code> の対義語。〔第2章〕</li>
-<li><strong>ロールバック</strong>（<code>rollback</code>／「巻き戻し」）— 公開してみたら不具合が出た時、<strong>前のバージョンに戻す</strong>こと。「デプロイできる」と同じくらい「戻せる」ことが重要。〔第1章〕</li>
+<li><strong>lock file</strong>（ロックファイル／<code>lock file</code>）— 実際にインストールした版組み合わせを<strong>全件記録</strong>し再現性を担保するファイル（<code>package-lock.json</code>・<code>Cargo.lock</code> 等）。原則コミット。〔<a href="10-versioning-package.html">第10章</a>〕</li>
+<li><strong>ログレベル</strong>（<code>DEBUG</code>/<code>INFO</code>/<code>WARN</code>/<code>ERROR</code>/<code>FATAL</code>）— ログの「重さ（深刻度）」の分類。本番では <code>DEBUG</code> を絞り、レベルで絞り込み・優先度判断する。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>ローカル</strong>（<code>local</code>）— <strong>手元の環境</strong>（自分のPC）。<code>リモート</code> の対義語。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>ロールバック</strong>（<code>rollback</code>／「巻き戻し」）— 公開してみたら不具合が出た時、<strong>前のバージョンに戻す</strong>こと。「デプロイできる」と同じくらい「戻せる」ことが重要。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 </ul>
 <hr />
 <h2>わ行</h2>
 <h3>わ</h3>
 <ul>
-<li><strong>ワークフロー</strong>（<code>workflow</code>）— GitHub Actions で「どのタイミングで・何をするか」を定義したもの。<code>.github/workflows/</code> に YAML で置く。〔第1章〕</li>
-<li><strong>WebHook</strong>（ウェブフック）— サーバーが<strong>クライアントに能動的に通知を送る</strong>仕組み。決済完了通知等で使う。公開エンドポイントになるため<strong>署名検証がほぼ必須</strong>。〔第3章〕</li>
-<li><strong>WebSocket</strong>（ウェブソケット）— 双方向・常時接続の通信スタイル。チャットやリアルタイム更新で使う。〔第3章〕</li>
-<li><strong>WebAuthn</strong>（ウェブオースン／<code>Web Authentication</code>）— Web で <code>FIDO2</code>/パスキーを実現する API 仕様。〔第5章〕</li>
+<li><strong>ワークフロー</strong>（<code>workflow</code>）— GitHub Actions で「どのタイミングで・何をするか」を定義したもの。<code>.github/workflows/</code> に YAML で置く。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>WebHook</strong>（ウェブフック）— サーバーが<strong>クライアントに能動的に通知を送る</strong>仕組み。決済完了通知等で使う。公開エンドポイントになるため<strong>署名検証がほぼ必須</strong>。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>WebSocket</strong>（ウェブソケット）— 双方向・常時接続の通信スタイル。チャットやリアルタイム更新で使う。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>WebAuthn</strong>（ウェブオースン／<code>Web Authentication</code>）— Web で <code>FIDO2</code>/パスキーを実現する API 仕様。〔<a href="05-auth.html">第5章</a>〕</li>
 </ul>
 <hr />
 <h2>英字語・記号始まり</h2>
 <ul>
-<li><strong>.env</strong>（ドット・イーエンヴイ／通称「ドット・エンブ」も）— ローカル開発で環境変数をまとめた設定ファイル。<strong>Git には入れない</strong>前提。〔第4章〕</li>
-<li><strong>.gitignore</strong>（ドット・ギットイグノア）— Git の追跡から<strong>除外するファイルを指定</strong>する設定ファイル。<code>.env</code> 等の秘匿ファイルを弾くのに使う。〔第4章〕</li>
-<li><strong>CDN</strong>（シーディーエヌ／<code>Content Delivery Network</code>）— 静的ファイル（画像・CSS等）を世界中のサーバーに配置し、<strong>ユーザーに近い所から配信</strong>する仕組み。静的配信のキャッシュ代表。〔第9章〕</li>
-<li><strong>DRY</strong>（ドライ／<code>Don't Repeat Yourself</code>／繰り返すな）— 同じコード・知識を<strong>重複させない</strong>原則。直す時に複数箇所触る重複は修正漏れの温床。〔第13章〕</li>
-<li><strong>Docker</strong>（ドッカー）— コンテナを作り・動かす<strong>最も普及したツール兼フォーマット</strong>。「環境を丸ごと箱詰め」して運ぶ。〔第6章〕</li>
-<li><strong>Dockerfile</strong>（ドッカーファイル）— イメージの作り方を書いた<strong>手順書</strong>。これをビルドするとイメージができる。〔第6章〕</li>
-<li><strong>ELK</strong>（イーエルケー／<code>Elasticsearch</code>+<code>Logstash</code>+<code>Kibana</code>）— 大量の構造化ログを集めて<strong>検索・可視化</strong>するログ集計スタックの代表例。〔第8章〕</li>
-<li><strong>Git</strong>（ギット）— コードの変更履歴を記録・管理するバージョン管理システム。〔第2章〕</li>
-<li><strong>GitHub</strong>（ギットハブ）— Git の履歴をインターネット上で共有・協働するプラットフォーム。「みんなで使う作業場」。〔第2章〕</li>
-<li><strong>GitHub Actions</strong>（ギットハブ・アクションズ）— GitHub が提供する CI/CD 実行環境。<code>.github/workflows/</code> に YAML で定義する。〔第1章〕</li>
-<li><strong>issue</strong>（イシュー）— 「やるべきこと・問題・要望」を1件ずつ管理するチケット。〔第2章〕</li>
-<li><strong>job</strong>（ジョブ）— GitHub Actions でワークフロー内の<strong>実行単位</strong>。<code>ワークフロー &gt; ジョブ &gt; ステップ</code> の階層。〔第1章〕</li>
-<li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔第3章〕</li>
-<li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶ<strong>署名付きトークン</strong>。API・モバイル向き（ステートレス・無効化は工夫が要る）。〔第5章〕</li>
-<li><strong>KISS</strong>（キス／<code>Keep It Simple, Stupid</code>／シンプルに）— <strong>必要以上に複雑にしない</strong>原則。賢い書き方より分かる書き方。〔第13章〕</li>
-<li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを本番で<strong>大量に運用・自動管理</strong>する基盤。〔第6章〕</li>
-<li><strong>left shift</strong>（レフトシフト／「左へずらす」）— 問題を工程の**手前（左）**で見つけるほど直すコストが安い、という思想。エディタ・pre-commit・CI など手前に検査を置く根拠。〔第12章〕</li>
-<li><strong>Observability</strong>（オブザーバビリティ／観測可能性）— システムの<strong>内部状態を外部から把握できる度合い</strong>。ログ・メトリクス等を整えて高める。〔第8章〕</li>
-<li><strong>origin</strong>（オリジン）— 自分が <code>push</code>/<code>pull</code> する相手（普通は fork した自分のリポジトリ）のデフォルトの呼び名。<code>upstream</code>（コピー元）の対。〔第2章〕</li>
-<li><strong>PATCH</strong>（パッチ）— HTTP メソッドの1つ。「一部だけ更新したい」。<code>PUT</code>（丸ごと更新）との違いは粒度。〔第3章〕</li>
-<li><strong>pre-commit</strong>（プレコミット）— コミットの<strong>直前</strong>に自動検査（Lint・テスト等）を走らせる仕組み。問題あるコードが履歴に入るのを未然に防ぐ。〔第12章〕</li>
-<li><strong>POST</strong>（ポスト）— HTTP メソッドの1つ。「新しく作成したい」。〔第3章〕</li>
-<li><strong>PUT</strong>（プット）— HTTP メソッドの1つ。「全体を更新したい（丸ごと置き換え）」。〔第3章〕</li>
-<li><strong>rebase</strong>（リベース）— ブランチの変更を main の最新の先に<strong>積み直す</strong>操作。履歴を一直線にできるが<strong>履歴書き換え</strong>なので要注意（<code>push</code> 済みの <code>rebase</code> は厳禁）。〔第2章〕</li>
-<li><strong>SLA/SLI/SLO</strong>（エスエルエー等／合意・指標・目標）— サービスの信頼性を**約束（SLA）・計測（SLI）・目標（SLO）**として数値管理する作法。「可用性99.9%」等。〔第8章〕</li>
-<li><strong>Stripe</strong>（ストライプ）— 決済 API の代表格。WebHook で決済完了通知を受け取る使い方が定番。〔第3章〕</li>
-<li><strong>TTL</strong>（ティーティーエル／<code>Time To Live</code>／「寿命」）— キャッシュの<strong>有効期限</strong>。過ぎると自動で捨てられ、新しさを期限で緩和する。〔第9章〕</li>
-<li><strong>upstream</strong>（アップストリーム）— コピー元の**「オリジナルのリポジトリ」**を指す呼び方（川の上流＝源流のイメージ）。<code>origin</code> の対。〔第2章〕</li>
-<li><strong>VM</strong>（ブイエム／<code>Virtual Machine</code>／仮想マシン）— <strong>OSごと</strong>丸ごと隔離する従来の仮想化方式。コンテナより重い・起動が遅いが、完全な隔離を持つ。〔第6章〕</li>
+<li><strong>.env</strong>（ドット・イーエンヴイ／通称「ドット・エンブ」も）— ローカル開発で環境変数をまとめた設定ファイル。<strong>Git には入れない</strong>前提。〔<a href="04-env-secrets.html">第4章</a>〕</li>
+<li><strong>.gitignore</strong>（ドット・ギットイグノア）— Git の追跡から<strong>除外するファイルを指定</strong>する設定ファイル。<code>.env</code> 等の秘匿ファイルを弾くのに使う。〔<a href="04-env-secrets.html">第4章</a>〕</li>
+<li><strong>CDN</strong>（シーディーエヌ／<code>Content Delivery Network</code>）— 静的ファイル（画像・CSS等）を世界中のサーバーに配置し、<strong>ユーザーに近い所から配信</strong>する仕組み。静的配信のキャッシュ代表。〔<a href="09-cache-async.html">第9章</a>〕</li>
+<li><strong>DRY</strong>（ドライ／<code>Don't Repeat Yourself</code>／繰り返すな）— 同じコード・知識を<strong>重複させない</strong>原則。直す時に複数箇所触る重複は修正漏れの温床。〔<a href="13-review-design.html">第13章</a>〕</li>
+<li><strong>Docker</strong>（ドッカー）— コンテナを作り・動かす<strong>最も普及したツール兼フォーマット</strong>。「環境を丸ごと箱詰め」して運ぶ。〔<a href="06-docker.html">第6章</a>〕</li>
+<li><strong>Dockerfile</strong>（ドッカーファイル）— イメージの作り方を書いた<strong>手順書</strong>。これをビルドするとイメージができる。〔<a href="06-docker.html">第6章</a>〕</li>
+<li><strong>ELK</strong>（イーエルケー／<code>Elasticsearch</code>+<code>Logstash</code>+<code>Kibana</code>）— 大量の構造化ログを集めて<strong>検索・可視化</strong>するログ集計スタックの代表例。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>Git</strong>（ギット）— コードの変更履歴を記録・管理するバージョン管理システム。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>GitHub</strong>（ギットハブ）— Git の履歴をインターネット上で共有・協働するプラットフォーム。「みんなで使う作業場」。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>GitHub Actions</strong>（ギットハブ・アクションズ）— GitHub が提供する CI/CD 実行環境。<code>.github/workflows/</code> に YAML で定義する。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>issue</strong>（イシュー）— 「やるべきこと・問題・要望」を1件ずつ管理するチケット。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>job</strong>（ジョブ）— GitHub Actions でワークフロー内の<strong>実行単位</strong>。<code>ワークフロー &gt; ジョブ &gt; ステップ</code> の階層。〔<a href="01-ci-cd.html">第1章</a>〕</li>
+<li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶ<strong>署名付きトークン</strong>。API・モバイル向き（ステートレス・無効化は工夫が要る）。〔<a href="05-auth.html">第5章</a>〕</li>
+<li><strong>KISS</strong>（キス／<code>Keep It Simple, Stupid</code>／シンプルに）— <strong>必要以上に複雑にしない</strong>原則。賢い書き方より分かる書き方。〔<a href="13-review-design.html">第13章</a>〕</li>
+<li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを本番で<strong>大量に運用・自動管理</strong>する基盤。〔<a href="06-docker.html">第6章</a>〕</li>
+<li><strong>left shift</strong>（レフトシフト／「左へずらす」）— 問題を工程の**手前（左）**で見つけるほど直すコストが安い、という思想。エディタ・pre-commit・CI など手前に検査を置く根拠。〔<a href="12-quality.html">第12章</a>〕</li>
+<li><strong>Observability</strong>（オブザーバビリティ／観測可能性）— システムの<strong>内部状態を外部から把握できる度合い</strong>。ログ・メトリクス等を整えて高める。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>origin</strong>（オリジン）— 自分が <code>push</code>/<code>pull</code> する相手（普通は fork した自分のリポジトリ）のデフォルトの呼び名。<code>upstream</code>（コピー元）の対。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>PATCH</strong>（パッチ）— HTTP メソッドの1つ。「一部だけ更新したい」。<code>PUT</code>（丸ごと更新）との違いは粒度。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>pre-commit</strong>（プレコミット）— コミットの<strong>直前</strong>に自動検査（Lint・テスト等）を走らせる仕組み。問題あるコードが履歴に入るのを未然に防ぐ。〔<a href="12-quality.html">第12章</a>〕</li>
+<li><strong>POST</strong>（ポスト）— HTTP メソッドの1つ。「新しく作成したい」。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>PUT</strong>（プット）— HTTP メソッドの1つ。「全体を更新したい（丸ごと置き換え）」。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>rebase</strong>（リベース）— ブランチの変更を main の最新の先に<strong>積み直す</strong>操作。履歴を一直線にできるが<strong>履歴書き換え</strong>なので要注意（<code>push</code> 済みの <code>rebase</code> は厳禁）。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>SLA/SLI/SLO</strong>（エスエルエー等／合意・指標・目標）— サービスの信頼性を**約束（SLA）・計測（SLI）・目標（SLO）**として数値管理する作法。「可用性99.9%」等。〔<a href="08-logging.html">第8章</a>〕</li>
+<li><strong>Stripe</strong>（ストライプ）— 決済 API の代表格。WebHook で決済完了通知を受け取る使い方が定番。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
+<li><strong>TTL</strong>（ティーティーエル／<code>Time To Live</code>／「寿命」）— キャッシュの<strong>有効期限</strong>。過ぎると自動で捨てられ、新しさを期限で緩和する。〔<a href="09-cache-async.html">第9章</a>〕</li>
+<li><strong>upstream</strong>（アップストリーム）— コピー元の**「オリジナルのリポジトリ」**を指す呼び方（川の上流＝源流のイメージ）。<code>origin</code> の対。〔<a href="02-git-github.html">第2章</a>〕</li>
+<li><strong>VM</strong>（ブイエム／<code>Virtual Machine</code>／仮想マシン）— <strong>OSごと</strong>丸ごと隔離する従来の仮想化方式。コンテナより重い・起動が遅いが、完全な隔離を持つ。〔<a href="06-docker.html">第6章</a>〕</li>
 </ul>
 <hr />
 <h2>まとめ</h2>
@@ -435,7 +440,7 @@ slug: 14-glossary</h2>
 <li>読み仮名は<strong>英字綴りの語のみ</strong>。カタカナ語・漢字語は自力で読めます</li>
 <li><strong>🔖 筆者の実例</strong> の枠がある用語は、汎用解説に加えて自作プロジェクトでの使われ方を補足しています</li>
 </ul>
-<div class="callout callout-tip"><p>💡 <strong>この辞書は生き物です</strong>: 本編（第5章以降）が増えるたび、新しい用語を追加していきます。「この言葉が載ってない！」があれば、それが次に追加すべき用語の目安です。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>この辞書は生き物です</strong>: 本編（<a href="05-auth.html">第5章</a>以降）が増えるたび、新しい用語を追加していきます。「この言葉が載ってない！」があれば、それが次に追加すべき用語の目安です。</p></div>
 
         </article>
 
@@ -455,7 +460,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">vTEST · 2026.01.01</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

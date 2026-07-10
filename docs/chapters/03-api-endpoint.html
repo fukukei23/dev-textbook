@@ -136,17 +136,35 @@
 
         <article class="chapter-body">
             <hr />
-<h2>title: API &amp; エンドポイント
+<details class="page-toc" open>
+<summary>📑 この章の目次</summary>
+<ul>
+<li><a href="#sec-1">title: API &amp; エンドポイント
+icon: 🔌
+card_desc: プログラム同士が通信する窓口の約束事 — HTTP基礎・ステータスコード・REST・GraphQL・WebHook
+slug: 03-api-endpoint</a></li>
+<li><a href="#sec-2">一言でいうと</a></li>
+<li><a href="#sec-3">1. なぜAPIという「約束事」が必要なのか</a></li>
+<li><a href="#sec-4">2. HTTP —— Web APIの共通語</a></li>
+<li><a href="#sec-5">3. 🔑 ステータスコード —— 「結果はどうだったか」</a></li>
+<li><a href="#sec-6">4. REST —— 「URLとHTTPメソッドで機能を表現する」設計思想</a></li>
+<li><a href="#sec-7">5. WebHook —— 「サーバーがクライアントに通知する」仕組み</a></li>
+<li><a href="#sec-8">6. API設計でよくある失敗と対処</a></li>
+<li><a href="#sec-9">7. 面接・実務での意味</a></li>
+<li><a href="#sec-10">まとめ</a></li>
+</ul>
+</details>
+<h2 id="sec-1">title: API &amp; エンドポイント
 icon: 🔌
 card_desc: プログラム同士が通信する窓口の約束事 — HTTP基礎・ステータスコード・REST・GraphQL・WebHook
 slug: 03-api-endpoint</h2>
 <h1>03 API &amp; エンドポイント — プログラム同士が通信する「窓口」の約束事</h1>
 <div class="callout callout-info"><p>「API」「エンドポイント」「REST」、そして「200・404・500」——現場の会話で当たり前のように出るこれらの言葉、何を指しているか正確に言えますか？ この章では、プログラム同士がやり取りするための<strong>約束事</strong>を根本から理解します。</p></div>
 <hr />
-<h2>一言でいうと</h2>
+<h2 id="sec-2">一言でいうと</h2>
 <p><strong>API（Application Programming Interface）</strong> は、プログラム同士が<strong>会話するときの約束事（インターフェース）<strong>です。「こういう形式で聞けば、こういう形式で答えます」という取り決めです。<strong>エンドポイント（endpoint）</strong> は、その</strong>窓口（住所）</strong>。「<code>/users/123</code> というURLに聞けば、ユーザー情報が返ってくる」のように、URLで機能を識別します。</p>
 <hr />
-<h2>1. なぜAPIという「約束事」が必要なのか</h2>
+<h2 id="sec-3">1. なぜAPIという「約束事」が必要なのか</h2>
 <p>たとえば、天気予報サービスを作りたいとします。自前で観測装置を持ち、気象データを解析し、地図上に表示する——これは現実的ではありません。</p>
 <p>そこで登場するのが<strong>API</strong>です。</p>
 <pre><code>あなたのアプリ  ──→  気象会社のAPI（=約束事）
@@ -156,7 +174,7 @@ slug: 03-api-endpoint</h2>
 <p>APIのおかげで、あなたは気象学の知識ゼロで天気予報アプリを作れます。**「誰かが用意した機能を、自分のアプリから呼び出す」**のがAPIです。</p>
 <div class="callout callout-tip"><p>💡 <strong>「インターフェース」＝ 接点・境界</strong>。人間同士が言葉を介して話すように、プログラム同士がAPIという共通の言葉で話します。</p></div>
 <hr />
-<h2>2. HTTP —— Web APIの共通語</h2>
+<h2 id="sec-4">2. HTTP —— Web APIの共通語</h2>
 <p>現在、APIの事実上の標準は <strong>HTTP（HyperText Transfer Protocol）</strong> です。Web ブラウザが Web ページを取得するときに使うのと同じ仕組みが、プログラム間の通信にも使われます。</p>
 <h3>リクエストとレスポンス</h3>
 <p>HTTP のやりとりは、**「リクエスト（お願い）」と「レスポンス（お返事）」**の2つで成り立ちます。</p>
@@ -253,7 +271,7 @@ slug: 03-api-endpoint</h2>
 </ul>
 <div class="callout callout-tip"><p>💡 <strong>レスポンスのフォーマット</strong>: 上の例 <code>{ &quot;temp&quot;: 22, &quot;weather&quot;: &quot;晴れ&quot; }</code> は <strong>JSON（JavaScript Object Notation）</strong> と呼ばれる形式です。現在 API の事実上の標準フォーマットで、「キーと値のペア」を <code>{}</code> で囲むだけのシンプルな記法です。</p></div>
 <hr />
-<h2>3. 🔑 ステータスコード —— 「結果はどうだったか」</h2>
+<h2 id="sec-5">3. 🔑 ステータスコード —— 「結果はどうだったか」</h2>
 <p>レスポンスには**3桁の数字（ステータスコード）**が必ず含まれます。これは「お返事の結果」を機械的に伝える仕組みです。</p>
 <h3>主要なステータスコード</h3>
 <div class="table-wrapper"><table>
@@ -367,7 +385,7 @@ slug: 03-api-endpoint</h2>
 </table></div>
 <div class="callout callout-tip"><p>💡 「4xx と 5xx の区別」は面接頻出です。「404 Not Found」は「あなたのURL指定が間違っている（=あなたの責任）」、「500 Internal Server Error」は「サーバー側が悪い（=サーバー提供者の責任）」。<strong>コード番号を見ただけで、どこを直すべきか当たりがつく</strong>のが理想です。</p></div>
 <hr />
-<h2>4. REST —— 「URLとHTTPメソッドで機能を表現する」設計思想</h2>
+<h2 id="sec-6">4. REST —— 「URLとHTTPメソッドで機能を表現する」設計思想</h2>
 <p>API の設計スタイルとして最も普及しているのが <strong>REST（Representational State Transfer）</strong> です。</p>
 <h3>RESTの基本原則</h3>
 <ol>
@@ -419,7 +437,7 @@ GET     /users/123/posts ユーザー123の記事一覧を取得
 </table></div>
 <div class="callout callout-info"><p>「REST が一番」と覚えず、**「場面に応じて選ぶ」**のがプロの視点です。</p></div>
 <hr />
-<h2>5. WebHook —— 「サーバーがクライアントに通知する」仕組み</h2>
+<h2 id="sec-7">5. WebHook —— 「サーバーがクライアントに通知する」仕組み</h2>
 <p>通常の API は<strong>クライアント起点</strong>（クライアントがサーバーに聞きに行く）です。しかし「ユーザー登録が完了したら通知がほしい」「決済が完了したら自動で処理したい」のように、<strong>サーバーが能動的に教えてくれる</strong>仕組みが必要な場合があります。</p>
 <p>それが <strong>WebHook（ウェブフック）</strong> です。</p>
 <pre><code>通常のAPI:    [あなたのアプリ] ──問合せ──&gt; [決済サービス]
@@ -436,7 +454,7 @@ WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービ
 </ul>
 <div class="callout callout-warn"><p>⚠ <strong>設計の勘所</strong>: WebHook は<strong>公開エンドポイント</strong>になるため、**署名検証（secret による認証）**がほぼ必須です。さもなければ、攻撃者が偽の通知を送れてしまいます。</p></div>
 <hr />
-<h2>6. API設計でよくある失敗と対処</h2>
+<h2 id="sec-8">6. API設計でよくある失敗と対処</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -464,7 +482,7 @@ WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービ
 <tr>
 <td><strong>認証・認可が甘すぎる</strong></td>
 <td>不正アクセス・データ漏洩</td>
-<td>認証必須・権限チェック・HTTPS 強制（→ 第4章・第5章）</td>
+<td>認証必須・権限チェック・HTTPS 強制（→ <a href="04-env-secrets.html">第4章</a>・<a href="05-auth.html">第5章</a>）</td>
 </tr>
 <tr>
 <td><strong>レート制限がない</strong></td>
@@ -474,7 +492,7 @@ WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービ
 </tbody>
 </table></div>
 <hr />
-<h2>7. 面接・実務での意味</h2>
+<h2 id="sec-9">7. 面接・実務での意味</h2>
 <div class="callout callout-info"><p>「API 設計で気をつけることは？」</p></div>
 <p>この質問は、単に「REST 知っていますか」を聞いているのではありません。**「相手と約束事を交わせるか・想定外の利用に耐えられるか・壊れた時に何が悪いか即座に判定できるか」**を聞いています。</p>
 <ul>
@@ -486,7 +504,7 @@ WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービ
 </ul>
 <p>これらを<strong>自覚して設計できる</strong>ことが、「API を使える」ではなく「<strong>API を設計できる</strong>」エンジニアの証です。</p>
 <hr />
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <ul>
 <li><strong>API</strong> はプログラム間の<strong>約束事</strong>。<strong>エンドポイント</strong>は<strong>窓口（URL）</strong></li>
 <li><strong>HTTP</strong> は事実上の標準。<strong>GET/POST/PUT/DELETE</strong> で操作を伝える</li>
@@ -495,7 +513,7 @@ WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービ
 <li><strong>WebHook</strong> は「サーバーから能動的に通知する」仕組み。<strong>署名検証必須</strong></li>
 <li>API 設計の品質は、<strong>エラー処理・バージョニング・認証・レート制限</strong>で決まる</li>
 </ul>
-<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: API が「プログラム同士の約束事」だと分かると、<strong>「APIキーやパスワードはどうやって渡すのか」<strong>が気になります。第4章では、認証情報・秘密情報を</strong>コードに直接書かない</strong>作法（環境変数・シークレット管理）を扱います。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: API が「プログラム同士の約束事」だと分かると、<strong>「APIキーやパスワードはどうやって渡すのか」<strong>が気になります。<a href="04-env-secrets.html">第4章</a>では、認証情報・秘密情報を</strong>コードに直接書かない</strong>作法（環境変数・シークレット管理）を扱います。</p></div>
 
         </article>
 
@@ -520,7 +538,7 @@ WebHook:     [あなたのアプリ] &lt;─通知────  [決済サービ
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">vTEST · 2026.01.01</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

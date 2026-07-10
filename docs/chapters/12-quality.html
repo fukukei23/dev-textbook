@@ -136,17 +136,35 @@
 
         <article class="chapter-body">
             <hr />
-<h2>title: 開発プロセス・品質
+<details class="page-toc" open>
+<summary>📑 この章の目次</summary>
+<ul>
+<li><a href="#sec-1">title: 開発プロセス・品質
+icon: 🛡️
+card_desc: バグを未然に防ぎ・早く見つける仕組み — テスト・Lint・型チェック・レビューの役割分担と「早く見つけるほど安い」思想
+slug: 12-quality</a></li>
+<li><a href="#sec-2">一言でいうと</a></li>
+<li><a href="#sec-3">1. なぜ品質の作法が必要なのか</a></li>
+<li><a href="#sec-4">2. 「品質を保つ仕組み」とは</a></li>
+<li><a href="#sec-5">3. 🔑 バグを防ぐ3つの自動検査</a></li>
+<li><a href="#sec-6">4. レビューと「早く見つける」思想</a></li>
+<li><a href="#sec-7">5. 🔑 段階的な検査 —— 手元から本番まで何層も重ねる</a></li>
+<li><a href="#sec-8">6. なぜ「品質の作法」が開発の作法なのか</a></li>
+<li><a href="#sec-9">7. よくある落とし穴と対処</a></li>
+<li><a href="#sec-10">まとめ</a></li>
+</ul>
+</details>
+<h2 id="sec-1">title: 開発プロセス・品質
 icon: 🛡️
 card_desc: バグを未然に防ぎ・早く見つける仕組み — テスト・Lint・型チェック・レビューの役割分担と「早く見つけるほど安い」思想
 slug: 12-quality</h2>
 <h1>12 開発プロセス・品質 — バグを未然に防ぎ、早く見つける仕組み</h1>
-<div class="callout callout-info"><p>前章（第11章）では「<strong>起きてしまったバグ</strong>」を論理的に直す作法を扱いました。本章ではその<strong>前段</strong> —— そもそもバグを<strong>出しにくくし</strong>、出ても<strong>早く見つける</strong>仕組みを扱います。「直す力」と同じくらい「<strong>防ぐ力</strong>」が、開発の現場では問われます。</p></div>
+<div class="callout callout-info"><p>前章（<a href="11-debugging.html">第11章</a>）では「<strong>起きてしまったバグ</strong>」を論理的に直す作法を扱いました。本章ではその<strong>前段</strong> —— そもそもバグを<strong>出しにくくし</strong>、出ても<strong>早く見つける</strong>仕組みを扱います。「直す力」と同じくらい「<strong>防ぐ力</strong>」が、開発の現場では問われます。</p></div>
 <hr />
-<h2>一言でいうと</h2>
+<h2 id="sec-2">一言でいうと</h2>
 <p>バグは<strong>後になるほど直すコストが跳ね上がります</strong>（本番で発覚すれば手元の何倍・何十倍）。だから現場は「<strong>人間の目と記憶に頼らず、機械にチェックさせる</strong>」仕組みを何層も重ねます。本章では、コードの品質を保つ3つの自動検査 —— <strong>テスト・Lint・型チェック</strong> —— と、人間の<strong>コードレビュー</strong>の役割分担、そして「<strong>早く見つけるほど安い</strong>」という工程の思想を扱います。</p>
 <hr />
-<h2>1. なぜ品質の作法が必要なのか</h2>
+<h2 id="sec-3">1. なぜ品質の作法が必要なのか</h2>
 <h3>「後で直す」の罠</h3>
 <p>締め切り前。「とりあえず動いたから、テストは後で書こう」と<strong>検査を後回しにして進める</strong>。すると:</p>
 <ul>
@@ -154,7 +172,7 @@ slug: 12-quality</h2>
 <li>バグが<strong>本番のユーザーの目に触れる</strong>（クレーム・信用失墜）</li>
 <li>原因が<strong>遠い昔のコード</strong>にあって追跡が困難になる</li>
 </ul>
-<p>これが第1章で触れた<strong>技術的負債</strong>の正体です。「後で直す」は借金で、利息（後からの追加コスト）が雪だるま式に膨らみます。</p>
+<p>これが<a href="01-ci-cd.html">第1章</a>で触れた<strong>技術的負債</strong>の正体です。「後で直す」は借金で、利息（後からの追加コスト）が雪だるま式に膨らみます。</p>
 <h3>バグの発見は「早いほど安い」</h3>
 <p>経験則として、バグの<strong>発見タイミング</strong>と<strong>修復コスト</strong>には桁違いの差があると言われます:</p>
 <div class="table-wrapper"><table>
@@ -188,9 +206,9 @@ slug: 12-quality</h2>
 </tbody>
 </table></div>
 <p>※ 数値は文脈による目安ですが、「<strong>手元で直すのと本番で直すのとで桁が違う</strong>」はほぼ普遍的な傾向です。</p>
-<p>だからこそ「<strong>できるだけ手前で</strong>」バグを見つける仕組みが必要です。第11章は「起きたバグを直す」、本章は「<strong>そもそも起きない・出ても早く見つける</strong>」の作法です。</p>
+<p>だからこそ「<strong>できるだけ手前で</strong>」バグを見つける仕組みが必要です。<a href="11-debugging.html">第11章</a>は「起きたバグを直す」、本章は「<strong>そもそも起きない・出ても早く見つける</strong>」の作法です。</p>
 <hr />
-<h2>2. 「品質を保つ仕組み」とは</h2>
+<h2 id="sec-4">2. 「品質を保つ仕組み」とは</h2>
 <h3>4つの防衛線</h3>
 <p>現場で品質を保つ主な仕組みは、<strong>自動検査3つ ＋ 人間の目1つ</strong>です:</p>
 <div class="table-wrapper"><table>
@@ -224,13 +242,13 @@ slug: 12-quality</h2>
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p>※ <strong>CI</strong>（→ 第1章）は、これら自動検査を「<strong>push するたび機械に回させる</strong>」土俵です。中身の検査（テスト／Lint／型チェック）があるからこそ、CI の「緑」に意味が出ます。</p></div>
+<div class="callout callout-info"><p>※ <strong>CI</strong>（→ <a href="01-ci-cd.html">第1章</a>）は、これら自動検査を「<strong>push するたび機械に回させる</strong>」土俵です。中身の検査（テスト／Lint／型チェック）があるからこそ、CI の「緑」に意味が出ます。</p></div>
 <h3>共通の思想: 機械に任せる</h3>
 <p>4つすべてに共通する思想は「<strong>人間の目と記憶に頼らない</strong>」ことです。人間は忘れ・見落とします。「同じ規約を毎回手で確認する」は破綻します。だから<strong>一度ルールを書けば、何度でも機械が同じ基準でチェックする</strong>仕組みにのせる —— これが品質の作法の根幹です。</p>
 <hr />
-<h2>3. 🔑 バグを防ぐ3つの自動検査</h2>
+<h2 id="sec-5">3. 🔑 バグを防ぐ3つの自動検査</h2>
 <h3>テスト —— 正しく動くか「実行」で確かめる</h3>
-<p><strong>テスト</strong>は「この入力なら、この結果になるはず」を<strong>実際に動かして</strong>確かめる仕組みです（→ 第1章で既出、ここでは「なぜ書くか」を掘り下げます）。</p>
+<p><strong>テスト</strong>は「この入力なら、この結果になるはず」を<strong>実際に動かして</strong>確かめる仕組みです（→ <a href="01-ci-cd.html">第1章</a>で既出、ここでは「なぜ書くか」を掘り下げます）。</p>
 <ul>
 <li><strong>単体テスト</strong>（<code>unit test</code>／ユニットテスト）: 関数など<strong>最小単位</strong>を単独で確かめる。速い・原因が特定しやすい</li>
 <li><strong>統合テスト</strong>（<code>integration test</code>／インテグレーションテスト）: 複数の部品を<strong>組み合わせた状態</strong>で確かめる。現実に近いが遅い</li>
@@ -282,7 +300,7 @@ slug: 12-quality</h2>
 </table></div>
 <p><strong>どれ1つで完璧にはなりません</strong>。3つを重ねて「それぞれの隙間」を埋めるのが、品質を保つ作法です。</p>
 <hr />
-<h2>4. レビューと「早く見つける」思想</h2>
+<h2 id="sec-6">4. レビューと「早く見つける」思想</h2>
 <h3>コードレビュー —— 人間が見る最後の砦</h3>
 <p>自動検査を全通過しても、まだ<strong>人間にしか分からない問題</strong>が残ります:</p>
 <ul>
@@ -290,7 +308,7 @@ slug: 12-quality</h2>
 <li><strong>他の人が読んで分かるか</strong>（可読性）</li>
 <li><strong>要件を満たしているか</strong>（仕様の見落とし）</li>
 </ul>
-<p>これを <strong>Pull Request</strong>（→ 第2章）で他のメンバーに見てもらうのが<strong>コードレビュー</strong>です。レビューは単なるミス探しでなく、<strong>チームの知見を共有し合う場</strong>でもあります（詳細は第13章「レビュー文化・設計」で扱います）。</p>
+<p>これを <strong>Pull Request</strong>（→ <a href="02-git-github.html">第2章</a>）で他のメンバーに見てもらうのが<strong>コードレビュー</strong>です。レビューは単なるミス探しでなく、<strong>チームの知見を共有し合う場</strong>でもあります（詳細は<a href="13-review-design.html">第13章</a>「レビュー文化・設計」で扱います）。</p>
 <h3>🔑 レフトシフト —— 手前で見つけるほど安い</h3>
 <p>前出の「バグは早く見つけるほど安い」を、工程の観点で言い換えたのが <strong>left shift</strong>（レフトシフト／左へずらす）という思想です。</p>
 <p>開発工程を<strong>左から右へ</strong>進むと見立てます:</p>
@@ -301,17 +319,17 @@ slug: 12-quality</h2>
 <ul>
 <li><strong>型チェック</strong>はエディタで<strong>書いている最中</strong>に指摘（一番左）</li>
 <li><strong>pre-commit</strong>（プレコミット）: コミットする<strong>直前</strong>に自動検査を走らせる仕組みで、問題あるコードが履歴に入るのを防ぐ</li>
-<li><strong>CI / PR</strong>（→ 第1章・第2章）で push のたび全検査を回す</li>
+<li><strong>CI / PR</strong>（→ <a href="01-ci-cd.html">第1章</a>・<a href="02-git-github.html">第2章</a>）で push のたび全検査を回す</li>
 </ul>
 <p>すべて「<strong>問題を右に運ばない</strong>」ための仕組みです。</p>
 <hr />
-<h2>5. 🔑 段階的な検査 —— 手元から本番まで何層も重ねる</h2>
+<h2 id="sec-7">5. 🔑 段階的な検査 —— 手元から本番まで何層も重ねる</h2>
 <h3>同じ検査を「複数のタイミング」で</h3>
 <p>重要なのは、検査を<strong>1回しかしない</strong>のでなく<strong>何層も重ねる</strong>ことです。例えばテスト・Lint・型チェックは:</p>
 <ol>
 <li><strong>エディタ</strong>: 書いている最中（リアルタイムに波線等で指摘）</li>
 <li><strong>コミット前</strong>（<code>pre-commit</code>）: 履歴に入る直前にブロック</li>
-<li><strong>CI / PR</strong>（→ 第1章）: push のたび全体を自動検査</li>
+<li><strong>CI / PR</strong>（→ <a href="01-ci-cd.html">第1章</a>）: push のたび全体を自動検査</li>
 <li><strong>本番前ゲート</strong>（→ CD）: 検査不通過なら本番に行かせない</li>
 </ol>
 <p>なぜ何層も？ —— <strong>各層が別の目的を担うから</strong>です。エディタは速さ、CI は完全性、本番前ゲートは最終防衛。1層抜けても次で止まる<strong>多重防御</strong>が、品質を安定させます。</p>
@@ -323,7 +341,7 @@ slug: 12-quality</h2>
 </ul>
 <p>品質の作法は「検査をパスすること」でなく「<strong>検査に支えられた自信を持つこと</strong>」が目的です。</p>
 <hr />
-<h2>6. なぜ「品質の作法」が開発の作法なのか</h2>
+<h2 id="sec-8">6. なぜ「品質の作法」が開発の作法なのか</h2>
 <h3>作法として位置づけられる理由</h3>
 <ul>
 <li><strong>本番事故の防止</strong>: 本番のバグは金・信用・時の損失。手前で見つける仕組みは<strong>保険</strong>であり<strong>責務</strong></li>
@@ -337,7 +355,7 @@ slug: 12-quality</h2>
 <li>「<strong>品質をどう担保していますか？</strong>」への回答も、これらの仕組みを<strong>層として</strong>語れるかが問われます</li>
 </ul>
 <hr />
-<h2>7. よくある落とし穴と対処</h2>
+<h2 id="sec-9">7. よくある落とし穴と対処</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -381,16 +399,16 @@ slug: 12-quality</h2>
 </table></div>
 <div class="callout callout-danger"><p>💡 <strong>カバレッジの罠</strong>: 「テストの<strong>カバレッジ</strong>（→ 用語集・何％のコードを実行したか）が高い ＝ 品質が高い」は<strong>短絡</strong>です。カバレッジは「実行した割合」であって「正しさを確かめた割合」ではありません。「通っただけで正しい結果を見ていない」テストもカバレッジを稼ぎます。数値は<strong>参考値</strong>と割り切り、中身（重要な経路を確かめたか）で判断するのが作法です。</p></div>
 <hr />
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <ul>
 <li>バグは<strong>後になるほど直すコストが跳ね上がる</strong>。だから「<strong>早く見つける</strong>」仕組みが問われる</li>
 <li>品質を保つ<strong>3つの自動検査</strong>: <strong>テスト</strong>（動作・回帰防止）・<strong>Lint</strong>（書き方の問題）・<strong>型チェック</strong>（データの型の矛盾）。役割分担を重ねて隙間を埋める</li>
-<li>共通思想は「<strong>人間の目と記憶に頼らず、機械に任せる</strong>」。CI（→ 第1章）はそれらを回す土俵</li>
-<li><strong>コードレビュー</strong>は人間にしか分からない問題（設計・可読性・要件）を扱う最後の砦（→ 第13章で詳しく）</li>
+<li>共通思想は「<strong>人間の目と記憶に頼らず、機械に任せる</strong>」。CI（→ <a href="01-ci-cd.html">第1章</a>）はそれらを回す土俵</li>
+<li><strong>コードレビュー</strong>は人間にしか分からない問題（設計・可読性・要件）を扱う最後の砦（→ <a href="13-review-design.html">第13章</a>で詳しく）</li>
 <li><strong>レフトシフト</strong>: 問題を工程の**左（手前）**で見つけるほど安い。エディタ・pre-commit・CI を層で重ねる</li>
 <li>検査は「<strong>パスすること</strong>」でなく「<strong>自信の根拠を持つこと</strong>」が目的。カバレッジ等の数値は参考値</li>
 </ul>
-<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: バグを防ぐ個別の検査と「早く見つける」思想が見えました。最後の第13章「<strong>レビュー文化・設計</strong>」では、人間の目である<strong>コードレビュー</strong>の作法と、そもそも<strong>変更しやすいコード</strong>の設計（アーキテクチャ）の基本を扱って、本書を締めくくります。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: バグを防ぐ個別の検査と「早く見つける」思想が見えました。最後の<a href="13-review-design.html">第13章</a>「<strong>レビュー文化・設計</strong>」では、人間の目である<strong>コードレビュー</strong>の作法と、そもそも<strong>変更しやすいコード</strong>の設計（アーキテクチャ）の基本を扱って、本書を締めくくります。</p></div>
 
         </article>
 
@@ -415,7 +433,7 @@ slug: 12-quality</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.30 · 2026.07.10</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

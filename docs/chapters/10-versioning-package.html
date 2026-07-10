@@ -136,17 +136,35 @@
 
         <article class="chapter-body">
             <hr />
-<h2>title: バージョニング・パッケージ管理
+<details class="page-toc" open>
+<summary>📑 この章の目次</summary>
+<ul>
+<li><a href="#sec-1">title: バージョニング・パッケージ管理
+icon: 📦
+card_desc: 「1.2.3」の意味と、依存ライブラリの管理 — セマンティックバージョニング/メジャー・マイナー・パッチ・依存関係・ロックファイル
+slug: 10-versioning-package</a></li>
+<li><a href="#sec-2">一言でいうと</a></li>
+<li><a href="#sec-3">1. なぜバージョニング・パッケージ管理が必要なのか</a></li>
+<li><a href="#sec-4">2. セマンティックバージョニング（SemVer）とは —— 「1.2.3」の読み方</a></li>
+<li><a href="#sec-5">3. 🔑 番号は「互換性の約束」 —— SemVerの核心</a></li>
+<li><a href="#sec-6">4. パッケージ管理とは —— 依存関係を宣言で管理する</a></li>
+<li><a href="#sec-7">5. 🔑 ロックファイルと範囲指定 —— 再現性の鍵</a></li>
+<li><a href="#sec-8">6. なぜ「バージョンを正しく管理する」が開発の作法なのか</a></li>
+<li><a href="#sec-9">7. よくある落とし穴と対処</a></li>
+<li><a href="#sec-10">まとめ</a></li>
+</ul>
+</details>
+<h2 id="sec-1">title: バージョニング・パッケージ管理
 icon: 📦
 card_desc: 「1.2.3」の意味と、依存ライブラリの管理 — セマンティックバージョニング/メジャー・マイナー・パッチ・依存関係・ロックファイル
 slug: 10-versioning-package</h2>
 <h1>10 バージョニング・パッケージ管理 — 「1.2.3」の意味と、依存ライブラリを壊さずに更新する作法</h1>
 <div class="callout callout-info"><p>自分の書いたコードだけでは動かない。他人が作ったライブラリ（道具の詰め合わせ）を組み合わせて動かす。その「組み合わせ」を番号で管理し、壊さずに更新する作法。</p></div>
 <hr />
-<h2>一言でいうと</h2>
+<h2 id="sec-2">一言でいうと</h2>
 <p>モダンな開発は、<strong>自分のコード + 無数の外部ライブラリ（部品）</strong> の組み合わせで成り立ちます。それぞれの部品には「<strong>バージョン（版）</strong>」という番号が付いていて、この番号の意味を読み解き、組み合わせを記録しておくのが「バージョニング・パッケージ管理」の作法です。</p>
 <hr />
-<h2>1. なぜバージョニング・パッケージ管理が必要なのか</h2>
+<h2 id="sec-3">1. なぜバージョニング・パッケージ管理が必要なのか</h2>
 <h3>「私の環境では動いた」の罠</h3>
 <p>開発していると、こういうことが起きます。</p>
 <ul>
@@ -162,7 +180,7 @@ slug: 10-versioning-package</h2>
 </ol>
 <p>この2つが揃って初めて、「どこでも・いつでも同じように動く」（<strong>再現性</strong>）が手に入ります。</p>
 <hr />
-<h2>2. セマンティックバージョニング（SemVer）とは —— 「1.2.3」の読み方</h2>
+<h2 id="sec-4">2. セマンティックバージョニング（SemVer）とは —— 「1.2.3」の読み方</h2>
 <h3>3つの数字</h3>
 <p>ライブラリのバージョンは、たいてい <strong><code>1.2.3</code></strong> のようにピリオドで区切られた3つの数字で表されます。これを<strong>セマンティックバージョニング</strong>（<code>Semantic Versioning</code>／通称 <strong>SemVer</strong>／セムヴァー）と呼びます。</p>
 <div class="table-wrapper"><table>
@@ -201,7 +219,7 @@ slug: 10-versioning-package</h2>
 </ul>
 <p>この「<strong>どの桁が上がったかで、壊れるかどうかが分かる</strong>」という約束こそが、SemVer の核心です。</p>
 <hr />
-<h2>3. 🔑 番号は「互換性の約束」 —— SemVerの核心</h2>
+<h2 id="sec-5">3. 🔑 番号は「互換性の約束」 —— SemVerの核心</h2>
 <h3>なぜ番号の読み方が重要か</h3>
 <p>SemVer が単なる「数え方のルール」でなく<strong>作法</strong>たるゆえんは、番号が<strong>作り手と使い手の間の約束</strong>だからです。</p>
 <ul>
@@ -217,7 +235,7 @@ slug: 10-versioning-package</h2>
 </ul>
 <p>「コンセントの形が変わった」のがメジャーアップデートだと分かれば、安易に挿し直さず、<strong>変換アダプタ（修正）を用意するか止めるか</strong>を判断できます。これと同じことを、番号の桁で行います。</p>
 <hr />
-<h2>4. パッケージ管理とは —— 依存関係を宣言で管理する</h2>
+<h2 id="sec-6">4. パッケージ管理とは —— 依存関係を宣言で管理する</h2>
 <h3>パッケージとパッケージマネージャ</h3>
 <p>外部ライブラリを<strong>パッケージ</strong>（<code>package</code>／荷物）と呼びます。そして、パッケージを<strong>探して・ダウンロードして・組み込んで・更新する</strong>仕組みを<strong>パッケージマネージャ</strong>（<code>package manager</code>／荷物の管理係）と呼びます。言語ごとに定番があります。</p>
 <div class="table-wrapper"><table>
@@ -258,7 +276,7 @@ uvicorn &gt;= 0.30.0
 </code></pre>
 <p>こう書いておけば、パッケージマネージャが宣言を読んで<strong>必要な部品を自動で集めてくれます</strong>。人数が増えても、別のパソコンでも、宣言ファイル1つあれば「同じ部品構成」が再現できます。</p>
 <hr />
-<h2>5. 🔑 ロックファイルと範囲指定 —— 再現性の鍵</h2>
+<h2 id="sec-7">5. 🔑 ロックファイルと範囲指定 —— 再現性の鍵</h2>
 <h3>範囲指定の誘惑と罠</h3>
 <p>宣言ファイルには「この版<strong>ぴったり</strong>」でなく「<strong>この版以上</strong>」のように<strong>範囲</strong>で書くことができます。</p>
 <div class="table-wrapper"><table>
@@ -316,11 +334,11 @@ uvicorn &gt;= 0.30.0
 <p>ロックファイルのおかげで「半年後に別の人が <code>install</code> しても、<strong>私が動かした時と全く同じ版組み合わせ</strong>が入る」ことが保証されます。範囲指定（宣言）で柔軟性を保ちつつ、ロックファイル（記録）で再現性を固める、という2枚構えがモダンな作法です。</p>
 <div class="callout callout-warn"><p>⚠ ロックファイルは<strong>原則コミット（Git に保存）<strong>します。特に</strong>アプリ開発</strong>では、再現性のためにメンバー・CI 全員で共有する必須ファイルです。「<code>.gitignore</code> で無視する」は誤解です。※一方で<strong>ライブラリ開発</strong>（他人が組み込む部品を作る側）では、使う側の依存関係を縛りすぎないよう、あえてコミットしない運用も一般的です。</p></div>
 <hr />
-<h2>6. なぜ「バージョンを正しく管理する」が開発の作法なのか</h2>
+<h2 id="sec-8">6. なぜ「バージョンを正しく管理する」が開発の作法なのか</h2>
 <h3>作法として位置づけられる理由</h3>
 <ul>
 <li><strong>チーム開発の前提</strong>: メンバー全員が同じ部品構成で動かせなければ、開発すら始まりません。宣言ファイルとロックファイルがその<strong>共通基盤</strong>です。</li>
-<li><strong>CI でも再現性が要る</strong>: 第1章で扱った CI（自動検査）は、CI サーバー上で改めて部品をインストールして検査します。ロックファイルがなければ**「あなたのPCでは緑・CIサーバーでは赤」**になり、CI の意味が崩れます。</li>
+<li><strong>CI でも再現性が要る</strong>: <a href="01-ci-cd.html">第1章</a>で扱った CI（自動検査）は、CI サーバー上で改めて部品をインストールして検査します。ロックファイルがなければ**「あなたのPCでは緑・CIサーバーでは赤」**になり、CI の意味が崩れます。</li>
 <li><strong>セキュリティにも直結</strong>: ライブラリに脆弱性（セキュリティの穴）が見つかると、<strong>修正版への更新</strong>が必要です。番号の読み方が分かっていれば「この更新は安全に取り込めるか」を素早く判断できます。</li>
 </ul>
 <h3>面接・実務での意味</h3>
@@ -330,7 +348,7 @@ uvicorn &gt;= 0.30.0
 <li>「<strong>私の環境では動きました</strong>」は、再現性の管理ができていないことの<strong>赤信号</strong>として扱われます。現場では「環境が同じであること」を証明できることが前提です。</li>
 </ul>
 <hr />
-<h2>7. よくある落とし穴と対処</h2>
+<h2 id="sec-9">7. よくある落とし穴と対処</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -374,7 +392,7 @@ uvicorn &gt;= 0.30.0
 </table></div>
 <div class="callout callout-tip"><p>💡 <strong>依存地獄</strong>（<code>dependency hell</code>）: 依存する部品が多くなりすぎて、「部品Aのために部品Bは新しくしたいが、部品Cが古いBしか受け付けない」のように<strong>版の矛盾</strong>で身動きが取れなくなる状態。SemVer・ロックファイル・定期的な棚卸しは、すべてこの地獄に落ちないための作法です。</p></div>
 <hr />
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <ul>
 <li>モダンな開発は<strong>自分のコード＋無数の外部ライブラリ</strong>の組み合わせ。これを番号で管理するのが<strong>バージョニング・パッケージ管理</strong></li>
 <li><strong>セマンティックバージョニング（SemVer）</strong> は <code>メジャー.マイナー.パッチ</code> の3桁。<strong>メジャーが上がった＝後方互換性が壊れる</strong>可能性、が核心の約束</li>
@@ -382,7 +400,7 @@ uvicorn &gt;= 0.30.0
 <li><strong>範囲指定</strong>（<code>^</code>・<code>~</code>）は柔軟だが再現性を緩める。<strong>ロックファイル</strong>で「実際に入った版」を固定して補う（原則コミット）</li>
 <li>「どこでも・いつでも同じように動く＝<strong>再現性</strong>」を支えるのがこの作法の目的。「私の環境では動く」は管理不足の赤信号</li>
 </ul>
-<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: 部品の組み合わせを管理できるようになりました。しかし、どんなに管理しても<strong>バグ</strong>は起きます。第11章「<strong>デバッグの作法</strong>」では、起きたバグの原因を、当てずっぽうでなく<strong>論理的に切り分けていく手順</strong>を扱います。</p></div>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: 部品の組み合わせを管理できるようになりました。しかし、どんなに管理しても<strong>バグ</strong>は起きます。<a href="11-debugging.html">第11章</a>「<strong>デバッグの作法</strong>」では、起きたバグの原因を、当てずっぽうでなく<strong>論理的に切り分けていく手順</strong>を扱います。</p></div>
 
         </article>
 
@@ -407,7 +425,7 @@ uvicorn &gt;= 0.30.0
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">vTEST · 2026.01.01</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

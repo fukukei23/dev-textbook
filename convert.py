@@ -480,6 +480,88 @@ def enhance_html(html: str) -> str:
     return html
 
 
+def linkify_chapter_refs(md_text: str, cmap: dict) -> str:
+    """平文「第N章」を該当章へのMarkdownリンクに変換（code fence/インラインcode内は除外）."""
+    # 章番号(1〜) → filename のマッピング
+    num_to_file: dict[str, str] = {}
+    for filename in cmap:
+        m = re.match(r"^(\d+)_", filename)
+        if m:
+            num = str(int(m.group(1)))  # 先頭0詰め除去: "07" → "7"
+            num_to_file[num] = filename
+
+    lines = md_text.split("\n")
+    in_fence = False
+    result = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            result.append(line)
+            continue
+        if in_fence:
+            result.append(line)
+            continue
+
+        # インラインcode（`...`）を一時退避して保護
+        placeholders: list[str] = []
+
+        def _stash_code(m):
+            placeholders.append(m.group(0))
+            return f"\x00CODE{len(placeholders) - 1}\x00"
+
+        safe_line = re.sub(r"`[^`]+`", _stash_code, line)
+
+        # 平文「第N章」をリンク化（既存 [..](..) 内は回避）
+        def _linkify(m):
+            n = m.group(1)
+            if n in num_to_file:
+                return f"[第{n}章]({num_to_file[n]})"
+            return m.group(0)
+
+        safe_line = re.sub(r"第(\d+)章", _linkify, safe_line)
+
+        # プレースホルダ復元
+        for i, code in enumerate(placeholders):
+            safe_line = safe_line.replace(f"\x00CODE{i}\x00", code)
+        result.append(safe_line)
+
+    return "\n".join(result)
+
+
+def add_toc_and_heading_ids(html: str) -> str:
+    """H2見出しにidを付与し、章冒頭にページ内TOC（details式・クリック開閉）を生成."""
+    headings = re.findall(r"<h2>(.*?)</h2>", html, flags=re.DOTALL)
+    if len(headings) < 3:
+        return html  # 見出し少なすぎる章はTOC省略
+
+    # H2 に id 付与（sec-1, sec-2, ...）
+    counter = [0]
+
+    def _add_id(match):
+        counter[0] += 1
+        text = match.group(1)
+        return f'<h2 id="sec-{counter[0]}">{text}</h2>'
+
+    html = re.sub(r"<h2>(.*?)</h2>", _add_id, html, flags=re.DOTALL)
+
+    # TOC HTML 組み立て
+    items = []
+    for i, text in enumerate(headings, start=1):
+        clean = re.sub(r"<[^>]+>", "", text).strip()
+        items.append(f'<li><a href="#sec-{i}">{clean}</a></li>')
+    toc_html = (
+        '<details class="page-toc" open>\n'
+        '<summary>📑 この章の目次</summary>\n'
+        '<ul>\n' + "\n".join(items) + "\n</ul>\n"
+        "</details>\n"
+    )
+
+    # 最初の <h2 の直前に挿入
+    html = re.sub(r"(<h2 id=\"sec-1\")", toc_html + r"\1", html, count=1)
+    return html
+
+
 # --- トップページのカテゴリ分け ---
 
 # 章番号→カテゴリの境界（番号レンジは閉区間）
@@ -547,10 +629,13 @@ def main():
 
         md_text = src.read_text(encoding="utf-8")
         md_text = filter_sections(md_text)
+        md_text = linkify_chapter_refs(md_text, effective_map)
         html_body = convert_md_to_html(md_text)
         html_body = inject_mermaid(html_body, ch["filename"])
         html_body = rewrite_links(html_body, effective_map)
         html_body = enhance_html(html_body)
+        if ch["slug"] != "14-glossary":
+            html_body = add_toc_and_heading_ids(html_body)
 
         prev_ch = chapters[i - 1] if i > 0 else None
         next_ch = chapters[i + 1] if i < len(chapters) - 1 else None

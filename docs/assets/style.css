@@ -680,3 +680,27 @@ a:hover { text-decoration: underline; }
     padding: 16px;
     border: 1px solid var(--border);
 }
+
+/* === ページ内TOC（機能追加・2026-07-10） === */
+.page-toc {
+    margin: 1.5rem 0;
+    padding: 0.75rem 1.25rem;
+    background: var(--bg-card, #f8f9fa);
+    border: 1px solid var(--border, #dee2e6);
+    border-left: 4px solid var(--accent, #5b4cf5);
+    border-radius: 8px;
+}
+.page-toc > summary {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.05rem;
+    list-style: none;
+    user-select: none;
+}
+.page-toc > summary::-webkit-details-marker { display: none; }
+.page-toc > summary::before { content: "▸ "; color: var(--accent, #5b4cf5); }
+.page-toc[open] > summary::before { content: "▾ "; }
+.page-toc ul { margin: 0.75rem 0 0; padding-left: 1.25rem; }
+.page-toc li { margin: 0.3rem 0; }
+.page-toc a { text-decoration: none; }
+.page-toc a:hover { text-decoration: underline; }

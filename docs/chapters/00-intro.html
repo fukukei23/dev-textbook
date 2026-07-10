@@ -136,7 +136,17 @@
             <h1>00 はじめに — この教科書の対象読者と使い方</h1>
 <div class="callout callout-info"><p>独学で開発を進めてきた人が、現場で「そろそろ当たり前」とされる常識を体系的につなぎ直すための教科書</p></div>
 <hr />
-<h2>誰のための教科書か</h2>
+<details class="page-toc" open>
+<summary>📑 この章の目次</summary>
+<ul>
+<li><a href="#sec-1">誰のための教科書か</a></li>
+<li><a href="#sec-2">この教科書の特徴</a></li>
+<li><a href="#sec-3">どう読むか</a></li>
+<li><a href="#sec-4">全体構成（全14章）</a></li>
+<li><a href="#sec-5">補足：既存のチートシート群との関係</a></li>
+</ul>
+</details>
+<h2 id="sec-1">誰のための教科書か</h2>
 <p>この教科書は、<strong>AIツールを使いこなしながら開発をしてきた人が、点々としていた知識を一本の線でつなぎ直す</strong>ために書きました。</p>
 <p>たとえばこんな疑問を持ったことはありませんか：</p>
 <ul>
@@ -147,7 +157,7 @@
 </ul>
 <p>こうした「なんとなく使っているけれど、人に正確に説明はできない」を、<strong>開発現場で前提とされるレベル</strong>まで引き上げるのが本書の目的です。</p>
 <hr />
-<h2>この教科書の特徴</h2>
+<h2 id="sec-2">この教科書の特徴</h2>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -175,16 +185,16 @@
 </tbody>
 </table></div>
 <hr />
-<h2>どう読むか</h2>
+<h2 id="sec-3">どう読むか</h2>
 <ul>
-<li><strong>通読して身につける</strong>のが主な使い方です。第1章から順に読むと、知識がつながっていきます。</li>
+<li><strong>通読して身につける</strong>のが主な使い方です。<a href="01-ci-cd.html">第1章</a>から順に読むと、知識がつながっていきます。</li>
 <li>各章は「<strong>概念 → なぜ重要か → 具体例</strong>」の順で構成しています。</li>
 <li>専門用語は初出時にかならず平易な言い換えを併記します。</li>
 <li>最終章「用語集」は、さっと引ける辞書として独立させてあります。</li>
 </ul>
 <div class="callout callout-tip"><p>💡 <strong>Tip</strong>: つまずいたら、その章の冒頭の要約だけ読んで次に進んでも構いません。あとから戻ってきて深掘りすれば十分です。</p></div>
 <hr />
-<h2>全体構成（全14章）</h2>
+<h2 id="sec-4">全体構成（全14章）</h2>
 <p>本書は3つの重要度に分かれています。まず 🔴 必須章から読むと、現場の会話の大部分がカバーできます。</p>
 <h3>🔴 必須（面接・実務で即聞かれる）</h3>
 <div class="table-wrapper"><table>
@@ -292,15 +302,15 @@
 </tr>
 </tbody>
 </table></div>
-<div class="callout callout-info"><p>✅ 第1章「CI/CD」・第2章「Git &amp; GitHub」・第3章「API &amp; エンドポイント」・第4章「環境変数・シークレット管理」・第5章「認証・認可」・第6章「コンテナ（Docker）」・第7章「データベース適材適所」・第8章「ログ・モニタリング」・第9章「キャッシュ・非同期処理」・第10章「バージョニング・パッケージ管理」・第11章「デバッグの作法」・第12章「開発プロセス・品質」・第13章「レビュー文化・設計」完成済み（<strong>全14章完結</strong>）。第14章「用語集」は第1〜13章の既出用語を収録。</p></div>
+<div class="callout callout-info"><p>✅ <a href="01-ci-cd.html">第1章</a>「CI/CD」・<a href="02-git-github.html">第2章</a>「Git &amp; GitHub」・<a href="03-api-endpoint.html">第3章</a>「API &amp; エンドポイント」・<a href="04-env-secrets.html">第4章</a>「環境変数・シークレット管理」・<a href="05-auth.html">第5章</a>「認証・認可」・<a href="06-docker.html">第6章</a>「コンテナ（Docker）」・<a href="07-database.html">第7章</a>「データベース適材適所」・<a href="08-logging.html">第8章</a>「ログ・モニタリング」・<a href="09-cache-async.html">第9章</a>「キャッシュ・非同期処理」・<a href="10-versioning-package.html">第10章</a>「バージョニング・パッケージ管理」・<a href="11-debugging.html">第11章</a>「デバッグの作法」・<a href="12-quality.html">第12章</a>「開発プロセス・品質」・<a href="13-review-design.html">第13章</a>「レビュー文化・設計」完成済み（<strong>全14章完結</strong>）。<a href="14-glossary.html">第14章</a>「用語集」は第1〜13章の既出用語を収録。</p></div>
 <hr />
-<h2>補足：既存のチートシート群との関係</h2>
+<h2 id="sec-5">補足：既存のチートシート群との関係</h2>
 <p>著者は個別テーマの「引く系」チートシート（Gitコマンド一覧・Docker早見表 等）も別途公開しています。本書はそれらを<strong>読んで理解する統合教科書</strong>として位置づけ、各章から関連チートシートへ「詳しくはこちら」とリンクします。</p>
 <ul>
 <li><strong>さっと引きたい</strong> → チートシート（<a href="https://fukukei23.github.io/guides/">技術ガイド集</a>）</li>
 <li><strong>順を追って理解したい</strong> → 本書</li>
 </ul>
-<p>それでは、<strong>第1章「CI/CD」</strong> から始めて、続けて <strong>第2章「Git &amp; GitHub」</strong>・<strong>第3章「API &amp; エンドポイント」</strong>・<strong>第4章「環境変数・シークレット管理」</strong> へ進みましょう。</p>
+<p>それでは、<strong><a href="01-ci-cd.html">第1章</a>「CI/CD」</strong> から始めて、続けて <strong><a href="02-git-github.html">第2章</a>「Git &amp; GitHub」</strong>・<strong><a href="03-api-endpoint.html">第3章</a>「API &amp; エンドポイント」</strong>・<strong><a href="04-env-secrets.html">第4章</a>「環境変数・シークレット管理」</strong> へ進みましょう。</p>
 
         </article>
 
@@ -320,7 +330,7 @@
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">vTEST · 2026.01.01</p>
+        <p class="site-version">v1.32 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>
