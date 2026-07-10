@@ -172,34 +172,60 @@ slug: 14-glossary</h2>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の予約管理システム（<code>reserve-optimizer</code>）では、予約の取得・作成・取消を行う REST API を設計し、フロントと GAS（Google Apps Script）の間を HTTP で結んでいます。</p></div>
 </details><h3>い</h3>
 <details class="glossary-item">
-<summary><strong>委譲</strong>（<code>delegation</code>／「任せる」）— 自分の代わりに<strong>限られたことだけ</strong>を外部に許可する仕組み（OAuth の核心）。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>dependency hell</strong>（依存地獄／<code>dependency hell</code>）— 依存ライブラリの<strong>版の矛盾</strong>で身動きが取れなくなる状態。SemVer・ロックファイル・棚卸しで防ぐ。〔<a href="10-versioning-package.html">第10章</a>〕</li>
-<li><strong>イメージ</strong>（<code>image</code>）— コンテナの<strong>設計図（読み取り専用のテンプレート）</strong>。イメージを起動するとコンテナ（実体）が動き出す。1イメージからコンテナを複数起動できる。〔<a href="06-docker.html">第6章</a>〕</li>
-<li><strong>インデックス</strong>（<code>index</code>／「索引」）— 本の巻末の索引のように、特定の列から<strong>高速にデータを見つける</strong>仕組み。ただし作成・更新コストもかかり、貼りすぎると書き込みが遅くなる。〔<a href="07-database.html">第7章</a>〕</li>
-</ul>
-<h3>え</h3>
-<ul>
-<li><strong>SQL</strong>（エスキューエル／<code>Structured Query Language</code>／「シークェル」とも）— RDB を操作するための<strong>共通言語</strong>。「このデータを取得/更新して」をほぼ共通の文法で書ける。〔<a href="07-database.html">第7章</a>〕</li>
-<li><strong>SQLite</strong>（エスキューライト）— データベース全体が<strong>ファイル1つ</strong>に収まる軽量な RDB。サーバー不要で導入が簡単だが、同時書き込みに弱い。〔<a href="07-database.html">第7章</a>〕</li>
-<li><strong>HTTP</strong>（エイチティーティーピー／<code>HyperText Transfer Protocol</code>）— Web の通信で事実上の標準になっている「リクエストとレスポンス」の約束事。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>HTTPS</strong>（エイチティーティーピーエス）— HTTP を<strong>暗号化</strong>したもの（<code>TLS/SSL</code> で通信を守る）。パスワード等の送受信に必須。現場では「エッチティーティーピーエス」とも。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>エンドポイント</strong>（<code>endpoint</code>）— API の「窓口（住所）」。URL のパス部分で機能を識別する。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>MRE</strong>（エムアールイー／<code>Minimal Reproducible Example</code>／最小再現例）— バグを再現する<strong>不要部分を削ぎ落とした最小</strong>の手順・コード。作る過程で原因が際立つ。〔<a href="11-debugging.html">第11章</a>〕</li>
-<li><strong>MFA</strong>（エムエフエー／多要素認証）— 知識・所有・生体など<strong>異なる性質</strong>の要素を組み合わせる認証。パスワード1つへの依存を減らす。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>npm</strong>（エヌピーエム／<code>npm</code>）— JavaScript（Node.js）の<strong>パッケージマネージャ</strong>（荷物の管理係）。〔<a href="10-versioning-package.html">第10章</a>〕</li>
-</ul>
-<h3>お</h3>
-<ul>
-<li><strong>OAuth</strong>（オース／通称「オーオース」も／<code>OAuth 2.0</code>）— 委譲: 限られた権限を外部サービスに貸す仕組み。「Googleでログイン」の基盤。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>OIDC</strong>（オーアイディーシー／<code>OpenID Connect</code>）— OAuth の上に乗った認証仕様。外部アカウント（Google等）で「この人は誰か」を保証してもらう。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>ORM</strong>（オーアールエム／<code>Object-Relational Mapping</code>／オブジェクト関係マッピング）— プログラムのコードとデータベースの間を橋渡しし、<strong>SQL を直接書かずに</strong>データ操作できる仕組み。〔<a href="07-database.html">第7章</a>〕</li>
-<li><strong>オーケストレーション</strong>（<code>orchestration</code>／「楽団の指揮」由来）— 複数のコンテナを本番で<strong>大量に運用・自動管理</strong>する仕組み。<code>Kubernetes</code>（K8s）が代表。〔<a href="06-docker.html">第6章</a>〕</li>
-</ul>
-<hr />
+<summary><strong>委譲</strong>（<code>delegation</code>／「任せる」）— 自分の代わりに<strong>限られたことだけ</strong>を外部に許可する仕組み（OAuth の核心）。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「パスワードを渡さずにアプリに権限を貸す」＝委譲。全部でなく「限られたことだけ任せる」を安全に実現するのが OAuth。</p></div>
+</details><details class="glossary-item">
+<summary><strong>dependency hell</strong>（依存地獄／<code>dependency hell</code>）— 依存ライブラリの<strong>版の矛盾</strong>で身動きが取れなくなる状態。SemVer・ロックファイル・棚卸しで防ぐ。〔<a href="10-versioning-package.html">第10章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「ライブラリ A は B v2 必要、C は B v3 必要」で矛盾して動かない状態。ロックファイルで版を固定し、定期的な棚卸しが予防策。</p></div>
+</details><details class="glossary-item">
+<summary><strong>イメージ</strong>（<code>image</code>）— コンテナの<strong>設計図（読み取り専用のテンプレート）</strong>。イメージを起動するとコンテナ（実体）が動き出す。1イメージからコンテナを複数起動できる。〔<a href="06-docker.html">第6章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「イメージ＝設計図、コンテナ＝実体」。同じイメージから開発・本番で同じ環境のコンテナを何個でも作れる（環境差の言い訳が消える）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>インデックス</strong>（<code>index</code>／「索引」）— 本の巻末の索引のように、特定の列から<strong>高速にデータを見つける</strong>仕組み。ただし作成・更新コストもかかり、貼りすぎると書き込みが遅くなる。〔<a href="07-database.html">第7章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「メールアドレスで素早く検索したい」列にインデックスを張る。ただし書き込み時に索引更新のコストがかかるので、何でもかんでも張らない。</p></div>
+</details><h3>え</h3>
+<details class="glossary-item">
+<summary><strong>SQL</strong>（エスキューエル／<code>Structured Query Language</code>／「シークェル」とも）— RDB を操作するための<strong>共通言語</strong>。「このデータを取得/更新して」をほぼ共通の文法で書ける。〔<a href="07-database.html">第7章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「先月売上上位10件を取得」を <code>SELECT ... WHERE ... ORDER BY ... LIMIT 10</code> のような共通文法で書ける。RDB なら方言があっても基本は同じ。</p></div>
+</details><details class="glossary-item">
+<summary><strong>SQLite</strong>（エスキューライト）— データベース全体が<strong>ファイル1つ</strong>に収まる軽量な RDB。サーバー不要で導入が簡単だが、同時書き込みに弱い。〔<a href="07-database.html">第7章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 小規模アプリやスマホ組み込みで「サーバー不要・ファイル1つ」の手軽さが活きる。ただし同時書き込みが多い処理には不向き（サーバー型 RDB へ）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>HTTP</strong>（エイチティーティーピー／<code>HyperText Transfer Protocol</code>）— Web の通信で事実上の標準になっている「リクエストとレスポンス」の約束事。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: ブラウザが「このページ見せて」とリクエストし、サーバーが HTML を返す＝HTTP の基本形。ステータスコード（200 OK／404 等）で結果を伝える。</p></div>
+</details><details class="glossary-item">
+<summary><strong>HTTPS</strong>（エイチティーティーピーエス）— HTTP を<strong>暗号化</strong>したもの（<code>TLS/SSL</code> で通信を守る）。パスワード等の送受信に必須。現場では「エッチティーティーピーエス」とも。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: パスワード入力フォーム等は必ず HTTPS（鍵マーク）。裸の HTTP だと通信が途中で覗き見・改ざんされる危険。</p></div>
+</details><details class="glossary-item">
+<summary><strong>エンドポイント</strong>（<code>endpoint</code>）— API の「窓口（住所）」。URL のパス部分で機能を識別する。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: <code>GET /api/users</code> や <code>POST /api/reserve</code> 等、URL のパスで「どの機能か」を識別。窓口ごとに役割を分けて設計する。</p></div>
+</details><details class="glossary-item">
+<summary><strong>MRE</strong>（エムアールイー／<code>Minimal Reproducible Example</code>／最小再現例）— バグを再現する<strong>不要部分を削ぎ落とした最小</strong>の手順・コード。作る過程で原因が際立つ。〔<a href="11-debugging.html">第11章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「バグります」と言うより、不要部分を削った最小コードを添えると原因が浮かびやすい。バグ報告・質問の基本作法。</p></div>
+</details><details class="glossary-item">
+<summary><strong>MFA</strong>（エムエフエー／多要素認証）— 知識・所有・生体など<strong>異なる性質</strong>の要素を組み合わせる認証。パスワード1つへの依存を減らす。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-danger"><p>💡 <strong>使い方</strong>: パスワード（知識）＋スマホのコード（所有）の組み合わせ。パスワードが漏れても片方で止まるので、重要アカウントは必ず MFA 有効化。</p></div>
+</details><details class="glossary-item">
+<summary><strong>npm</strong>（エヌピーエム／<code>npm</code>）— JavaScript（Node.js）の<strong>パッケージマネージャ</strong>（荷物の管理係）。〔<a href="10-versioning-package.html">第10章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: <code>npm install パッケージ名</code> で外部ライブラリを取り込み、<code>npm install</code> 単体で <code>package.json</code> 通りに環境を再現。JS 開発の荷物管理係。</p></div>
+</details><h3>お</h3>
+<details class="glossary-item">
+<summary><strong>OAuth</strong>（オース／通称「オーオース」も／<code>OAuth 2.0</code>）— 委譲: 限られた権限を外部サービスに貸す仕組み。「Googleでログイン」の基盤。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「Google でログイン」「このアプリに Twitter 投稿を許可」等。パスワードを渡さずに限られた権限だけ貸すのが OAuth の核心。</p></div>
+</details><details class="glossary-item">
+<summary><strong>OIDC</strong>（オーアイディーシー／<code>OpenID Connect</code>）— OAuth の上に乗った認証仕様。外部アカウント（Google等）で「この人は誰か」を保証してもらう。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「Google でログイン」で「この人は Google アカウント持ち主の〇〇さん」と本人性を保証してもらう層。OAuth（権限貸し）の上に認証を乗せた仕様。</p></div>
+</details><details class="glossary-item">
+<summary><strong>ORM</strong>（オーアールエム／<code>Object-Relational Mapping</code>／オブジェクト関係マッピング）— プログラムのコードとデータベースの間を橋渡しし、<strong>SQL を直接書かずに</strong>データ操作できる仕組み。〔<a href="07-database.html">第7章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: SQL を直接書かず <code>User.objects.filter(name=&quot;山田&quot;)</code> のようにコードでデータ検索。SQL 文字列の組み立てミスを減らせる（複雑処理は生 SQL も）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>オーケストレーション</strong>（<code>orchestration</code>／「楽団の指揮」由来）— 複数のコンテナを本番で<strong>大量に運用・自動管理</strong>する仕組み。<code>Kubernetes</code>（K8s）が代表。〔<a href="06-docker.html">第6章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: コンテナが数十〜数百に増えた本番で「どのサーバーで・何個動かす・故障時の再起動」を自動管理。Kubernetes（K8s）が代表格。</p></div>
+</details><hr />
 <h2>か行</h2>
 <h3>か</h3>
-<ul>
-<li><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔<a href="12-quality.html">第12章</a>〕</li>
+<details class="glossary-item">
+<summary><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔<a href="12-quality.html">第12章</a>〕</li>
 <li><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔<a href="12-quality.html">第12章</a>〕</li>
 <li><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔<a href="01-ci-cd.html">第1章</a>〕</li>
 <li><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔<a href="04-env-secrets.html">第4章</a>〕</li>
