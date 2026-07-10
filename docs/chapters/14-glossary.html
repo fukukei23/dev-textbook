@@ -103,6 +103,12 @@
             デバッグの作法
         </a>
         
+        <a href="12-quality.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🛡️</span>
+            開発プロセス・品質
+        </a>
+        
         <a href="14-glossary.html"
            class="sidebar-link active">
             <span class="sidebar-icon">📖</span>
@@ -115,7 +121,7 @@
     <main class="content">
         <div class="chapter-nav-top">
             
-            <a href="11-debugging.html" class="nav-prev">← デバッグの作法</a>
+            <a href="12-quality.html" class="nav-prev">← 開発プロセス・品質</a>
             
             
         </div>
@@ -177,6 +183,8 @@ slug: 14-glossary</h2>
 <h2>か行</h2>
 <h3>か</h3>
 <ul>
+<li><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔第12章〕</li>
+<li><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔第12章〕</li>
 <li><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔第1章〕</li>
 <li><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔第4章〕</li>
 </ul>
@@ -232,6 +240,7 @@ slug: 14-glossary</h2>
 </ul>
 <h3>せ</h3>
 <ul>
+<li><strong>静的解析</strong>（<code>static analysis</code>／スタティックアナリシス）— コードを<strong>実行せずに</strong>解析する手法。Lint・型チェックを含む上位概念。実行不要で速く、人間の見落としを補う。〔第12章〕</li>
 <li><strong>セキュリティスキャン</strong> — 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔第1章〕</li>
 <li><strong>セッション</strong>（<code>session</code>）— ログイン中の状態をサーバー側が記憶する仕組み。Cookieと組み合わせて使うブラウザ型の古典（ステートフル）。〔第5章〕</li>
 <li><strong>SemVer</strong>（セムヴァー／<code>Semantic Versioning</code>／セマンティックバージョニング）— バージョン番号 <code>メジャー.マイナー.パッチ</code> で<strong>後方互換性の有無</strong>を伝える約束。メジャー上がり＝壊れる変更。〔第10章〕</li>
@@ -345,6 +354,7 @@ slug: 14-glossary</h2>
 <li><strong>リモート</strong>（<code>remote</code>）— ネットワーク上（GitHub 等）にある<strong>離れたリポジトリ</strong>。<code>ローカル</code>（手元）の対義語。〔第2章〕</li>
 <li><strong>リポジトリ</strong>（<code>repository</code>／通称「レポ」「リポ」）— 変更が<strong>履歴として保存される場所</strong>（<code>.git/</code> 配下）。〔第2章〕</li>
 <li><strong>リンター</strong>（<code>linter</code>）— コードがチームの規約を守っているか（読みやすさ・一貫性）を自動チェックする道具。<code>ruff</code>・<code>ESLint</code> 等が代表。〔第1章〕</li>
+<li><strong>Lint</strong>（リント）— コードを<strong>実行せずに（静的解析）</strong>、書き方の問題・バグの種を見つける検査そのもの。リンターが担当する。〔第12章〕</li>
 <li><strong>リバート</strong>（<code>revert</code>／「取り消す」）— 特定のコミットを打ち消す操作。壊れた変更を main から取り除く時に使う。〔第1章〕</li>
 <li><strong>REST</strong>（レスト／<code>Representational State Transfer</code>）— URL（名詞）と HTTP メソッド（動詞）で機能を表現する API 設計思想。最も普及しているスタイル。〔第3章〕</li>
 <li><strong>RPC</strong>（アールピーシー／<code>Remote Procedure Call</code>）— 「関数呼び出し」風の通信スタイル。これを現代風にしたのが <code>gRPC</code>。〔第3章〕</li>
@@ -390,9 +400,11 @@ slug: 14-glossary</h2>
 <li><strong>JSON</strong>（ジェイソン／<code>JavaScript Object Notation</code>）— 「キーと値のペア」を <code>{}</code> で囲む、<strong>汎用のデータ交換形式</strong>。API で事実上標準。〔第3章〕</li>
 <li><strong>JWT</strong>（ジェイダブリューティー／通称「ジョット」／<code>JSON Web Token</code>）— 認証情報を安全に運ぶ<strong>署名付きトークン</strong>。API・モバイル向き（ステートレス・無効化は工夫が要る）。〔第5章〕</li>
 <li><strong>Kubernetes</strong>（クーバネティス／公式ギリシャ語発音。通称「K8s＝ケーエイツ」）— コンテナを本番で<strong>大量に運用・自動管理</strong>する基盤。〔第6章〕</li>
+<li><strong>left shift</strong>（レフトシフト／「左へずらす」）— 問題を工程の**手前（左）**で見つけるほど直すコストが安い、という思想。エディタ・pre-commit・CI など手前に検査を置く根拠。〔第12章〕</li>
 <li><strong>Observability</strong>（オブザーバビリティ／観測可能性）— システムの<strong>内部状態を外部から把握できる度合い</strong>。ログ・メトリクス等を整えて高める。〔第8章〕</li>
 <li><strong>origin</strong>（オリジン）— 自分が <code>push</code>/<code>pull</code> する相手（普通は fork した自分のリポジトリ）のデフォルトの呼び名。<code>upstream</code>（コピー元）の対。〔第2章〕</li>
 <li><strong>PATCH</strong>（パッチ）— HTTP メソッドの1つ。「一部だけ更新したい」。<code>PUT</code>（丸ごと更新）との違いは粒度。〔第3章〕</li>
+<li><strong>pre-commit</strong>（プレコミット）— コミットの<strong>直前</strong>に自動検査（Lint・テスト等）を走らせる仕組み。問題あるコードが履歴に入るのを未然に防ぐ。〔第12章〕</li>
 <li><strong>POST</strong>（ポスト）— HTTP メソッドの1つ。「新しく作成したい」。〔第3章〕</li>
 <li><strong>PUT</strong>（プット）— HTTP メソッドの1つ。「全体を更新したい（丸ごと置き換え）」。〔第3章〕</li>
 <li><strong>rebase</strong>（リベース）— ブランチの変更を main の最新の先に<strong>積み直す</strong>操作。履歴を一直線にできるが<strong>履歴書き換え</strong>なので要注意（<code>push</code> 済みの <code>rebase</code> は厳禁）。〔第2章〕</li>
@@ -415,9 +427,9 @@ slug: 14-glossary</h2>
 
         <nav class="chapter-nav-bottom">
             
-            <a href="11-debugging.html" class="nav-card prev">
+            <a href="12-quality.html" class="nav-card prev">
                 <span class="nav-label">← 前の章</span>
-                <span class="nav-title">🐛 デバッグの作法</span>
+                <span class="nav-title">🛡️ 開発プロセス・品質</span>
             </a>
             
             
@@ -429,7 +441,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.24 · 2026.07.10</p>
+        <p class="site-version">v1.26 · 2026.07.10</p>
     </footer>
 
     <script src="../assets/script.js"></script>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開発プロセス・品質 — 開発の常識・作法</title>
+    <meta name="description" content="開発プロセス・品質 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:title" content="開発プロセス・品質 — 開発の常識・作法">
+    <meta property="og:description" content="開発プロセス・品質 — 開発の常識・作法（開発現場の常識をまとめた統合教科書）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://fukukei23.github.io/dev-textbook/chapters/12-quality.html">
+    <meta property="og:image" content="https://fukukei23.github.io/dev-textbook/assets/ogp.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" aria-label="メニュー" id="menuToggle">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="../index.html" class="site-title">📚 開発の常識・作法</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマ切替">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="../index.html">🏠 ホーム</a>
+        </div>
+        
+        <a href="00-intro.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📚</span>
+            はじめに
+        </a>
+        
+        <a href="01-ci-cd.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔄</span>
+            CI/CD
+        </a>
+        
+        <a href="02-git-github.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🌿</span>
+            Git &amp; GitHub
+        </a>
+        
+        <a href="03-api-endpoint.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔌</span>
+            API &amp; エンドポイント
+        </a>
+        
+        <a href="04-env-secrets.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔐</span>
+            環境変数・シークレット管理
+        </a>
+        
+        <a href="05-auth.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🔑</span>
+            認証・認可
+        </a>
+        
+        <a href="06-docker.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📦</span>
+            コンテナ（Docker）
+        </a>
+        
+        <a href="07-database.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🗄️</span>
+            データベース適材適所
+        </a>
+        
+        <a href="08-logging.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📊</span>
+            ログ・モニタリング
+        </a>
+        
+        <a href="09-cache-async.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">⚡</span>
+            キャッシュ・非同期処理
+        </a>
+        
+        <a href="10-versioning-package.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📦</span>
+            バージョニング・パッケージ管理
+        </a>
+        
+        <a href="11-debugging.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">🐛</span>
+            デバッグの作法
+        </a>
+        
+        <a href="12-quality.html"
+           class="sidebar-link active">
+            <span class="sidebar-icon">🛡️</span>
+            開発プロセス・品質
+        </a>
+        
+        <a href="14-glossary.html"
+           class="sidebar-link">
+            <span class="sidebar-icon">📖</span>
+            用語集
+        </a>
+        
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="content">
+        <div class="chapter-nav-top">
+            
+            <a href="11-debugging.html" class="nav-prev">← デバッグの作法</a>
+            
+            
+            <a href="14-glossary.html" class="nav-next">用語集 →</a>
+            
+        </div>
+
+        <article class="chapter-body">
+            <hr />
+<h2>title: 開発プロセス・品質
+icon: 🛡️
+card_desc: バグを未然に防ぎ・早く見つける仕組み — テスト・Lint・型チェック・レビューの役割分担と「早く見つけるほど安い」思想
+slug: 12-quality</h2>
+<h1>12 開発プロセス・品質 — バグを未然に防ぎ、早く見つける仕組み</h1>
+<div class="callout callout-info"><p>前章（第11章）では「<strong>起きてしまったバグ</strong>」を論理的に直す作法を扱いました。本章ではその<strong>前段</strong> —— そもそもバグを<strong>出しにくくし</strong>、出ても<strong>早く見つける</strong>仕組みを扱います。「直す力」と同じくらい「<strong>防ぐ力</strong>」が、開発の現場では問われます。</p></div>
+<hr />
+<h2>一言でいうと</h2>
+<p>バグは<strong>後になるほど直すコストが跳ね上がります</strong>（本番で発覚すれば手元の何倍・何十倍）。だから現場は「<strong>人間の目と記憶に頼らず、機械にチェックさせる</strong>」仕組みを何層も重ねます。本章では、コードの品質を保つ3つの自動検査 —— <strong>テスト・Lint・型チェック</strong> —— と、人間の<strong>コードレビュー</strong>の役割分担、そして「<strong>早く見つけるほど安い</strong>」という工程の思想を扱います。</p>
+<hr />
+<h2>1. なぜ品質の作法が必要なのか</h2>
+<h3>「後で直す」の罠</h3>
+<p>締め切り前。「とりあえず動いたから、テストは後で書こう」と<strong>検査を後回しにして進める</strong>。すると:</p>
+<ul>
+<li>後で触った時に<strong>別の場所を壊す</strong>（気づかないまま進む）</li>
+<li>バグが<strong>本番のユーザーの目に触れる</strong>（クレーム・信用失墜）</li>
+<li>原因が<strong>遠い昔のコード</strong>にあって追跡が困難になる</li>
+</ul>
+<p>これが第1章で触れた<strong>技術的負債</strong>の正体です。「後で直す」は借金で、利息（後からの追加コスト）が雪だるま式に膨らみます。</p>
+<h3>バグの発見は「早いほど安い」</h3>
+<p>経験則として、バグの<strong>発見タイミング</strong>と<strong>修復コスト</strong>には桁違いの差があると言われます:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>どこで見つかるか</th>
+<th>おおまかなコスト（比）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>書いている最中</strong>（エディタ・型チェック）</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>コミット前</strong>（手元のテスト・Lint）</td>
+<td>数倍</td>
+</tr>
+<tr>
+<td><strong>CI / PR</strong>（push 時の自動検査）</td>
+<td>数十倍</td>
+</tr>
+<tr>
+<td><strong>結合テスト・QA</strong></td>
+<td>数百倍</td>
+</tr>
+<tr>
+<td><strong>本番のユーザー</strong></td>
+<td>数千〜数万倍（信用損失を含む）</td>
+</tr>
+</tbody>
+</table></div>
+<p>※ 数値は文脈による目安ですが、「<strong>手元で直すのと本番で直すのとで桁が違う</strong>」はほぼ普遍的な傾向です。</p>
+<p>だからこそ「<strong>できるだけ手前で</strong>」バグを見つける仕組みが必要です。第11章は「起きたバグを直す」、本章は「<strong>そもそも起きない・出ても早く見つける</strong>」の作法です。</p>
+<hr />
+<h2>2. 「品質を保つ仕組み」とは</h2>
+<h3>4つの防衛線</h3>
+<p>現場で品質を保つ主な仕組みは、<strong>自動検査3つ ＋ 人間の目1つ</strong>です:</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>仕組み</th>
+<th>何を見つけるか</th>
+<th>誰が／何が見つけるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>テスト</strong>（<code>test</code>）</td>
+<td>「期待通り動くか」を実行で確かめる</td>
+<td>機械（自動）</td>
+</tr>
+<tr>
+<td><strong>Lint</strong>（リント）</td>
+<td>コードの書き方の問題・バグの種</td>
+<td>機械（自動）</td>
+</tr>
+<tr>
+<td><strong>型チェック</strong>（<code>type check</code>／型検査）</td>
+<td>データの「種類」の矛盾</td>
+<td>機械（自動）</td>
+</tr>
+<tr>
+<td><strong>コードレビュー</strong></td>
+<td>設計・可読性・見逃し</td>
+<td>人間</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-info"><p>※ <strong>CI</strong>（→ 第1章）は、これら自動検査を「<strong>push するたび機械に回させる</strong>」土俵です。中身の検査（テスト／Lint／型チェック）があるからこそ、CI の「緑」に意味が出ます。</p></div>
+<h3>共通の思想: 機械に任せる</h3>
+<p>4つすべてに共通する思想は「<strong>人間の目と記憶に頼らない</strong>」ことです。人間は忘れ・見落とします。「同じ規約を毎回手で確認する」は破綻します。だから<strong>一度ルールを書けば、何度でも機械が同じ基準でチェックする</strong>仕組みにのせる —— これが品質の作法の根幹です。</p>
+<hr />
+<h2>3. 🔑 バグを防ぐ3つの自動検査</h2>
+<h3>テスト —— 正しく動くか「実行」で確かめる</h3>
+<p><strong>テスト</strong>は「この入力なら、この結果になるはず」を<strong>実際に動かして</strong>確かめる仕組みです（→ 第1章で既出、ここでは「なぜ書くか」を掘り下げます）。</p>
+<ul>
+<li><strong>単体テスト</strong>（<code>unit test</code>／ユニットテスト）: 関数など<strong>最小単位</strong>を単独で確かめる。速い・原因が特定しやすい</li>
+<li><strong>統合テスト</strong>（<code>integration test</code>／インテグレーションテスト）: 複数の部品を<strong>組み合わせた状態</strong>で確かめる。現実に近いが遅い</li>
+</ul>
+<p>テストの最大の価値は<strong>変更時の安全網</strong>です。コードを直した時、<strong>前まで動いていたものが壊れていないか</strong>（＝ <strong>回帰</strong>／<code>regression</code>／リグレッション）を自動で教えてくれます。テストがないと「直したつもりが別を壊した」に気づけません。</p>
+<div class="callout callout-tip"><p>💡 <strong>テストしやすさも設計</strong>: 「テストが書きにくい」コードは、往々にして<strong>1つの関数に責務が混ざりすぎている</strong>サインです。テストを書きやすい設計は、結果的に読みやすく変更しやすい設計になります。</p></div>
+<h3>Lint —— コードの書き方の問題を「静的に」見つける</h3>
+<p><strong>Lint</strong>（リント）は、コードを<strong>実行せずに</strong>（＝ <strong>静的解析</strong>／<code>static analysis</code>／スタティックアナリシス）、書き方の問題を見つける検査です。<strong>リンター</strong>（<code>linter</code>／→ 用語集）が担当します。</p>
+<p>見つけてくれるもの:</p>
+<ul>
+<li><strong>バグの種</strong>: 「使っていない変数」「到達しないコード」「比較と代入の書き間違え（<code>==</code> と <code>=</code> 等）」等、実行しなくても分かる問題</li>
+<li><strong>可読性・一貫性</strong>: チームの書き方規約（インデント・命名 等）の遵守</li>
+</ul>
+<p>Lint の強みは<strong>速さと完全性</strong>です。実行不要なので一瞬で、かつ「全部の行を見る」ので人間の見落としを補います。「インデントが揃っていない」等は人間が直すには退屈で、機械に任せるべき典型です。</p>
+<h3>型チェック —— データの「種類」の矛盾を見つける</h3>
+<p><strong>型チェック</strong>（<code>type check</code>／型検査）は、データの**「種類（型）」**の矛盾を（これも静的に）見つける検査です。</p>
+<p>例:</p>
+<ul>
+<li>「数値」を期待する関数に「文字列」を渡していないか</li>
+<li><code>null</code>（空であること）の可能性がある値を、確認せず使っていないか</li>
+</ul>
+<p>型の矛盾は<strong>実行時エラーやバグの代表格</strong>です。型チェックを通しておけば「この値は絶対に数値」と<strong>機械が保証</strong>してくれるため、その类别のバグが構造的に起きなくなります。静的型付き言語（TypeScript・Rust・Go 等）ではコンパイラが、動的型言語（Python 等）では型ヒント＋検査ツール（<code>mypy</code> 等）が担います。</p>
+<h3>3つの役割分担</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>検査</th>
+<th>得意</th>
+<th>見つけられない</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>テスト</strong></td>
+<td>実際の動作・回帰防止</td>
+<td>書いていない経路・仕様の誤り</td>
+</tr>
+<tr>
+<td><strong>Lint</strong></td>
+<td>書き方の問題・バグの種</td>
+<td>実行時にしか分かる問題・仕様</td>
+</tr>
+<tr>
+<td><strong>型チェック</strong></td>
+<td>データの種類の矛盾</td>
+<td>正しい型だが中身が違う問題</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>どれ1つで完璧にはなりません</strong>。3つを重ねて「それぞれの隙間」を埋めるのが、品質を保つ作法です。</p>
+<hr />
+<h2>4. レビューと「早く見つける」思想</h2>
+<h3>コードレビュー —— 人間が見る最後の砦</h3>
+<p>自動検査を全通過しても、まだ<strong>人間にしか分からない問題</strong>が残ります:</p>
+<ul>
+<li><strong>設計が適切か</strong>（もっとシンプルに書けないか）</li>
+<li><strong>他の人が読んで分かるか</strong>（可読性）</li>
+<li><strong>要件を満たしているか</strong>（仕様の見落とし）</li>
+</ul>
+<p>これを <strong>Pull Request</strong>（→ 第2章）で他のメンバーに見てもらうのが<strong>コードレビュー</strong>です。レビューは単なるミス探しでなく、<strong>チームの知見を共有し合う場</strong>でもあります（詳細は第13章「レビュー文化・設計」で扱います）。</p>
+<h3>🔑 レフトシフト —— 手前で見つけるほど安い</h3>
+<p>前出の「バグは早く見つけるほど安い」を、工程の観点で言い換えたのが <strong>left shift</strong>（レフトシフト／左へずらす）という思想です。</p>
+<p>開発工程を<strong>左から右へ</strong>進むと見立てます:</p>
+<pre><code>設計 → コーディング → テスト → リリース → 本番運用
+ ←早く見つけるほど安い→          ←遅いほど高い→
+</code></pre>
+<p>問題をこの流れの**左（手前）**で見つけるほど、直すコストが安い。だから:</p>
+<ul>
+<li><strong>型チェック</strong>はエディタで<strong>書いている最中</strong>に指摘（一番左）</li>
+<li><strong>pre-commit</strong>（プレコミット）: コミットする<strong>直前</strong>に自動検査を走らせる仕組みで、問題あるコードが履歴に入るのを防ぐ</li>
+<li><strong>CI / PR</strong>（→ 第1章・第2章）で push のたび全検査を回す</li>
+</ul>
+<p>すべて「<strong>問題を右に運ばない</strong>」ための仕組みです。</p>
+<hr />
+<h2>5. 🔑 段階的な検査 —— 手元から本番まで何層も重ねる</h2>
+<h3>同じ検査を「複数のタイミング」で</h3>
+<p>重要なのは、検査を<strong>1回しかしない</strong>のでなく<strong>何層も重ねる</strong>ことです。例えばテスト・Lint・型チェックは:</p>
+<ol>
+<li><strong>エディタ</strong>: 書いている最中（リアルタイムに波線等で指摘）</li>
+<li><strong>コミット前</strong>（<code>pre-commit</code>）: 履歴に入る直前にブロック</li>
+<li><strong>CI / PR</strong>（→ 第1章）: push のたび全体を自動検査</li>
+<li><strong>本番前ゲート</strong>（→ CD）: 検査不通過なら本番に行かせない</li>
+</ol>
+<p>なぜ何層も？ —— <strong>各層が別の目的を担うから</strong>です。エディタは速さ、CI は完全性、本番前ゲートは最終防衛。1層抜けても次で止まる<strong>多重防御</strong>が、品質を安定させます。</p>
+<h3>「検査を通す」でなく「検査に頼る」設計</h3>
+<p>落とし穴は「検査があるから大丈夫」と<strong>検査に丸投げ</strong>する態度です。検査は<strong>書かれたことしか確かめません</strong>。テストが無い経路は検査されず、Lint も型チェックも「仕様が正しいか」は分かりません。だからこそ:</p>
+<ul>
+<li>検査を書く ＝ <strong>どうあるべきか</strong>を言語化する作業（仕様の明文化）</li>
+<li>検査が多い ＝ <strong>自信の根拠</strong>が増える（「これだけ通ったから大丈夫」）</li>
+</ul>
+<p>品質の作法は「検査をパスすること」でなく「<strong>検査に支えられた自信を持つこと</strong>」が目的です。</p>
+<hr />
+<h2>6. なぜ「品質の作法」が開発の作法なのか</h2>
+<h3>作法として位置づけられる理由</h3>
+<ul>
+<li><strong>本番事故の防止</strong>: 本番のバグは金・信用・時の損失。手前で見つける仕組みは<strong>保険</strong>であり<strong>責務</strong></li>
+<li><strong>チーム開発の前提</strong>: テストも Lint もないコードは、他の人が触る時に<strong>壊す恐怖</strong>と戦うことになる。検査があるからこそ安心して変更できる</li>
+<li><strong>変更への自信</strong>: 「テストが通っているから大胆に直せる」は、現場でコードを改善し続ける原動力です</li>
+</ul>
+<h3>面接・実務での意味</h3>
+<ul>
+<li>「<strong>テスト・Lint・型チェックの違いを説明してください</strong>」は面接の<strong>定番質問</strong>です。3つの役割分担（動作・書き方・型）を即答できるかは、実務経験の指標です</li>
+<li>「<strong>なぜテストを書くのか</strong>」への正解は「バグを見つけるため」だけでなく「<strong>将来の変更を安全にするため（回帰防止）</strong>」まで言えると深い</li>
+<li>「<strong>品質をどう担保していますか？</strong>」への回答も、これらの仕組みを<strong>層として</strong>語れるかが問われます</li>
+</ul>
+<hr />
+<h2>7. よくある落とし穴と対処</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>落とし穴</th>
+<th>何が起きるか</th>
+<th>正しい対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>テストを書かずに進める</strong></td>
+<td>回帰に気づかない・本番事故</td>
+<td>最初から<strong>テストを書く</strong>。後回しは利息が膨らむ（技術的負債）</td>
+</tr>
+<tr>
+<td><strong>テストだけで安心する</strong></td>
+<td>仕様の誤り・型の問題を見逃す</td>
+<td><strong>Lint・型チェックも重ねる</strong>。3つの役割分担を意識</td>
+</tr>
+<tr>
+<td><strong>Lint を無視／例外だらけ</strong></td>
+<td>バグの種が残る・規約が形骸化</td>
+<td>例外は最小に・<strong>意味のある指摘は直す</strong>。機械任せを徹底</td>
+</tr>
+<tr>
+<td><strong>検査を「通すため」に書く</strong></td>
+<td>通ったが中身が薄い・自信の根拠にならない</td>
+<td>検査は<strong>仕様の明文化</strong>。重要な経路を意識して書く</td>
+</tr>
+<tr>
+<td><strong>人間の目に頼る</strong></td>
+<td>見落とし・属人化（担当者不在で止まる）</td>
+<td><strong>機械ができることは機械に</strong>。人はレビュー（設計・可読性）へ</td>
+</tr>
+<tr>
+<td><strong>早い段階の検査をサボる</strong></td>
+<td>CI・本番まで運んで大コスト</td>
+<td><strong>レフトシフト</strong>: エディタ・pre-commit で手前に止める</td>
+</tr>
+</tbody>
+</table></div>
+<div class="callout callout-danger"><p>💡 <strong>カバレッジの罠</strong>: 「テストの<strong>カバレッジ</strong>（→ 用語集・何％のコードを実行したか）が高い ＝ 品質が高い」は<strong>短絡</strong>です。カバレッジは「実行した割合」であって「正しさを確かめた割合」ではありません。「通っただけで正しい結果を見ていない」テストもカバレッジを稼ぎます。数値は<strong>参考値</strong>と割り切り、中身（重要な経路を確かめたか）で判断するのが作法です。</p></div>
+<hr />
+<h2>まとめ</h2>
+<ul>
+<li>バグは<strong>後になるほど直すコストが跳ね上がる</strong>。だから「<strong>早く見つける</strong>」仕組みが問われる</li>
+<li>品質を保つ<strong>3つの自動検査</strong>: <strong>テスト</strong>（動作・回帰防止）・<strong>Lint</strong>（書き方の問題）・<strong>型チェック</strong>（データの型の矛盾）。役割分担を重ねて隙間を埋める</li>
+<li>共通思想は「<strong>人間の目と記憶に頼らず、機械に任せる</strong>」。CI（→ 第1章）はそれらを回す土俵</li>
+<li><strong>コードレビュー</strong>は人間にしか分からない問題（設計・可読性・要件）を扱う最後の砦（→ 第13章で詳しく）</li>
+<li><strong>レフトシフト</strong>: 問題を工程の**左（手前）**で見つけるほど安い。エディタ・pre-commit・CI を層で重ねる</li>
+<li>検査は「<strong>パスすること</strong>」でなく「<strong>自信の根拠を持つこと</strong>」が目的。カバレッジ等の数値は参考値</li>
+</ul>
+<div class="callout callout-tip"><p>💡 <strong>次のステップ</strong>: バグを防ぐ個別の検査と「早く見つける」思想が見えました。最後の第13章「<strong>レビュー文化・設計</strong>」では、人間の目である<strong>コードレビュー</strong>の作法と、そもそも<strong>変更しやすいコード</strong>の設計（アーキテクチャ）の基本を扱って、本書を締めくくります。</p></div>
+
+        </article>
+
+        <nav class="chapter-nav-bottom">
+            
+            <a href="11-debugging.html" class="nav-card prev">
+                <span class="nav-label">← 前の章</span>
+                <span class="nav-title">🐛 デバッグの作法</span>
+            </a>
+            
+            
+            <a href="14-glossary.html" class="nav-card next">
+                <span class="nav-label">次の章 →</span>
+                <span class="nav-title">📖 用語集</span>
+            </a>
+            
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <p>開発の常識・作法 — <a href="https://github.com/fukukei23/dev-textbook">GitHub</a>
+         · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
+         · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
+         · <a href="https://fukukei23.github.io/">fukukei23</a></p>
+        <p class="site-version">v1.26 · 2026.07.10</p>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+            themeVariables: { fontSize: '14px' }
+        });
+    </script>
+</body>
+</html>
