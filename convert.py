@@ -562,6 +562,34 @@ def add_toc_and_heading_ids(html: str) -> str:
     return html
 
 
+def collapse_glossary_items(html: str) -> str:
+    """用語集: callout(使い方/実例)付きの単独エントリを details（クリック開閉）に変換。
+
+    <ul><li><strong>CI</strong>...説明</li></ul>
+    <div class="callout">使い方...</div>
+    <div class="callout">実例...</div>
+    ↓
+    <details class="glossary-item"><summary><strong>CI</strong>...説明</summary>
+    <div class="callout">使い方...</div>...</details>
+    """
+    pattern = re.compile(
+        r'<ul>\s*<li>(.*?)</li>\s*</ul>\s*((?:<div class="callout[^"]*">.*?</div>\s*)+)',
+        flags=re.DOTALL,
+    )
+
+    def repl(m):
+        summary_html = m.group(1).strip()
+        callouts_html = m.group(2).rstrip()
+        return (
+            f'<details class="glossary-item">\n'
+            f'<summary>{summary_html}</summary>\n'
+            f'{callouts_html}\n'
+            f'</details>'
+        )
+
+    return pattern.sub(repl, html)
+
+
 # --- トップページのカテゴリ分け ---
 
 # 章番号→カテゴリの境界（番号レンジは閉区間）
@@ -636,6 +664,8 @@ def main():
         html_body = enhance_html(html_body)
         if ch["slug"] != "14-glossary":
             html_body = add_toc_and_heading_ids(html_body)
+        else:
+            html_body = collapse_glossary_items(html_body)
 
         prev_ch = chapters[i - 1] if i > 0 else None
         next_ch = chapters[i + 1] if i < len(chapters) - 1 else None

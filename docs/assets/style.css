@@ -704,3 +704,23 @@ a:hover { text-decoration: underline; }
 .page-toc li { margin: 0.3rem 0; }
 .page-toc a { text-decoration: none; }
 .page-toc a:hover { text-decoration: underline; }
+
+/* === 用語集アイテム（details・クリック開閉・2026-07-10） === */
+.glossary-item {
+    margin: 0.75rem 0;
+    padding: 0.5rem 1rem;
+    background: var(--bg-card, #f8f9fa);
+    border: 1px solid var(--border, #dee2e6);
+    border-radius: 8px;
+}
+.glossary-item > summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    user-select: none;
+}
+.glossary-item > summary::-webkit-details-marker { display: none; }
+.glossary-item > summary::before { content: "▸ "; color: var(--accent, #5b4cf5); }
+.glossary-item[open] > summary::before { content: "▾ "; }
+.glossary-item > summary > strong { color: var(--accent, #5b4cf5); }
+.glossary-item .callout { margin: 0.5rem 0 0; }
