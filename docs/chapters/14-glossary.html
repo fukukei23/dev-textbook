@@ -225,70 +225,123 @@ slug: 14-glossary</h2>
 <h2>か行</h2>
 <h3>か</h3>
 <details class="glossary-item">
-<summary><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔<a href="12-quality.html">第12章</a>〕</li>
-<li><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔<a href="12-quality.html">第12章</a>〕</li>
-<li><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔<a href="01-ci-cd.html">第1章</a>〕</li>
-<li><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔<a href="04-env-secrets.html">第4章</a>〕</li>
-<li><strong>関心の分離</strong>（<code>SoC</code>／エスオーシー／<code>separation of concerns</code>）— 異なる関心事（UI・DB・業務ロジック等）を<strong>分離して別の部品に</strong>。混ざると1箇所の変更が全体に波及する。〔<a href="13-review-design.html">第13章</a>〕</summary>
+<summary><strong>回帰</strong>（<code>regression</code>／リグレッション）— コードを直した時に<strong>前まで動いていたものが壊れる</strong>こと。テストで自動検知する主目的の1つ。〔<a href="12-quality.html">第12章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「直したら別の場所が壊れた」＝回帰。テストを毎回自動で回す（CI）のは、この回帰を即座に捕まえるため。</p></div>
+</details><details class="glossary-item">
+<summary><strong>型チェック</strong>（<code>type check</code>／タイプチェック／型検査）— データの「<strong>種類（型）</strong>」の矛盾を、コードを実行せずに（静的に）見つける検査。型の矛盾による実行時エラーを構造的に防ぐ。〔<a href="12-quality.html">第12章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 実行前に「文字列を数値として足そうとしている」等の型矛盾を指摘。実行時エラーを未然に防ぐ。</p></div>
+</details><details class="glossary-item">
+<summary><strong>カバレッジ</strong>（<code>coverage</code>）— テストがコードをどれくらい網羅しているかの割合（％）。高いほど「未テスト箇所が少ない」が、<strong>100％＝バグなし ではない</strong>（逆に低くても、必ずバグがあるわけではない）。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「テストがコードの何割を通ったか」の目安。100％でも「指定した機能を網羅した」だけでバグがない保証ではない（確認し忘れた機能は計測外）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>環境変数</strong>（<code>environment variable</code>）— プログラムの<strong>外側</strong>から差し込む設定値。コードを書き換えずに開発と本番を切り替えられる。〔<a href="04-env-secrets.html">第4章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: APIキーやDB接続先等をコード外から差し込む。開発・本番で同じコード・設定値だけ切替（<code>.env</code> ファイルで管理）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>関心の分離</strong>（<code>SoC</code>／エスオーシー／<code>separation of concerns</code>）— 異なる関心事（UI・DB・業務ロジック等）を<strong>分離して別の部品に</strong>。混ざると1箇所の変更が全体に波及する。〔<a href="13-review-design.html">第13章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: UI・DB・業務ロジックを別部品に分ける。「表示だけ直したい」変更がDB処理を壊さない構造になる。</p></div>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の LLM 中継プロキシ（<code>glm-rate-proxy</code>）では、APIキー等の秘匿値をすべて <code>~/.secrets.env</code> という環境変数ファイルに一元化し、コードには「キー名」しか書かない運用で漏洩を防いでいます。</p></div>
 </details><details class="glossary-item">
-<summary><strong>cargo</strong>（カルゴ／<code>cargo</code>）— Rust の<strong>パッケージマネージャ</strong>。〔<a href="10-versioning-package.html">第10章</a>〕</li>
-</ul>
-<h3>き</h3>
-<ul>
-<li><strong>キャッシュ</strong>（<code>cache</code>）— 一度取得・計算した結果を<strong>使い回して速くする</strong>仕組み。古さ（一貫性）の管理が難問。〔<a href="09-cache-async.html">第9章</a>〕</li>
-<li><strong>キャッシュ雪崩</strong>（スタンピード／<code>cache stampede</code>）— TTL一斉切れで全キャッシュミス→本来のデータ源に<strong>殺到してダウン</strong>させる事故。〔<a href="09-cache-async.html">第9章</a>〕</li>
-<li><strong>キュー</strong>（<code>queue</code>／「列」）— 非同期処理で依頼を<strong>順に並べておく場所</strong>。ワーカーが取り出して処理する。〔<a href="09-cache-async.html">第9章</a>〕</li>
-<li><strong>git bisect</strong>（ギット・バイセクション／<code>git bisect</code>）— 良い版と悪い版を指定し、原因のコミットを<strong>二分探索</strong>で特定するGit機能。〔<a href="11-debugging.html">第11章</a>〕</li>
-<li><strong>技術的負債</strong>（<code>technical debt</code>）— 「後で直す」と先送りされた問題が、雪だるま式に膨らんで開発を重くする現象。借金のメタファー。〔<a href="01-ci-cd.html">第1章</a>〕</li>
-<li><strong>凝集度</strong>（<code>cohesion</code>／コヒージョン）— 1つのモジュール（部品）内の<strong>機能のまとまり</strong>。<strong>高い（強い）ほど良い</strong>。1モジュール＝1責務に集中すると凝集が強くなる（→ 結合度）。〔<a href="13-review-design.html">第13章</a>〕</li>
-</ul>
-<h3>く</h3>
-<ul>
-<li><strong>GraphQL</strong>（グラフキューエル／通称「グラフキュー」も）— 「欲しいフィールドだけ」を1リクエストで指定できる API 設計スタイル。REST の代替候補。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>クライアント</strong>（<code>client</code>）— サービスに<strong>リクエストを送る側</strong>（ブラウザ・アプリ等）。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>クローン</strong>（<code>clone</code>）— リモート（GitHub 等）のリポジトリを<strong>まるごと手元にコピー</strong>する最初の1回の操作。〔<a href="02-git-github.html">第2章</a>〕</li>
-<li><strong>CRUD</strong>（クラッド）— 作成(<code>Create</code>)・読取(<code>Read</code>)・更新(<code>Update</code>)・削除(<code>Delete</code>)の頭文字。データ操作の4基本。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>Cookie</strong>（クッキー）— ブラウザに保存される小さなデータ。リクエストのたび<strong>自動で</strong>サーバーに送信される。セッション方式の中核。〔<a href="05-auth.html">第5章</a>〕</li>
-</ul>
-<h3>け</h3>
-<ul>
-<li><strong>結合度</strong>（<code>coupling</code>／カプリング）— モジュール（部品）同士の<strong>依存の強さ</strong>。<strong>低い（ゆるい）ほど良い</strong>。片方を変えるともう片方も壊れる＝結合が強い（→ 凝集度）。〔<a href="13-review-design.html">第13章</a>〕</li>
-<li><strong>GET</strong>（ゲット）— HTTP メソッドの1つ。「取得したい（ページを見る）」という意味。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-</ul>
-<h3>こ</h3>
-<ul>
-<li><strong>コードレビュー</strong>（<code>code review</code>）— 他の人が書いたコードを<strong>確認し、改善点を伝え合う</strong>作業。Pull Request で実施するのが現代の定番。ミス探しでなく知見共有の場。〔<a href="13-review-design.html">第13章</a>〕</li>
-<li><strong>コミット</strong>（<code>commit</code>）— 変更を「歴史の1ページ」として<strong>ローカルに保存</strong>すること。<code>commit</code> だけではまだ他の人に見えない（→ <code>push</code>）。〔<a href="02-git-github.html">第2章</a>〕</li>
-<li><strong>コンテナ</strong>（<code>container</code>）— アプリと実行環境を**「丸ごと1つの箱」**に詰め込む技術。イメージ（設計図）を起動した「動いている実体」でもある。<code>Docker</code> が代表実装。〔<a href="06-docker.html">第6章</a>〕</li>
-<li><strong>コンフリクト</strong>（<code>conflict</code>／「衝突」）— 同じファイルの同じ行を別々に変更してしまい、Git が自動で統合できなくなった状態。人間が解決する。〔<a href="02-git-github.html">第2章</a>〕</li>
-</ul>
-<hr />
+<summary><strong>cargo</strong>（カルゴ／<code>cargo</code>）— Rust の<strong>パッケージマネージャ</strong>。〔<a href="10-versioning-package.html">第10章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: Rust の荷物管理係。<code>cargo build</code>（ビルド）／<code>cargo add パッケージ名</code>（依存ライブラリ導入）で版管理する。</p></div>
+</details><h3>き</h3>
+<details class="glossary-item">
+<summary><strong>キャッシュ</strong>（<code>cache</code>）— 一度取得・計算した結果を<strong>使い回して速くする</strong>仕組み。古さ（一貫性）の管理が難問。〔<a href="09-cache-async.html">第9章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「何度も同じ検索結果を取得」等の無駄を、結果を使い回して高速化。ただし古くなる（一貫性）問題と付き合う。</p></div>
+</details><details class="glossary-item">
+<summary><strong>キャッシュ雪崩</strong>（スタンピード／<code>cache stampede</code>）— TTL一斉切れで全キャッシュミス→本来のデータ源に<strong>殺到してダウン</strong>させる事故。〔<a href="09-cache-async.html">第9章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: TTL が一斉に切れると全リクエストが本来の DB 等に殺到→ダウン。TTL に揺らぎ（ジッター）を持たせて一斉切れを予防。</p></div>
+</details><details class="glossary-item">
+<summary><strong>キュー</strong>（<code>queue</code>／「列」）— 非同期処理で依頼を<strong>順に並べておく場所</strong>。ワーカーが取り出して処理する。〔<a href="09-cache-async.html">第9章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「依頼を順に並べて、ワーカーが順に処理」。時間のかかる処理（メール送信等）を後回しにして素早くレスポンスを返す。</p></div>
+</details><details class="glossary-item">
+<summary><strong>git bisect</strong>（ギット・バイセクション／<code>git bisect</code>）— 良い版と悪い版を指定し、原因のコミットを<strong>二分探索</strong>で特定するGit機能。〔<a href="11-debugging.html">第11章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「この版では動く・あの版では壊れる」を指定すると、Git が二分探索で原因コミットを特定してくれる（手動探索より圧倒的に速い）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>技術的負債</strong>（<code>technical debt</code>）— 「後で直す」と先送りされた問題が、雪だるま式に膨らんで開発を重くする現象。借金のメタファー。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「後で直す」と先送りした箇所が積もって開発速度を下げる。借金と同じで計画的に返済（リファクタリング）しないと金利（修正コスト）が膨らむ。</p></div>
+</details><details class="glossary-item">
+<summary><strong>凝集度</strong>（<code>cohesion</code>／コヒージョン）— 1つのモジュール（部品）内の<strong>機能のまとまり</strong>。<strong>高い（強い）ほど良い</strong>。1モジュール＝1責務に集中すると凝集が強くなる（→ 結合度）。〔<a href="13-review-design.html">第13章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 1部品内の「機能のまとまり」。強い（高い）ほど良い＝1部品＝1責務に集中させる（同時に結合度は下げる）。</p></div>
+</details><h3>く</h3>
+<details class="glossary-item">
+<summary><strong>GraphQL</strong>（グラフキューエル／通称「グラフキュー」も）— 「欲しいフィールドだけ」を1リクエストで指定できる API 設計スタイル。REST の代替候補。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「名前と電話番号だけ欲しい」等、必要フィールドを1リクエストで指定。REST の過不足（不要データも取る／足りず複数回）を解消。</p></div>
+</details><details class="glossary-item">
+<summary><strong>クライアント</strong>（<code>client</code>）— サービスに<strong>リクエストを送る側</strong>（ブラウザ・アプリ等）。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: リクエストを送る側（ブラウザ・スマホアプリ等）。サーバー（応える側）と対になる。</p></div>
+</details><details class="glossary-item">
+<summary><strong>クローン</strong>（<code>clone</code>）— リモート（GitHub 等）のリポジトリを<strong>まるごと手元にコピー</strong>する最初の1回の操作。〔<a href="02-git-github.html">第2章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: GitHub のリポジトリを手元にまるごとコピーする最初の1回。その後の更新は <code>git pull</code> で取り込む。</p></div>
+</details><details class="glossary-item">
+<summary><strong>CRUD</strong>（クラッド）— 作成(<code>Create</code>)・読取(<code>Read</code>)・更新(<code>Update</code>)・削除(<code>Delete</code>)の頭文字。データ操作の4基本。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 作成・読取・更新・削除。「この画面でできること」を4つで整理できる（「編集画面は CRUD のどれ？」と問うと抜けが分かる）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>Cookie</strong>（クッキー）— ブラウザに保存される小さなデータ。リクエストのたび<strong>自動で</strong>サーバーに送信される。セッション方式の中核。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: ブラウザに保存されリクエストのたび自動送信される小さなデータ。「ログイン状態の保持」等の中核。</p></div>
+</details><h3>け</h3>
+<details class="glossary-item">
+<summary><strong>結合度</strong>（<code>coupling</code>／カプリング）— モジュール（部品）同士の<strong>依存の強さ</strong>。<strong>低い（ゆるい）ほど良い</strong>。片方を変えるともう片方も壊れる＝結合が強い（→ 凝集度）。〔<a href="13-review-design.html">第13章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 部品同士の依存の強さ。ゆるい（低い）ほど良い＝片方を直してもう片方が壊れない（同時に凝集度は上げる）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>GET</strong>（ゲット）— HTTP メソッドの1つ。「取得したい（ページを見る）」という意味。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: HTTP メソッドで「取得したい」。URL にパラメータを付けて「これ見せて」と要求。原則データを変えない（参照系）。</p></div>
+</details><h3>こ</h3>
+<details class="glossary-item">
+<summary><strong>コードレビュー</strong>（<code>code review</code>）— 他の人が書いたコードを<strong>確認し、改善点を伝え合う</strong>作業。Pull Request で実施するのが現代の定番。ミス探しでなく知見共有の場。〔<a href="13-review-design.html">第13章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: Pull Request で他の人がコードを確認し合う。ミス探し以上に「チームの知見・方針をすり合わせる」場。</p></div>
+</details><details class="glossary-item">
+<summary><strong>コミット</strong>（<code>commit</code>）— 変更を「歴史の1ページ」として<strong>ローカルに保存</strong>すること。<code>commit</code> だけではまだ他の人に見えない（→ <code>push</code>）。〔<a href="02-git-github.html">第2章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 変更を歴史の1ページとしてローカルに保存。<code>commit</code> だけでは他の人に見えない（→ <code>push</code> で共有）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>コンテナ</strong>（<code>container</code>）— アプリと実行環境を**「丸ごと1つの箱」**に詰め込む技術。イメージ（設計図）を起動した「動いている実体」でもある。<code>Docker</code> が代表実装。〔<a href="06-docker.html">第6章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: アプリ＋実行環境を「丸ごと1箱」に。「自分の PC では動いた」を無くす（環境ごと持ち運ぶ）。Docker が代表。</p></div>
+</details><details class="glossary-item">
+<summary><strong>コンフリクト</strong>（<code>conflict</code>／「衝突」）— 同じファイルの同じ行を別々に変更してしまい、Git が自動で統合できなくなった状態。人間が解決する。〔<a href="02-git-github.html">第2章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 同じ行を別々に変更して Git が自動統合できない状態。人間が「どちらを正とするか」判断して解決する。</p></div>
+</details><hr />
 <h2>さ行</h2>
 <h3>し</h3>
-<ul>
-<li><strong>CI</strong>（シーアイ／<code>Continuous Integration</code>＝継続的インテグレーション）— <code>push</code> のたび機械が自動でビルド・テスト・品質チェックを回す仕組み。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<details class="glossary-item">
+<summary><strong>CI</strong>（シーアイ／<code>Continuous Integration</code>＝継続的インテグレーション）— <code>push</code> のたび機械が自動でビルド・テスト・品質チェックを回す仕組み。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
 <div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「CI回してますか？」＝「<code>push</code> ごとに自動テスト走らせてますか」。GitHub の Actions タブで緑 ✓ が並んでいる状態が「CI が通っている」。</p></div>
 <div class="callout callout-info"><p>🔖 <strong>筆者の実例</strong>: 自作の AI エージェント基盤 <code>NexusCore</code> では、<code>Bandit</code>（セキュリティスキャン）＋ <code>pytest</code>（テスト）＋ <code>ruff</code>（リンター）を GitHub Actions で毎 <code>push</code> 時に自動実行し、CI が緑（成功）の状態を維持しています。</p></div>
 </details><details class="glossary-item">
-<summary><strong>CD</strong>（シーディー／<code>Continuous Delivery / Deployment</code>＝継続的デリバリー／デプロイ）— CI で検査を通ったコードを「いつでもリリースできる状態」に保つ、または本番まで自動で届ける仕組み。〔<a href="01-ci-cd.html">第1章</a>〕</li>
-<li><strong>シークレット</strong>（<code>secret</code>）— 環境変数の中でも<strong>他人に見られてはいけない値</strong>（APIキー・パスワード・トークン等）。基本原則: コードに書かない・Gitに入れない・本番は専用保管場所。〔<a href="04-env-secrets.html">第4章</a>〕</li>
-<li><strong>gRPC</strong>（ジーアールピーシー）— 「関数呼び出し」風の通信（RPC）を、現代風に<strong>高速・型付き</strong>にしたもの。マイクロサービス間等で使われる。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>CSRF</strong>（シーエスアールエフ／<code>Cross-Site Request Forgery</code>／「偽造リクエスト」）— ログイン中の利用者に、悪意ある別サイトから勝手にリクエストを送らせる攻撃。Cookie方式で特に注意。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>CI/CD の「緑・赤」</strong> — GitHub 上の CI 結果の色表示。🟢緑＝全job成功・🔴赤＝どこか失敗・🟡黄（<code>in_progress</code>）＝いま実行中。〔<a href="01-ci-cd.html">第1章</a>〕</li>
-</ul>
-<h3>す</h3>
-<ul>
-<li><strong>ステージ</strong>（<code>stage</code>／別名 <code>index</code>）— コミット前に「この変更を記録する」と<strong>まとめておく待合室</strong>。ワークツリー→ステージ→リポジトリの中間。〔<a href="02-git-github.html">第2章</a>〕</li>
-<li><strong>ステータスコード</strong>（<code>status code</code>）— HTTP レスポンスに含まれる<strong>3桁の数字</strong>で「結果はどうだったか」を機械的に伝える。<code>200</code>=成功・<code>401</code>=認証無効・<code>403</code>=権限なし・<code>404</code>=見つからない・<code>500</code>=サーバー内部エラー・<code>503</code>=サービス停止中。〔<a href="03-api-endpoint.html">第3章</a>〕</li>
-<li><strong>ステップ</strong>（<code>step</code>）— GitHub Actions でジョブの中の個々の実行単位。<code>ジョブ &gt; ステップ</code> の階層。〔<a href="01-ci-cd.html">第1章</a>〕</li>
-</ul>
-<h3>せ</h3>
-<ul>
-<li><strong>静的解析</strong>（<code>static analysis</code>／スタティックアナリシス）— コードを<strong>実行せずに</strong>解析する手法。Lint・型チェックを含む上位概念。実行不要で速く、人間の見落としを補う。〔<a href="12-quality.html">第12章</a>〕</li>
-<li><strong>セキュリティスキャン</strong> — 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔<a href="01-ci-cd.html">第1章</a>〕</li>
-<li><strong>セッション</strong>（<code>session</code>）— ログイン中の状態をサーバー側が記憶する仕組み。Cookieと組み合わせて使うブラウザ型の古典（ステートフル）。〔<a href="05-auth.html">第5章</a>〕</li>
-<li><strong>SemVer</strong>（セムヴァー／<code>Semantic Versioning</code>／セマンティックバージョニング）— バージョン番号 <code>メジャー.マイナー.パッチ</code> で<strong>後方互換性の有無</strong>を伝える約束。メジャー上がり＝壊れる変更。〔<a href="10-versioning-package.html">第10章</a>〕</summary>
+<summary><strong>CD</strong>（シーディー／<code>Continuous Delivery / Deployment</code>＝継続的デリバリー／デプロイ）— CI で検査を通ったコードを「いつでもリリースできる状態」に保つ、または本番まで自動で届ける仕組み。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「CIで検査通過 → 自動で本番に反映」がCD。CIが「通る」、CDが「出る」。両輪で初めて「安心して更新できる」状態に届く。</p></div>
+</details><details class="glossary-item">
+<summary><strong>シークレット</strong>（<code>secret</code>）— 環境変数の中でも<strong>他人に見られてはいけない値</strong>（APIキー・パスワード・トークン等）。基本原則: コードに書かない・Gitに入れない・本番は専用保管場所。〔<a href="04-env-secrets.html">第4章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: APIキーやパスワードを <code>app.py</code> に直書きしてGitHubにpush → 数時間で世界中から見られる事故が頻発。<strong>環境変数経由</strong>にして、リポジトリにはキー名だけを書く。</p></div>
+</details><details class="glossary-item">
+<summary><strong>gRPC</strong>（ジーアールピーシー）— 「関数呼び出し」風の通信（RPC）を、現代風に<strong>高速・型付き</strong>にしたもの。マイクロサービス間等で使われる。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: REST API（<code>GET /users</code>）は「URLと動詞で会話」、gRPCは「関数呼び出しで会話」と覚えるとイメージしやすい。サービス間で大量に通信する内部APIで速度・型安全が必要な時に選ぶ。</p></div>
+</details><details class="glossary-item">
+<summary><strong>CSRF</strong>（シーエスアールエフ／<code>Cross-Site Request Forgery</code>／「偽造リクエスト」）— ログイン中の利用者に、悪意ある別サイトから勝手にリクエストを送らせる攻撃。Cookie方式で特に注意。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「別のタブで開いた偽サイト経由で、自分の銀行口座から勝手に送金」されるイメージ。Cookieだけで本人判定しているのが原因で、CSRFトークン（1回だけ有効な乱数）で防ぐ。</p></div>
+</details><details class="glossary-item">
+<summary><strong>CI/CD の「緑・赤」</strong> — GitHub 上の CI 結果の色表示。🟢緑＝全job成功・🔴赤＝どこか失敗・🟡黄（<code>in_progress</code>）＝いま実行中。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 緑＝「直したコードが自動テストを全部通過」＝mainブランチにマージしてOKな印。赤＝「どこかが失敗」＝マージ前に直す。色は<strong>信号</strong>と覚える（緑＝進め、赤＝止まれ）。</p></div>
+</details><h3>す</h3>
+<details class="glossary-item">
+<summary><strong>ステージ</strong>（<code>stage</code>／別名 <code>index</code>）— コミット前に「この変更を記録する」と<strong>まとめておく待合室</strong>。ワークツリー→ステージ→リポジトリの中間。〔<a href="02-git-github.html">第2章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: <code>git add ファイル名</code> で「この変更を次にcommitする分に入れる」と宣言する操作。選別して記録できる（全部まとめて1コミットでなく、「機能A」「機能B」と分けられる）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>ステータスコード</strong>（<code>status code</code>）— HTTP レスポンスに含まれる<strong>3桁の数字</strong>で「結果はどうだったか」を機械的に伝える。<code>200</code>=成功・<code>401</code>=認証無効・<code>403</code>=権限なし・<code>404</code>=見つからない・<code>500</code>=サーバー内部エラー・<code>503</code>=サービス停止中。〔<a href="03-api-endpoint.html">第3章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「ページが出ない」とき、ブラウザのDevToolsのNetworkタブで <code>404</code>（URL違い）か <code>500</code>（サーバー側バグ）か <code>503</code>（サーバーダウン中）かで見当を付ける。<strong>最初の数字のクラス</strong>で大別（2xx=成功、4xx=自分のリクエスト側ミス、5xx=サーバー側問題）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>ステップ</strong>（<code>step</code>）— GitHub Actions でジョブの中の個々の実行単位。<code>ジョブ &gt; ステップ</code> の階層。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: YAMLで「<code>actions/checkout@v4</code>でソース取得 → <code>python3 -m pip install</code>で依存導入 → <code>pytest</code>でテスト」のように並べる。各stepが失敗すると次のstepは走らない。</p></div>
+</details><h3>せ</h3>
+<details class="glossary-item">
+<summary><strong>静的解析</strong>（<code>static analysis</code>／スタティックアナリシス）— コードを<strong>実行せずに</strong>解析する手法。Lint・型チェックを含む上位概念。実行不要で速く、人間の見落としを補う。〔<a href="12-quality.html">第12章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「プログラムを走らせずに問題を見つける」＝静的解析。エディタで書いているそばから波線で出る警告の大半がこれ（実行しなくても型・構文の問題は機械に分かる）。</p></div>
+</details><details class="glossary-item">
+<summary><strong>セキュリティスキャン</strong> — 既知の脆弱性のあるライブラリを使っていないかを自動で調べる CI の検査。<code>Bandit</code> 等が代表例。〔<a href="01-ci-cd.html">第1章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「自分のコード」だけでなく「自分が使ってるライブラリの中にも脆弱性が埋まってる」ケースを検出。「古い版を使い続けるな」の自動取り締まりだと思えばいい。</p></div>
+</details><details class="glossary-item">
+<summary><strong>セッション</strong>（<code>session</code>）— ログイン中の状態をサーバー側が記憶する仕組み。Cookieと組み合わせて使うブラウザ型の古典（ステートフル）。〔<a href="05-auth.html">第5章</a>〕</summary>
+<div class="callout callout-tip"><p>💡 <strong>使い方</strong>: ログイン中「あなたのIDは〇〇さん」をサーバーが覚えていて、以降のリクエストのたびに「同じ人か」確認する方式。サーバーが状態を持つ＝「ステートフル」。JWTなど「トークンに状態を載せる」方式との対比で使う言葉。</p></div>
+</details><details class="glossary-item">
+<summary><strong>SemVer</strong>（セムヴァー／<code>Semantic Versioning</code>／セマンティックバージョニング）— バージョン番号 <code>メジャー.マイナー.パッチ</code> で<strong>後方互換性の有無</strong>を伝える約束。メジャー上がり＝壊れる変更。〔<a href="10-versioning-package.html">第10章</a>〕</summary>
 <div class="callout callout-tip"><p>💡 <strong>使い方</strong>: 「<code>^1.2.3</code> で入れたら <code>2.0.0</code> が出て壊れた」＝メジャー上がりで後方互換性が壊れた例。番号の<strong>桁</strong>で警戒度を変える（パッチ=安心・マイナー=ほぼ安心・メジャー=要確認）。</p></div>
 </details><hr />
 <h2>た行</h2>
@@ -488,7 +541,7 @@ slug: 14-glossary</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.38 · 2026.07.10</p>
+        <p class="site-version">vTEST · 2026.01.01</p>
     </footer>
 
     <script src="../assets/script.js"></script>
