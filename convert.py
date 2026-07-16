@@ -454,6 +454,30 @@ def rewrite_links(html: str, chapter_map: dict | None = None) -> str:
     return html
 
 
+def convert_tldr(html: str) -> str:
+    """H1直後の『3行で分かる』blockquote を <aside class="tldr"> に変換.
+
+    平易化（2026-07-17移植）: 各ページH1直後に置いた `> **3行で分かる**` blockquoteを
+    目立つTLDR枠に変換する。enhance_html の単一段落callout変換（<blockquote><p>…</p></blockquote>）
+    にマッチしない複数要素blockquoteを対象とするため、enhance_html の後に呼ぶこと。
+    H1直後の最初のblockquoteのみ（位置保証）。'3行で分かる' を含まなければ変換しない（後方互換）。
+    ※ enhance_html の【前】に呼ぶこと（後だと enhance_html のcallout変換にTLDRが食われる）。
+    """
+    pattern = re.compile(
+        r'(<h1[^>]*>.*?</h1>\s*)(<blockquote>.*?</blockquote>)',
+        re.DOTALL,
+    )
+    m = pattern.search(html)
+    if not m:
+        return html
+    head, block = m.group(1), m.group(2)
+    if '3行で分かる' not in block:
+        return html
+    inner = block[len('<blockquote>'):-len('</blockquote>')]
+    converted = head + f'<aside class="tldr">{inner}</aside>'
+    return html[:m.start()] + converted + html[m.end():]
+
+
 def enhance_html(html: str) -> str:
     """HTMLに装飾を追加（テーブルラップ・コールアウト等）."""
     # テーブルをスクロールラッパーで囲む
@@ -661,6 +685,7 @@ def main():
         html_body = convert_md_to_html(md_text)
         html_body = inject_mermaid(html_body, ch["filename"])
         html_body = rewrite_links(html_body, effective_map)
+        html_body = convert_tldr(html_body)
         html_body = enhance_html(html_body)
         if ch["slug"] != "14-glossary":
             html_body = add_toc_and_heading_ids(html_body)

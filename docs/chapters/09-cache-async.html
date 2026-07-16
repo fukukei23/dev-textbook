@@ -159,6 +159,14 @@ icon: ⚡
 card_desc: 処理を速くする・後回しにする技術の使い分け — キャッシュ/無効化/TTL・非同期/キュー・同期との違い
 slug: 09-cache-async</h2>
 <h1>09 キャッシュ・非同期処理 — 処理を速くする・後回しにする技術の使い分け</h1>
+<aside class="tldr">
+<p><strong>3行で分かる</strong></p>
+<ol>
+<li>処理を速くする（キャッシュ）・後回しにする（非同期）の2技術を使い分ける</li>
+<li>キャッシュ/TTL/無効化・非同期/キュー・同期との違い</li>
+<li>「毎回同じ計算をしない」「時間のかかる処理でユーザーを待たせない」</li>
+</ol>
+</aside>
 <div class="callout callout-info"><p>「ページの表示が遅い」「重い処理でユーザーを待たせている」——この2つの問題に、開発現場は決まって2つの技術で立ち向かいます。<strong>キャッシュ</strong>（結果を使い回して速くする）と<strong>非同期処理</strong>（重い処理を後回しにする）です。この章では、この2つの本質と使い分けを根本から理解します。</p></div>
 <hr />
 <h2 id="sec-2">一言でいうと</h2>
@@ -377,7 +385,7 @@ slug: 09-cache-async</h2>
          · <a href="https://fukukei23.github.io/claude-code-guide/">Claude Code Guide</a>
          · <a href="https://fukukei23.github.io/guides/">技術ガイド集</a>
          · <a href="https://fukukei23.github.io/">fukukei23</a></p>
-        <p class="site-version">v1.38 · 2026.07.10</p>
+        <p class="site-version">v1.40 · 2026.07.17</p>
     </footer>
 
     <script src="../assets/script.js"></script>

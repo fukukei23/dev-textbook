@@ -670,6 +670,26 @@ a:hover { text-decoration: underline; }
 [data-theme="dark"] .callout-warn { background: rgba(245,158,11,0.1); }
 [data-theme="dark"] .callout-danger { background: rgba(239,68,68,0.1); }
 
+/* ===== TLDR (3行で分かる) ===== */
+.tldr {
+    background: var(--blue-bg);
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+}
+.tldr::before {
+    content: "⚡ 3行で分かる";
+    display: block;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+    font-size: 0.95em;
+}
+.tldr p:first-of-type { display: none; }  /* 『3行で分かる』見出し行（::beforeで代替表示）を隠す */
+.tldr ol { margin: 0.25rem 0 0 1.25rem; padding-left: 0.5rem; }
+.tldr li { margin-bottom: 0.35rem; line-height: 1.5; }
+
 /* ===== MERMAID ===== */
 .mermaid {
     margin: 20px 0;
